@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://kingdavidglad.github.io/radio69-zsivanyok-podcast/sitemap.xml
