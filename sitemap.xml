@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://kingdavidglad.github.io/radio69/</loc></url>
-  <url><loc>https://kingdavidglad.github.io/radio69/cikkek/zsivanyok-radio69-musorrend.html</loc></url>
-  <url><loc>https://kingdavidglad.github.io/radio69/cikkek/magyar-radio-top-40-vasarnap.html</loc></url>
-  <url><loc>https://kingdavidglad.github.io/radio69/cikkek/zenedoboz-radio69-musorrend.html</loc></url>
-  <url><loc>https://kingdavidglad.github.io/radio69/cikkek/radio69-hits-remix-zenei-kinalat.html</loc></url>
-  <url><loc>https://kingdavidglad.github.io/radio69/cikkek/igy-keszul-zsivanyok-podcast.html</loc></url>
-  <url><loc>https://kingdavidglad.github.io/radio69/cikkek/jo-podcast-vendeg-zsivanyok.html</loc></url>
+  <url>
+    <loc>https://kingdavidglad.github.io/radio69-zsivanyok-podcast/</loc>
+  </url>
+  <url>
+    <loc>https://kingdavidglad.github.io/radio69-zsivanyok-podcast/cikkek/zsivanyok-radio69-musorrend.html</loc>
+  </url>
+  <url>
+    <loc>https://kingdavidglad.github.io/radio69-zsivanyok-podcast/cikkek/magyar-radio-top-40-vasarnap.html</loc>
+  </url>
+  <url>
+    <loc>https://kingdavidglad.github.io/radio69-zsivanyok-podcast/cikkek/zenedoboz-radio69-musorrend.html</loc>
+  </url>
+  <url>
+    <loc>https://kingdavidglad.github.io/radio69-zsivanyok-podcast/cikkek/radio69-hits-remix-zenei-kinalat.html</loc>
+  </url>
 </urlset>
