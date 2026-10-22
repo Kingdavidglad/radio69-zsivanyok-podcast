@@ -6,7 +6,8 @@
 window.RADIO69_DJS = [
   { name: "DJ Effect", image: "assets/djs/dj-effect.jpg" },
   { name: "DJ Veronic", image: "assets/djs/dj-veronic.jpg" },
-  { name: "DJ Hlásznyik", image: "assets/djs/dj-hlasznyik.jpg" }
+  { name: "DJ Hlásznyik", image: "assets/djs/dj-hlasznyik.jpg" },
+  { name: "DJ Daniel", image: "assets/djs/dj-daniel.jpg" }
 ];
 
 (() => {
