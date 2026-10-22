@@ -4,7 +4,8 @@
  * majd adj hozzá egy elemet a listához. A kártyán csak a fotó és a név jelenik meg.
  */
 window.RADIO69_DJS = [
-  { name: "DJ Effect", image: "assets/djs/dj-effect.jpg" }
+  { name: "DJ Effect", image: "assets/djs/dj-effect.jpg" },
+  { name: "DJ Veronic", image: "assets/djs/dj-veronic.jpg" }
 ];
 
 (() => {
