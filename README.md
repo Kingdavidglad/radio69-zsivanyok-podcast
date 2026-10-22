@@ -80,9 +80,10 @@ Mobilos javítás (2026-10-22): a stíluslap hivatkozása verziózott `?v=mobile
 
 
 ## DJ-k oldal
-- Új oldal: `dj-k.html` – a jelenlegi állapot „Feltöltés alatt”.
+- Új oldal: `dj-k.html` – a DJ-k arcképe és neve jelenik meg.
+- Jelenleg DJ Effect szerepel a listában.
 - A DJ-k listáját a `djs.js` fájlban lehet szerkeszteni.
 - Töltsd fel a portréfotókat az `assets/djs/` mappába, majd a `djs.js` listájához adj hozzá például egy ilyen elemet: `{ name: "DJ Dave", image: "assets/djs/dj-dave.jpg" }`.
 - A nyilvános oldalon csak a DJ portréja és alatta a neve látszik.
 - GitHub Pages statikus tárhely, ezért nincs közvetlen, weboldalon belüli fájlfeltöltő adminfelület: a képeket és a `djs.js` fájlt GitHubon kell feltölteni/módosítani.
-- Amíg az oldal a „Feltöltés alatt” állapotban van, `noindex` beállítású és nincs benne a sitemapben. Miután hozzáadtad a DJ-ket, frissíteni kell a `dj-k.html` robots meta tagjét és a `sitemap.xml` fájlt.
+- Mivel már szerepel rajta DJ-profil, a `dj-k.html` indexelhető metaadatot kapott, és bekerült a `sitemap.xml` fájlba.

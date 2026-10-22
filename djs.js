@@ -1,11 +1,10 @@
 /*
  * DJ-K LISTÁJA – Rádió69
  * Új DJ hozzáadásához töltsd fel a portréját az assets/djs/ mappába,
- * majd adj hozzá egy sort a listához. Az oldalon csak a fotó és a név jelenik meg.
- * Példa: { name: "DJ Dave", image: "assets/djs/dj-dave.jpg" },
+ * majd adj hozzá egy elemet a listához. A kártyán csak a fotó és a név jelenik meg.
  */
 window.RADIO69_DJS = [
-  // { name: "DJ neve", image: "assets/djs/dj-neve.jpg" },
+  { name: "DJ Effect", image: "assets/djs/dj-effect.jpg" }
 ];
 
 (() => {
