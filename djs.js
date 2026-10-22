@@ -11,7 +11,8 @@ window.RADIO69_DJS = [
   { name: "Carver", image: "assets/djs/dj-carver.jpg" },
   { name: "MATT.T.", image: "assets/djs/dj-matt-t.jpg" },
   { name: "TERENCE", image: "assets/djs/dj-terence.jpg" },
-  { name: "ADAMO", image: "assets/djs/dj-adamo.jpg" }
+  { name: "ADAMO", image: "assets/djs/dj-adamo.jpg" },
+  { name: "FRIGYES", image: "assets/djs/dj-frigyes.jpg" }
 ];
 
 (() => {
