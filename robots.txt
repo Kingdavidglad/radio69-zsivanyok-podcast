@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kingdavidglad.github.io/radio69/sitemap.xml

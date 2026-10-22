@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#090912">
+  <meta name="description" content="Rádió69 × Zsiványok Podcast – cikk és érdekesség.">
+  <meta name="robots" content="noindex,follow">
+  <title>Cikk – Rádió69 × Zsiványok</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/favicon.png"><link rel="stylesheet" href="style.css">
+</head>
+<body class="article-page">
+  <div class="ambient ambient-one" aria-hidden="true"></div><div class="ambient ambient-two" aria-hidden="true"></div>
+  <header class="site-header"><a class="brand" href="index.html" aria-label="Vissza a főoldalra"><img src="assets/radio69-icon.png" class="brand-logo" alt="Rádió69 logó"><span class="brand-divider" aria-hidden="true"></span><span class="brand-name">RÁDIÓ<span>69</span><small>× ZSIVÁNYOK</small></span></a><nav class="article-nav"><a href="index.html#friss">← Vissza az olvasnivalókhoz</a><a class="header-link" href="index.html#podcast">PODCAST <span>↗</span></a></nav></header>
+  <main class="page-width article-main" id="articleMain"><p class="article-loading">A cikk betöltése…</p></main>
+  <footer class="site-footer page-width"><a class="footer-brand" href="index.html"><img src="assets/radio69-icon.png" alt="" aria-hidden="true"><span>RÁDIÓ<span>69</span><small>× ZSIVÁNYOK PODCAST</small></span></a><span class="footer-middle">Zene. Történetek. Közösség.</span><span class="copyright">© <span id="year"></span> Rádió69 × Zsiványok</span></footer>
+  <div class="ai-chat-widget" id="aiChatWidget">
+    <section class="ai-chat-panel" id="aiChatPanel" aria-label="Rádió69 AI chat" hidden>
+      <header class="ai-chat-header">
+        <div class="ai-chat-avatar" aria-hidden="true"><img src="assets/radio69-icon.png" alt=""></div>
+        <div class="ai-chat-title-wrap">
+          <strong>Rádió69 AI asszisztens</strong>
+          <span class="ai-chat-status"><i id="aiChatStatusDot"></i><span id="aiChatStatusText">Kapcsolat ellenőrzése…</span></span>
+        </div>
+        <button class="ai-chat-icon-btn" id="aiChatNew" type="button" aria-label="Beszélgetés törlése" title="Új beszélgetés">↻</button>
+        <button class="ai-chat-icon-btn" id="aiChatClose" type="button" aria-label="Chat bezárása" title="Bezárás">×</button>
+      </header>
+      <div class="ai-chat-messages" id="aiChatMessages" role="log" aria-live="polite" aria-relevant="additions text">
+        <div class="ai-chat-message bot-message"><div class="ai-chat-bubble">Szia! 👋 Kérdezz bátran a Rádió69-ről, a Zsiványok Podcast-ról vagy az oldalon található tartalmakról.</div><span class="ai-chat-time">Rádió69 asszisztens</span></div>
+      </div>
+      <div class="ai-chat-suggestions" id="aiChatSuggestions" aria-label="Javasolt kérdések">
+        <button type="button" class="ai-chat-suggestion">Hol nézhetem meg a Zsiványok Podcastot?</button>
+        <button type="button" class="ai-chat-suggestion">Hol találom a Rádió69 közösségi oldalait?</button>
+        <button type="button" class="ai-chat-suggestion">Milyen témákról olvashatok itt?</button>
+      </div>
+      <form class="ai-chat-form" id="aiChatForm">
+        <label class="sr-only" for="aiChatInput">Írd be a kérdésedet</label>
+        <textarea id="aiChatInput" rows="1" maxlength="1500" placeholder="Írd be a kérdésed…" required></textarea>
+        <button type="submit" id="aiChatSend" aria-label="Üzenet küldése" title="Küldés"><span>➤</span></button>
+      </form>
+      <div class="ai-chat-footnote">A válaszokat mesterséges intelligencia készítheti; fontos információkat ellenőrizz.</div>
+    </section>
+    <button class="ai-chat-launcher" id="aiChatToggle" type="button" aria-label="AI chat megnyitása" aria-controls="aiChatPanel" aria-expanded="false">
+      <span class="ai-chat-launcher-icon" aria-hidden="true">✦</span><span class="ai-chat-launcher-label">Kérdezz az AI-tól</span><span class="ai-chat-launcher-pulse" aria-hidden="true"></span>
+    </button>
+  </div>
+  <script src="chat.js"></script>
+  <script src="articles.js"></script><script src="article.js"></script>
+</body>
+</html>
