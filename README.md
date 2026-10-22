@@ -48,3 +48,23 @@ Mobilos javítás (2026-10-22): a stíluslap hivatkozása verziózott `?v=mobile
 - Mielőtt véglegesnek tekinted, cseréld ki benne az adatkezelő teljes nevére/szervezetére, postai címére vagy székhelyére, valamint a kapcsolattartási e-mail-címére utaló `[IDE ÍRD ...]` helykitöltőket.
 - A tájékoztató a jelenlegi statikus GitHub Pages-változatot írja le: nincs bekapcsolva AdSense/Analytics, és az AI-chat próba módban helyben előre meghatározott válaszokat ad. Ha bármelyik funkciót megváltoztatod, előbb frissítsd a tájékoztatót és az esetleg szükséges hozzájáruláskezelést.
 - Ez minta, nem személyre szabott jogi tanács. A közzététel előtt ellenőrizd a valós adatkezelési gyakorlatot, és szükség esetén kérj jogi segítséget.
+
+## Rólunk és Kapcsolat oldal
+
+- Új oldal: `rolunk-kapcsolat.html`
+- A főoldal menüjéből, a főoldali bemutatkozó részből és a láblécből is elérhető.
+- A kapcsolatfelvételi lehetőségek a Rádió69 és a Zsiványok Podcast meglévő nyilvános felületeire mutatnak; nem tartalmaz kitalált e-mail-címet vagy működés nélküli űrlapot.
+- Feltöltés előtt ellenőrizd az `adatvedelem.html` fájlban az adatkezelő adatait, és töltsd ki a helykitöltőket.
+
+## Egyéni 404 oldal
+
+- A `404.html` egyéni, mobilbarát hibaoldal a nem létező URL-ekhez.
+- GitHub Pages automatikusan ezt a fájlt használja, ha a projekt gyökerében van.
+- A hibaoldal nem szerepel a sitemapben, és `noindex,follow` metaadatot használ.
+
+## SEO-frissítés
+
+- A hat cikk rövid, egyedi keresési és közösségi címet használ; a látható cikkcímek változatlanok.
+- A főoldal HTML-forrásában is megtalálhatók a cikkek közvetlen hivatkozásai, a JavaScriptes kártyarenderelés tartalékaként.
+- A `sitemap.xml` csak kanonikus, indexelhető URL-eket tartalmaz; az adatvédelmi mintaoldal `noindex`, ezért nem szerepel benne.
+- Közzététel utáni ellenőrzési lépések: `SEO-ELLENORZO.md`.

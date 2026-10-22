@@ -1,0 +1,6 @@
+# Soha ne tölts fel titkos kulcsokat vagy helyi fejlesztői csomagokat
+.env
+.env.*
+!.env.example
+node_modules/
+.DS_Store
