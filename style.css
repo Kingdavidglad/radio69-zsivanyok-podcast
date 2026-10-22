@@ -161,102 +161,117 @@
 .article-source-note{margin:13px 0 0}
 @media(max-width:760px){.article-sources{padding:17px;border-radius:14px}.article-sources-title strong{font-size:18px}.article-sources li a{font-size:12px}}
 
-
-
-
-/* Mobilos finomhangolás: kényelmesebb érintés, olvashatóbb cikkek, stabilabb menü. */
-html { -webkit-text-size-adjust: 100%; }
-button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
-img { height: auto; }
-
-@media (max-width: 760px) {
-  .main-nav { z-index: 30; max-height: calc(100dvh - 92px); overflow-y: auto; overscroll-behavior: contain; }
-  .main-nav a { min-height: 44px; display: flex; align-items: center; }
-  .hero-actions .button { min-height: 46px; }
-  .topic-band-inner { scroll-snap-type: x proximity; padding-block: 5px; }
-  .topic-band a { min-height: 44px; scroll-snap-align: start; }
-  .search-box { min-height: 48px; }
-  .filter-row { scrollbar-width: none; scroll-snap-type: x proximity; }
-  .filter-row::-webkit-scrollbar, .topic-band-inner::-webkit-scrollbar { display: none; }
-  .filter-chip { min-height: 42px; scroll-snap-align: start; }
-  .article-card { height: 100%; }
-  .social-link { min-height: 62px; }
-  .article-nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
-  .article-nav > a:first-child { min-height: 40px; display: inline-flex; align-items: center; }
-  .article-actions .small-action { min-height: 42px; }
-  .ai-chat-widget { bottom: max(12px, env(safe-area-inset-bottom)); }
-}
-
-@media (max-width: 480px) {
-  .page-width { width: calc(100% - 28px); }
-  .site-header { width: calc(100% - 28px); min-height: 70px; height: auto; padding-block: 9px; }
-  .brand { min-width: 0; gap: 7px; }
-  .brand-logo { width: 38px; height: 38px; }
-  .brand-name { font-size: 15px; }
-  .brand-name small { font-size: 6.5px; letter-spacing: 1.05px; }
-  .menu-toggle { flex: 0 0 42px; }
-  .main-nav { top: calc(100% + 1px); }
-  .hero { padding-top: 38px; }
-  .hero h1 { font-size: clamp(38px, 10.5vw, 48px); line-height: 1.02; letter-spacing: -1.7px; }
-  .hero-feature { min-height: 300px; height: min(330px, 88vw); }
-  .section { padding-top: 54px; }
-  .section-heading h2, .promo-copy h2, .about-copy h2 { font-size: clamp(29px, 8vw, 34px); }
-  .article-content p { font-size: 15px; line-height: 1.85; }
-  .article-content .article-intro { font-size: 17px; line-height: 1.75; }
-  .article-header h1 { font-size: clamp(31px, 8.5vw, 42px); line-height: 1.08; }
-  .article-byline { gap: 8px; }
-  .article-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-  .small-action { min-width: 0; padding-inline: 10px; }
-  .ai-chat-panel { width: calc(100vw - 20px); right: -2px; max-height: calc(100dvh - 90px); }
-  .ai-chat-launcher { max-width: calc(100vw - 28px); }
-  .site-footer { width: calc(100% - 28px); }
-}
-
-@media (max-width: 360px) {
-  .brand-divider { display: none; }
-  .brand-name small { letter-spacing: .65px; }
-  .menu-toggle { width: 40px; height: 40px; flex-basis: 40px; }
-  .hero-proof small { max-width: 235px; }
-  .ai-chat-launcher-label { max-width: 145px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-}
-
-
-/* Extra mobilos javítás a valódi telefonos nézethez: ne legyen oldal-szintű vízszintes görgetés. */
+/* Reszponzív alapszabályok – a mobilos javítások egy helyre rendezve. */
 html {
-  max-width: 100%;
-  overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden; /* Régebbi böngészők tartalék beállítása. */
+  overflow-x: clip;
 }
+
 body {
-  width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
 }
-main, header, footer, section, nav, aside, article, .page-width,
-.hero, .magazine-layout, .magazine-main, .magazine-sidebar,
-.radio-world-panel, .podcast-promo, .social-grid, .about-card {
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  height: auto;
+}
+
+main,
+header,
+footer,
+section,
+nav,
+aside,
+article,
+.page-width,
+.hero,
+.hero-copy,
+.hero-feature,
+.magazine-layout,
+.magazine-main,
+.magazine-sidebar,
+.article-grid,
+.article-card,
+.radio-world-panel,
+.podcast-promo,
+.social-grid,
+.social-card,
+.about-card {
   min-width: 0;
 }
 
+/* Telefon és kisebb tablet */
 @media (max-width: 760px) {
-  /* A fő tartalom a telefon teljes CSS-viewportjához igazodjon, ne egy beszűkült szülőhöz. */
-  body { width: 100vw; max-width: 100vw; }
-  .site-header, .page-width, .site-footer {
-    width: calc(100vw - 34px);
-    max-width: calc(100vw - 34px);
+  .site-header {
+    width: calc(100% - 34px);
+    max-width: calc(100% - 34px);
+    height: auto;
+    min-height: 70px;
+    padding-block: 8px;
   }
-  main { width: 100%; max-width: 100vw; }
 
-  /* A témasor saját sávban görgessen, ne a teljes oldalt húzza oldalra. */
+  .page-width,
+  .site-footer {
+    width: calc(100% - 34px);
+    max-width: calc(100% - 34px);
+  }
+
+  .main-nav {
+    top: calc(100% + 1px);
+    left: 0;
+    right: 0;
+    z-index: 30;
+    width: auto;
+    max-width: 100%;
+    max-height: calc(100dvh - 92px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .main-nav a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .hero,
+  .hero-copy,
+  .hero-feature,
+  .section-heading,
+  .article-grid,
+  .article-card,
+  .social-card,
+  .site-footer {
+    max-width: 100%;
+  }
+
+  .hero-actions .button,
+  .topic-band a,
+  .filter-chip,
+  .article-actions .small-action {
+    min-height: 44px;
+  }
+
+  /* Csak a témasor görgessen vízszintesen, ne a teljes oldal. */
   .topic-band {
     width: 100%;
     max-width: 100%;
     overflow: hidden;
   }
+
   .topic-band-inner.page-width {
     width: 100%;
     max-width: 100%;
-    margin-inline: 0;
+    margin: 0;
     padding: 8px 14px;
     justify-content: flex-start;
     gap: 8px;
@@ -264,30 +279,66 @@ main, header, footer, section, nav, aside, article, .page-width,
     overflow-y: hidden;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
     scrollbar-width: none;
-    -ms-overflow-style: none;
   }
-  .topic-band-inner::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-  }
-  .topic-band a { flex: 0 0 auto; }
 
-  /* A lenyíló menü a fejléc szélességén belül maradjon. */
-  .site-header { max-width: calc(100% - 28px); }
-  .main-nav {
-    left: 0;
-    right: 0;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
+  .topic-band-inner::-webkit-scrollbar,
+  .filter-row::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
   }
-  .hero, .hero-copy, .hero-feature, .section-heading,
-  .article-grid, .article-card, .social-card, .site-footer {
-    min-width: 0;
-    max-width: 100%;
+
+  .topic-band a {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
   }
+
+  .filter-row {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .filter-chip {
+    scroll-snap-align: start;
+  }
+
+  .search-box {
+    min-height: 48px;
+  }
+
+  .article-card {
+    height: 100%;
+  }
+
+  .social-link {
+    min-height: 54px;
+  }
+
+  .article-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .article-nav > a:first-child {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+
+  .ai-chat-widget {
+    bottom: max(12px, env(safe-area-inset-bottom));
+    max-width: calc(100% - 20px);
+  }
+
   .hero-feature-content strong,
   .article-card h3,
   .editor-pick-copy strong,
@@ -295,42 +346,201 @@ main, header, footer, section, nav, aside, article, .page-width,
   .podcast-promo h2 {
     overflow-wrap: anywhere;
   }
-  .topic-band + .section { max-width: 100%; }
-  .filter-row {
-    max-width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    overscroll-behavior-x: contain;
-    -webkit-overflow-scrolling: touch;
-  }
 }
 
+/* Kisebb telefonok */
 @media (max-width: 480px) {
-  .page-width, .site-header, .site-footer {
-    width: calc(100vw - 28px);
+  .page-width,
+  .site-header,
+  .site-footer {
+    width: calc(100% - 28px);
+    max-width: calc(100% - 28px);
+  }
+
+  .site-header {
+    min-height: 70px;
+    padding-block: 8px;
+  }
+
+  .brand {
+    min-width: 0;
+    gap: 7px;
+  }
+
+  .brand-logo {
+    width: 38px;
+    height: 38px;
+  }
+
+  .brand-name {
+    font-size: 15px;
+  }
+
+  .brand-name small {
+    font-size: 6.5px;
+    letter-spacing: 1.05px;
+  }
+
+  .menu-toggle {
+    flex: 0 0 42px;
+  }
+
+  .hero {
+    padding-top: 38px;
+  }
+
+  .hero h1 {
+    font-size: clamp(38px, 10.5vw, 48px);
+    line-height: 1.02;
+    letter-spacing: -1.7px;
+  }
+
+  .hero-feature {
+    min-height: 300px;
+    height: min(330px, 88vw);
+  }
+
+  .section {
+    padding-top: 54px;
+  }
+
+  .section-heading h2,
+  .promo-copy h2,
+  .about-copy h2 {
+    font-size: clamp(29px, 8vw, 34px);
+  }
+
+  .article-header h1 {
+    font-size: clamp(31px, 8.5vw, 42px);
+    line-height: 1.08;
+  }
+
+  .article-content p {
+    font-size: 15px;
+    line-height: 1.85;
+  }
+
+  .article-content .article-intro {
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  .article-byline {
+    gap: 8px;
+  }
+
+  .article-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .small-action {
+    min-width: 0;
+    padding-inline: 10px;
+  }
+
+  .filter-row {
+    margin-right: -14px;
+  }
+
+  .ai-chat-widget {
+    right: 10px;
+    left: auto;
+    max-width: calc(100% - 20px);
+  }
+
+  .ai-chat-panel {
+    right: 0;
+    width: min(390px, calc(100vw - 20px));
+    max-width: calc(100vw - 20px);
+    max-height: calc(100dvh - 90px);
+  }
+
+  .ai-chat-launcher {
     max-width: calc(100vw - 28px);
   }
-  .topic-band-inner.page-width {
-    width: 100%;
-    max-width: 100%;
-  }
+
   .site-footer {
     flex-wrap: wrap;
     justify-content: space-between;
     row-gap: 12px;
   }
-  .copyright { max-width: 100%; }
-  .ai-chat-widget {
-    right: 10px;
-    left: auto;
-    max-width: calc(100vw - 20px);
+
+  .copyright {
+    max-width: 100%;
   }
-  .ai-chat-launcher {
-    max-width: calc(100vw - 28px);
+
+  .social-section {
+    padding-top: 55px;
   }
-  .ai-chat-panel {
-    width: calc(100vw - 20px);
-    max-width: 390px;
-    right: 0;
+
+  .social-grid,
+  .magazine-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .magazine-main .article-grid,
+  .related-section .article-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .magazine-main .card-image,
+  .related-grid .card-image {
+    height: 190px;
+  }
+
+  .editor-picks-card {
+    grid-column: auto;
+  }
+
+  .radio-world-panel {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .radio-world-brand {
+    min-height: 125px;
+  }
+
+  .radio-world-brand img {
+    max-height: 110px;
+  }
+
+  .radio-world-copy h2 {
+    font-size: 32px;
+  }
+
+  .radio-world-actions .button {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 360px) {
+  .brand-divider {
+    display: none;
+  }
+
+  .brand-name small {
+    letter-spacing: .65px;
+  }
+
+  .menu-toggle {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+
+  .hero-proof small {
+    max-width: 235px;
+  }
+
+  .ai-chat-launcher-label {
+    max-width: 145px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
