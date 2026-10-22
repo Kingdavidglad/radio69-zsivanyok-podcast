@@ -627,3 +627,9 @@ main#home {
     max-width: 100% !important;
   }
 }
+
+
+/* Adatvédelmi tájékoztató link a láblécben */
+.footer-policy-link{color:#c6b5ec;font-size:10px;font-weight:700;white-space:nowrap}
+.footer-policy-link:hover{color:#fff;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:760px){.footer-policy-link{font-size:10px}}
