@@ -64,7 +64,16 @@ Mobilos javítás (2026-10-22): a stíluslap hivatkozása verziózott `?v=mobile
 
 ## SEO-frissítés
 
-- A hat cikk rövid, egyedi keresési és közösségi címet használ; a látható cikkcímek változatlanok.
+- A nyolc cikk rövid, egyedi keresési és közösségi címet használ; a látható cikkcímek változatlanok.
 - A főoldal HTML-forrásában is megtalálhatók a cikkek közvetlen hivatkozásai, a JavaScriptes kártyarenderelés tartalékaként.
 - A `sitemap.xml` csak kanonikus, indexelhető URL-eket tartalmaz; az adatvédelmi mintaoldal `noindex`, ezért nem szerepel benne.
 - Közzététel utáni ellenőrzési lépések: `SEO-ELLENORZO.md`.
+
+
+## Tartalmi frissítés (2026-10-22)
+- A magazin 8 forráslinkkel ellátott cikket tartalmaz.
+- Két új, időtálló podcastos háttércikk: podcast indításához szükséges alapok; egy epizód becsült munkaráfordítása.
+- A főoldali cikklista és a külön HTML-cikkoldalak ugyanabból a cikktárból készültek.
+- A cikkek saját megfogalmazású összefoglalók, a források a cikkek végén kattinthatók.
+- A műsoridők a Rádió69 hivatalos oldalán 2026-10-22-én ellenőrzött adatokra épülnek, és később változhatnak.
+- A képek illusztrációk, nem a podcast hivatalos fotói, ahol ez a képaláírásban szerepel.

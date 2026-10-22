@@ -1,24 +1,22 @@
-# SEO-ellenőrző lista — Rádió69 × Zsiványok Podcast
+# SEO és tartalom ellenőrzőlista
 
-Ez a csomag technikai SEO-frissítést tartalmaz a GitHub Pages kiadáshoz.
+A projekt aktuális GitHub Pages címe: `https://kingdavidglad.github.io/radio69-zsivanyok-podcast/`.
 
-## Mi változott?
-- Rövidebb, egyedibb `<title>` címek a hat cikkhez; a látható cikkcímek változatlanok.
-- Teljesebb közösségi megosztási metaadatok a Rólunk/Kapcsolat oldalon.
-- A főoldal HTML-forrásában is vannak belső cikkhivatkozások, így a cikkek a JavaScript betöltése előtt is felfedezhetők.
-- A sitemap érvényes XML, csak kanonikus, indexelhető URL-eket sorol fel; a `noindex` adatvédelmi sablon és a 404 oldal nincs benne.
-- A `robots.txt` az új GitHub Pages sitemapre mutat.
-- A cikkek morzsanavigációjának strukturált adata a kanonikus főoldalra mutat.
+## Cikkek
+- 8 közzétett cikk van az `articles.js` fájlban.
+- Minden cikknek külön `.html` oldala van a `cikkek/` mappában.
+- Minden oldal kapott egyedi címet, leírást, canonical URL-t, Open Graph / Twitter metaadatokat és BlogPosting strukturált adatot.
+- A források az egyes cikkek alján kattinthatók.
+- A műsoridőkről szóló cikkek megjegyzik, hogy a hivatalos műsorrend változhat.
 
-## Feltöltés
-A `radio69-zsivanyok-podcast` repository `main` ágának gyökerébe töltsd fel a frissített fájlokat. A `.env`, API-kulcs és `node_modules` nem része ennek a csomagnak, és nem is szabad publikálni őket.
+## Google Search Console
+1. Nyisd meg az URL-ellenőrzést a főoldalra és a fontos cikkekre.
+2. Kérj indexelést az indexelhető URL-ekre.
+3. A Webhelytérképek résznél küldd be a `sitemap.xml` útvonalat.
+4. Ha a sitemap hibát mutat, ellenőrizd a közvetlen URL-t: `https://kingdavidglad.github.io/radio69-zsivanyok-podcast/sitemap.xml`.
 
-## Közzététel utáni teszt
-1. Ellenőrizd a főoldalt és a hat cikk-URL-t böngészőben.
-2. Nyisd meg a `.../sitemap.xml` címet; az XML-ben nem kell stíluslap, a böngésző „no style information” üzenete normális.
-3. A Google Search Console-ban futtass URL-ellenőrzést a főoldalon és egy cikkoldalon; csak ezután kérj indexelést.
-4. Ha a sitemap beolvasása továbbra is hibás, a Search Console pontos hibastátuszát ellenőrizd; a fájl helyes XML-szintaxisa önmagában nem garantálja az indexelést.
-5. Az Adatvédelem oldal továbbra is `noindex`, amíg az üzemeltetői helykitöltők nincsenek kitöltve.
-
-## Tartalmi megjegyzés
-A cikkoldalakon még van szerkesztési/mintatartalomra figyelmeztető szöveg. Mielőtt ezekre jelentős keresőforgalmat vagy AdSense-jóváhagyást alapoznál, cseréld le a minta részeket végleges, saját, ellenőrzött és forrásolt szövegre. A metaadatok nem garantálnak Google-indexelést vagy helyezést.
+## Publikálás előtti ellenőrzések
+- Az `adatvedelem.html` helykitöltőit valódi adatkezelői adatokra kell cserélni; addig `noindex` marad és nincs a sitemapben.
+- Ellenőrizd a közösségi linkeket és a külső forrásokat.
+- A `.env` és minden API-kulcs titok: GitHubra feltölteni tilos.
+- A GitHub Pages statikus tárhely; a valós AI-válaszhoz külön, biztonságos háttérszerver kell.
