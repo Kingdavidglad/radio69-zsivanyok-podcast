@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="stylesheet" href="style.css?v=rendezvenyek-youtube-thumbnail-20261023">
+  <link rel="stylesheet" href="style.css?v=rendezvenyek-youtube-thumbnails-20261023">
   <style>
     .events-main{padding-top:40px;padding-bottom:70px}
     .events-hero{position:relative;isolation:isolate;overflow:hidden;padding:clamp(28px,5vw,58px);border:1px solid rgba(181,138,255,.24);border-radius:28px;background:radial-gradient(ellipse at 5% 0%,rgba(181,138,255,.18),transparent 40%),radial-gradient(ellipse at 95% 100%,rgba(6,182,212,.12),transparent 38%),linear-gradient(135deg,#171426 0%,#0e101a 68%,#111020 100%);}
@@ -46,9 +46,10 @@
     .event-video-modal-open{overflow:hidden}
     @media(max-width:600px){.event-video-modal{padding:9px}.event-video-dialog{padding:17px;border-radius:18px;max-height:calc(100vh - 18px)}.event-video-close{top:10px;right:10px;width:38px;height:38px}.event-video-dialog h2{padding-right:30px}.event-video-message{min-height:145px}}
     .event-art{position:relative;display:grid;place-items:center;min-height:220px;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.08);background:radial-gradient(circle at 50% 35%,rgba(181,138,255,.25),transparent 36%),linear-gradient(135deg,#1b1630,#101725 65%,#101019)}
-    .event-thumbnail{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:inherit}
-    .event-card:first-child .event-art:before,.event-card:first-child .event-art:after{pointer-events:none}
-    .event-card:first-child .event-art-caption{z-index:2;padding:7px 10px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(6,7,17,.72);backdrop-filter:blur(6px)}
+    .event-art img.event-thumbnail{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:center;background:#101019;transition:transform .35s ease}
+    .event-card:hover .event-art img.event-thumbnail{transform:scale(1.035)}
+    .event-art:before,.event-art:after{z-index:1;pointer-events:none}
+    .event-art-caption{z-index:2;padding:7px 10px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(7,8,18,.72);backdrop-filter:blur(8px)}
     .event-card:nth-child(2) .event-art{background:radial-gradient(circle at 48% 42%,rgba(236,72,153,.23),transparent 38%),linear-gradient(135deg,#21152d,#151525 62%,#0e1725)}
     .event-art:before,.event-art:after{content:"";position:absolute;border:1px solid rgba(6,214,237,.26);border-radius:50%;width:240px;height:240px;transform:rotate(-18deg) scaleY(.38)}
     .event-art:after{width:320px;height:320px;border-color:rgba(181,138,255,.24);transform:rotate(23deg) scaleY(.42)}
@@ -93,11 +94,11 @@
       <div class="section-heading"><div><span class="section-kicker">EMLÉKEZETES PILLANATOK</span><h2 id="eventsTitle">Eddigi <span class="gradient-text">rendezvényeink.</span></h2><p class="section-subtitle">Néhány korábbi közösségi alkalom, amelyet érdemes megőrizni az emlékeink között.</p></div></div>
       <div class="events-grid">
         <a class="event-card event-card-link" href="#rendezveny-video" data-event-title="Mikulás-látogatás a kórházban" data-youtube="https://www.youtube.com/watch?v=8jImEzs_vQs&amp;list=PL1Hn-sM6p76faEY_K9OCXS-gG5wwoxvls" aria-haspopup="dialog" aria-controls="eventVideoModal">
-          <div class="event-art"><img class="event-thumbnail" src="https://img.youtube.com/vi/8jImEzs_vQs/hqdefault.jpg" alt="A Mikulás-látogatás a kórházban YouTube-videó indexképe" loading="lazy" referrerpolicy="no-referrer"><span class="event-art-caption">ÜNNEPI JÓTETT</span></div>
+          <div class="event-art" aria-hidden="true"><img class="event-thumbnail" src="https://img.youtube.com/vi/8jImEzs_vQs/hqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="event-art-caption">ÜNNEPI JÓTETT</span></div>
           <div class="event-content"><span class="event-tag">❤️ Közösségi program</span><h2>Mikulás-látogatás a kórházban</h2><p>Egy ünnepi alkalom, amikor a Mikulás a kórházba látogatott, hogy egy kis figyelmességgel, mosollyal és ünnepi hangulattal tegye szebbé a napot.</p><div class="event-note"><span aria-hidden="true">✦</span><span>A rendezvényhez tartozó YouTube-videó a kártyára kattintva nyílik meg.</span></div><span class="event-watch-hint"><span class="play-icon" aria-hidden="true">▶</span> Videó megtekintése</span></div>
         </a>
-        <a class="event-card event-card-link" href="#rendezveny-video" data-event-title="Valentin-napi rendezvény a Zsani Sörözőben" data-youtube="" aria-haspopup="dialog" aria-controls="eventVideoModal">
-          <div class="event-art" aria-hidden="true"><div class="event-art-symbol">💝</div><span class="event-art-caption">KÖZÖS ÜNNEPLÉS</span></div>
+        <a class="event-card event-card-link" href="#rendezveny-video" data-event-title="Valentin-napi rendezvény a Zsani Sörözőben" data-youtube="https://www.youtube.com/watch?v=-ZvJKhnbncc" aria-haspopup="dialog" aria-controls="eventVideoModal">
+          <div class="event-art" aria-hidden="true"><img class="event-thumbnail" src="https://img.youtube.com/vi/-ZvJKhnbncc/hqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="event-art-caption">KÖZÖS ÜNNEPLÉS</span></div>
           <div class="event-content"><span class="event-tag">🌹 Valentin-nap</span><h2>Valentin-napi rendezvény a Zsani Sörözőben</h2><p>Egy Valentin-napi alkalom a Zsani Sörözőben, ahol a közös élmények, a jó hangulat és az együtt töltött idő került a középpontba.</p><div class="event-note"><span aria-hidden="true">✦</span><span>A rendezvényhez tartozó YouTube-videó a kártyára kattintva nyílik meg.</span></div><span class="event-watch-hint"><span class="play-icon" aria-hidden="true">▶</span> Videó megtekintése</span></div>
         </a>
       </div>
