@@ -113,7 +113,7 @@
     // A köszöntést laponként, böngészőfülönként legfeljebb egyszer próbáljuk automatikusan elindítani.
     // A böngésző ezt blokkolhatja; a meghallgatás gomb ettől függetlenül elérhető marad.
     try {
-      const storageKey = 'radio69WelcomeAttemptedV1';
+      const storageKey = 'radio69WelcomeAttemptedV2';
       if (!sessionStorage.getItem(storageKey)) {
         sessionStorage.setItem(storageKey, '1');
         autoAttempted = true;
@@ -122,10 +122,10 @@
       autoAttempted = true;
     }
 
-    if (autoAttempted) {
-      window.setTimeout(() => {
-        if (document.visibilityState === 'visible') speakGreeting();
-      }, 900);
+    if (autoAttempted && document.visibilityState === 'visible') {
+      // Azonnal megpróbáljuk elindítani a köszöntést, amint a DOM elkészült.
+      // A hallható automatikus lejátszást a böngésző továbbra is blokkolhatja.
+      speakGreeting();
     }
   }
 
