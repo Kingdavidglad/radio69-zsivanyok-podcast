@@ -199,6 +199,24 @@
       <span class="ai-chat-launcher-icon" aria-hidden="true">✦</span><span class="ai-chat-launcher-label">Kérdezz az asszisztenstől</span><span class="ai-chat-launcher-pulse" aria-hidden="true"></span>
     </button>
   </div>
+  <dialog id="articleDialog" aria-labelledby="dialogTitle">
+  <div class="article-dialog-content">
+    <button
+      type="button"
+      id="dialogClose"
+      aria-label="Bezárás"
+    >×</button>
+
+    <p id="dialogCategory"></p>
+    <h2 id="dialogTitle"></h2>
+    <p id="dialogIntro"></p>
+    <div id="dialogBody"></div>
+
+    <button type="button" id="dialogDone">
+      Bezárás
+    </button>
+  </div>
+</dialog>
   <script src="chat.js"></script>
   <script src="articles.js"></script><script src="script.js"></script><script src="welcome-voice.js"></script>
 </body>
