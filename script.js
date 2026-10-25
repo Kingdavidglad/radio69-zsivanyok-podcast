@@ -1,10 +1,10 @@
-/* Dinamikus aktív menüpont-jelölés: az aktuális oldal/rovat alatt megjelenik a lila-cián vonal. */
+/* Dinamikus aktív menüpont-jelölés: a lap tetején mindig a Főoldal aktív. */
 (function () {
   const nav = document.querySelector('.main-nav');
   if (!nav) return;
 
   const links = Array.from(nav.querySelectorAll('a[href]'));
-  const pathFile = (pathname) => {
+  const pathFile = pathname => {
     const pieces = pathname.split('/').filter(Boolean);
     const last = pieces.length ? pieces[pieces.length - 1] : '';
     return last.toLowerCase().endsWith('.html') ? last.toLowerCase() : 'index.html';
@@ -21,7 +21,8 @@
   }
 
   function setActive(selected, currentIsSection = false) {
-    links.forEach((link) => {
+    if (!selected) return;
+    links.forEach(link => {
       const isActive = link === selected;
       link.classList.toggle('active', isActive);
       if (isActive) {
@@ -33,54 +34,63 @@
   }
 
   function findLinkForHash(hash) {
-    if (!hash) hash = '#home';
-    return links.find((link) => {
+    return links.find(link => {
       const dest = destination(link);
-      return dest.file === 'index.html' && dest.hash === hash;
+      return dest.file === 'index.html' && dest.hash === (hash || '#home');
     }) || null;
   }
 
-  function updateForLocation() {
-    if (currentFile !== 'index.html') {
-      const pageLink = links.find((link) => destination(link).file === currentFile);
-      if (pageLink) setActive(pageLink, false);
+  // A menü célpontjai közül csak az önálló, valóban látható szekciókat figyeljük.
+  const watched = currentFile === 'index.html'
+    ? links
+        .map(link => ({ link, dest: destination(link) }))
+        .filter(({ dest }) => dest.file === 'index.html' && dest.hash && dest.hash !== '#home')
+        .map(({ link, dest }) => ({ link, section: document.getElementById(dest.hash.slice(1)) }))
+        .filter(item => item.section)
+    : [];
+
+  function updateActiveFromScroll() {
+    if (currentFile !== 'index.html') return;
+
+    // Ha a látogató visszagörgetett a lap tetejére, a Főoldal legyen aktív,
+    // akkor is, ha a címsorban korábban például #temak maradt.
+    if (window.scrollY <= 120) {
+      setActive(findLinkForHash('#home'), true);
       return;
     }
-    const selected = findLinkForHash(window.location.hash || '#home');
-    if (selected) setActive(selected, Boolean(window.location.hash));
+
+    // A legközelebbi, aktiválási vonalat már elért szekció menüpontja legyen aláhúzva.
+    const activationLine = Math.min(window.innerHeight * 0.35, 240);
+    const passed = watched
+      .map(item => ({ ...item, top: item.section.getBoundingClientRect().top }))
+      .filter(item => item.top <= activationLine)
+      .sort((a, b) => b.top - a.top);
+
+    if (passed.length) {
+      setActive(passed[0].link, true);
+    } else {
+      setActive(findLinkForHash('#home'), true);
+    }
   }
 
-  // Azonnali kiemelés kattintáskor, majd frissítés a hash változásakor.
-  links.forEach((link) => {
-    link.addEventListener('click', () => {
-      const dest = destination(link);
-      if (currentFile === 'index.html' && dest.file === 'index.html' && dest.hash) {
-        setActive(link, true);
-      }
+  if (currentFile !== 'index.html') {
+    const pageLink = links.find(link => destination(link).file === currentFile);
+    if (pageLink) setActive(pageLink, false);
+  } else {
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        const dest = destination(link);
+        if (dest.file === 'index.html' && dest.hash) {
+          setActive(link, true);
+        }
+      });
     });
-  });
-  window.addEventListener('hashchange', updateForLocation);
-  updateForLocation();
 
-  // A főoldalon görgetés közben is kövesse, melyik szekció van éppen képernyőn.
-  if (currentFile === 'index.html' && 'IntersectionObserver' in window) {
-    const watched = links
-      .map((link) => ({ link, dest: destination(link) }))
-      .filter(({ dest }) => dest.file === 'index.html' && dest.hash)
-      .map(({ link, dest }) => ({ link, section: document.getElementById(dest.hash.slice(1)) }))
-      .filter((item) => item.section);
-
-    if (watched.length) {
-      const observer = new IntersectionObserver((entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (!visible) return;
-        const item = watched.find(({ section }) => section === visible.target);
-        if (item) setActive(item.link, true);
-      }, { rootMargin: '-18% 0px -62% 0px', threshold: [0, 0.15, 0.35] });
-      watched.forEach(({ section }) => observer.observe(section));
-    }
+    window.addEventListener('scroll', updateActiveFromScroll, { passive: true });
+    window.addEventListener('resize', updateActiveFromScroll);
+    window.addEventListener('hashchange', updateActiveFromScroll);
+    window.addEventListener('load', updateActiveFromScroll);
+    updateActiveFromScroll();
   }
 })();
 
