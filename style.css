@@ -733,3 +733,8 @@ main#home {
     margin-top: 4px;
   }
 }
+
+
+/* Médiaajánlat menüpont – közös stílus minden aloldalon */
+.main-nav a.nav-media-link{border:1px solid rgba(139,92,246,.42);border-radius:999px;padding:8px 11px;color:#d8ccff;background:rgba(124,58,237,.10);font-weight:700;white-space:nowrap}
+.main-nav a.nav-media-link:hover,.main-nav a.nav-media-link:focus-visible{color:#fff;border-color:rgba(34,211,238,.72);background:rgba(6,182,212,.10)}
