@@ -106,6 +106,48 @@
   }
 }
 </style>
+  <style>
+.main-nav a.nav-dev-link {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: auto !important;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: visible;
+}
+
+.main-nav a.nav-dev-link::after {
+  content: none !important;
+  display: none !important;
+}
+
+.main-nav a.nav-dev-link .nav-dev-dot {
+  flex: 0 0 7px;
+}
+
+@media (max-width: 520px) {
+  .main-nav {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .main-nav a.nav-dev-link {
+    padding: 8px 11px !important;
+    gap: 7px;
+  }
+
+  .main-nav a.nav-dev-link .nav-dev-badge {
+    display: none !important;
+  }
+}
+</style>
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div><div class="ambient ambient-two" aria-hidden="true"></div>
@@ -118,10 +160,9 @@
     <button class="menu-toggle" id="menuToggle" aria-label="Navigáció megnyitása" aria-expanded="false"><span></span><span></span><span></span></button>
     <nav class="main-nav" id="mainNav" aria-label="Fő navigáció">
       <a class="active" href="#home">Főoldal</a><a href="#friss">Olvasnivalók</a><a href="#temak">Témák</a><a href="#radio69">Rádió69</a><a href="#podcast">Zsiványok Podcast</a><a href="dj-k.html">DJ-k</a><a href="rendezvenyek.html">Rendezvények</a><a href="#kozosseg">Közösség</a><a href="rolunk-kapcsolat.html#rolunk">Rólunk</a><a href="mediaajanlat.html">Médiaajánlat</a>
-    <a href="folyamatos-fejlesztes.html" class="nav-dev-link">
-  <span class="nav-dev-dot"></span>
+  <a href="folyamatos-fejlesztes.html" class="nav-dev-link">
+  <span class="nav-dev-dot" aria-hidden="true"></span>
   <span>Fejlődünk</span>
-  <span class="nav-dev-badge">ÚJDONSÁG</span>
 </a>
     </nav>
     <a class="header-link" href="rolunk-kapcsolat.html#kapcsolat">KAPCSOLAT <span>↗</span></a>
