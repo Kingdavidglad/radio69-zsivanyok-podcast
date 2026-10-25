@@ -413,6 +413,64 @@
     }
     @media (prefers-reduced-motion: reduce) { .podcast-team-link, .podcast-team-link__arrow { transition: none; } .podcast-team-link:hover { transform: none; } }
   </style>
+
+  <style id="radio69-story-wheel-style">
+    .story-wheel-section { padding-top: 12px; }
+    .story-wheel-card {
+      position: relative; isolation: isolate; overflow: hidden;
+      display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+      align-items: center; gap: clamp(26px, 5vw, 58px);
+      padding: clamp(24px, 4.5vw, 48px); border-radius: 28px;
+      border: 1px solid rgba(139,92,246,.48);
+      background:
+        radial-gradient(circle at 85% 12%, rgba(6,182,212,.16), transparent 29%),
+        radial-gradient(circle at 0% 100%, rgba(236,72,153,.12), transparent 34%),
+        linear-gradient(135deg, rgba(25,18,47,.98), rgba(9,17,32,.98));
+      box-shadow: 0 22px 55px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.045);
+    }
+    .story-wheel-card::before, .story-wheel-card::after {
+      content: ""; position: absolute; z-index: -1; border-radius: 50%; pointer-events: none;
+      border: 1px solid rgba(103,232,249,.16);
+    }
+    .story-wheel-card::before { width: 260px; height: 260px; right: -145px; top: -155px; box-shadow: 0 0 0 22px rgba(103,232,249,.025), 0 0 0 46px rgba(167,139,250,.025); }
+    .story-wheel-card::after { width: 150px; height: 150px; left: -105px; bottom: -95px; border-color: rgba(167,139,250,.2); }
+    .story-wheel-copy { max-width: 650px; }
+    .story-wheel-kicker { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 13px; color: #67e8f9; font-size: .72rem; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
+    .story-wheel-kicker-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22d3ee; box-shadow: 0 0 14px rgba(34,211,238,.8); }
+    .story-wheel-copy h2 { margin: 0 0 14px; color: #fff; font-family: 'Outfit', sans-serif; font-size: clamp(1.9rem, 3.8vw, 3rem); line-height: 1.08; letter-spacing: -.04em; }
+    .story-wheel-copy h2 span { color: #a78bfa; background: linear-gradient(90deg,#c4b5fd,#67e8f9,#f0abfc); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .story-wheel-copy > p { max-width: 560px; margin: 0; color: #cbd5e1; font-size: .98rem; line-height: 1.8; }
+    .story-wheel-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+    .story-wheel-tags span { padding: 7px 10px; border: 1px solid rgba(167,139,250,.22); border-radius: 999px; color: #dcd6f7; background: rgba(255,255,255,.035); font-size: .75rem; font-weight: 650; }
+    .story-wheel-button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; margin-top: 24px; padding: 13px 19px; border: 1px solid rgba(103,232,249,.55); border-radius: 14px; color: #fff; background: linear-gradient(110deg,#6d28d9,#4f46e5 58%,#0e7490); box-shadow: 0 10px 28px rgba(79,70,229,.22); font: inherit; font-size: .9rem; font-weight: 800; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, filter .2s ease; }
+    .story-wheel-button:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.09); box-shadow: 0 13px 32px rgba(79,70,229,.32); }
+    .story-wheel-button:focus-visible, .story-wheel-result-link:focus-visible { outline: 3px solid #67e8f9; outline-offset: 4px; }
+    .story-wheel-button:disabled { opacity: .75; cursor: progress; }
+    .story-wheel-status { min-height: 49px; margin: 17px 0 0; color: #b9b7d2; font-size: .9rem; line-height: 1.65; }
+    .story-wheel-status strong { color: #fff; }
+    .story-wheel-result-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 3px; color: #67e8f9; font-size: .88rem; font-weight: 800; text-decoration: none; }
+    .story-wheel-result-link:hover { color: #c4b5fd; }
+    .story-wheel-result-link[hidden] { display: none; }
+    .story-wheel-visual { display: grid; justify-items: center; gap: 17px; min-width: 0; }
+    .story-wheel-disc-wrap { position: relative; width: min(100%, 352px); aspect-ratio: 1; filter: drop-shadow(0 18px 28px rgba(0,0,0,.34)); }
+    .story-wheel-pointer { position: absolute; top: -5px; left: 50%; z-index: 3; width: 0; height: 0; transform: translateX(-50%); border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 29px solid #f0abfc; filter: drop-shadow(0 2px 5px rgba(0,0,0,.4)); }
+    .story-wheel-disc { position: absolute; inset: 0; overflow: hidden; border: 6px solid rgba(241,245,249,.9); border-radius: 50%; background: conic-gradient(from 0deg, #7c3aed 0deg 57deg, #d8b4fe 57deg 60deg, #0891b2 60deg 117deg, #a5f3fc 117deg 120deg, #db2777 120deg 177deg, #fbcfe8 177deg 180deg, #4338ca 180deg 237deg, #c7d2fe 237deg 240deg, #0f766e 240deg 297deg, #99f6e4 297deg 300deg, #9333ea 300deg 357deg, #e9d5ff 357deg 360deg); box-shadow: inset 0 0 0 2px rgba(255,255,255,.12), 0 0 0 1px rgba(103,232,249,.4); transform: rotate(0deg); transition: transform 4.8s cubic-bezier(.12,.72,.12,1); will-change: transform; }
+    .story-wheel-disc::before { content: ""; position: absolute; inset: 8px; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; pointer-events: none; }
+    .story-wheel-label { position: absolute; display: grid; place-items: center; width: 78px; min-height: 31px; padding: 3px 4px; box-sizing: border-box; border-radius: 8px; color: #fff; text-align: center; font-size: .72rem; line-height: 1.05; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,.45); background: rgba(9,9,25,.15); }
+        .story-wheel-label { transform: translate(-50%,-50%); }
+    .story-wheel-label:nth-child(1) { left: 65%; top: 24%; }
+    .story-wheel-label:nth-child(2) { left: 76%; top: 50%; }
+    .story-wheel-label:nth-child(3) { left: 65%; top: 76%; }
+    .story-wheel-label:nth-child(4) { left: 35%; top: 76%; }
+    .story-wheel-label:nth-child(5) { left: 24%; top: 50%; }
+    .story-wheel-label:nth-child(6) { left: 35%; top: 24%; }
+    .story-wheel-hub { position: absolute; z-index: 2; top: 50%; left: 50%; display: grid; place-items: center; width: 68px; height: 68px; transform: translate(-50%,-50%); border: 4px solid rgba(255,255,255,.86); border-radius: 50%; background: radial-gradient(circle at 30% 25%,#27204d,#090b1a 75%); box-shadow: 0 0 0 5px rgba(10,15,35,.24), 0 0 24px rgba(103,232,249,.3); color: #fff; font-family: 'Outfit',sans-serif; font-size: 18px; font-weight: 900; letter-spacing: -.06em; pointer-events: none; }
+    .story-wheel-caption { margin: 0; color: #8f91ae; text-align: center; font-size: .72rem; letter-spacing: .04em; }
+    @media (max-width: 760px) { .story-wheel-card { grid-template-columns: minmax(0,1fr); gap: 32px; padding: 27px 20px; border-radius: 22px; } .story-wheel-copy h2 { font-size: clamp(1.8rem,8vw,2.55rem); } .story-wheel-visual { grid-row: 1; } .story-wheel-disc-wrap { width: min(82vw, 330px); } }
+    @media (max-width: 400px) { .story-wheel-label { width: 67px; font-size: .64rem; } .story-wheel-hub { width: 60px; height: 60px; font-size: 16px; } .story-wheel-button { width: 100%; box-sizing: border-box; } }
+    @media (prefers-reduced-motion: reduce) { .story-wheel-button { transition: none; } .story-wheel-disc { transition-duration: 1ms; } }
+  </style>
+
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div><div class="ambient ambient-two" aria-hidden="true"></div>
@@ -494,6 +552,36 @@
         </aside>
       </div>
       <p class="editorial-note"><span>ⓘ</span> A műsorinfókhoz és a podcastos háttéranyagokhoz forráslinket tettünk. A műsorrend változhat; az aktuális időpontokat mindig a Rádió69 hivatalos oldalán ellenőrizd. A cikkekben szereplő stúdió- és koncertfotók illusztrációk.</p>
+    </section>
+
+
+    <section class="page-width section story-wheel-section" id="sztorikerek" aria-labelledby="storyWheelTitle">
+      <div class="story-wheel-card">
+        <div class="story-wheel-copy">
+          <span class="story-wheel-kicker"><span class="story-wheel-kicker-dot" aria-hidden="true"></span> EGY KIS RÁDIÓS JÁTÉK</span>
+          <h2 id="storyWheelTitle">Nem tudod, mit olvass? <span>Pörgesd meg!</span></h2>
+          <p>A Rádió69 × Zsiványok sztorikereke véletlenszerűen választ neked egy témát. Egy pörgetés, egy új sztori — nézd meg, hová vezet a szerencséd!</p>
+          <div class="story-wheel-tags" aria-label="A kerék témái"><span>🎙️ Podcast</span><span>🎵 TOP 40</span><span>✨ Kulisszák</span></div>
+          <button class="story-wheel-button" id="storyWheelSpinButton" type="button"><span aria-hidden="true">✦</span> Pörgetem a kereket <span aria-hidden="true">↗</span></button>
+          <p class="story-wheel-status" id="storyWheelStatus" role="status" aria-live="polite">Készen állsz? Pörgess egyet, és fedezz fel egy új történetet!</p>
+          <a class="story-wheel-result-link" id="storyWheelResultLink" href="#friss" hidden>Megnézem a témát <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="story-wheel-visual" aria-label="Interaktív témaválasztó kerék">
+          <div class="story-wheel-disc-wrap">
+            <span class="story-wheel-pointer" aria-hidden="true"></span>
+            <div class="story-wheel-disc" id="storyWheelDisc" aria-hidden="true">
+              <span class="story-wheel-label">ZeneDoboz</span>
+              <span class="story-wheel-label">Magyar TOP 40</span>
+              <span class="story-wheel-label">Podcastvendég</span>
+              <span class="story-wheel-label">Rádió69</span>
+              <span class="story-wheel-label">Kulisszák</span>
+              <span class="story-wheel-label">Podcasttippek</span>
+            </div>
+            <span class="story-wheel-hub" aria-hidden="true">69</span>
+          </div>
+          <p class="story-wheel-caption">RÁDIÓ69 × ZSIVÁNYOK · TEKERD MEG A KEREKET</p>
+        </div>
+      </div>
     </section>
 
     <section class="page-width section radio-world-section" id="radio69">
@@ -622,6 +710,7 @@
   <script src="articles.js"></script><script src="script.js"></script>
 
   <!-- Rádió69 hangos üdvözlés -->
+  <script src="radio69-sztorikerek.js"></script>
   <script src="welcome-voice.js"></script>
 
 </body>
