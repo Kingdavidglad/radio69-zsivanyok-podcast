@@ -1,6 +1,6 @@
-/* Rádió69 – díjmentes, böngészőbe épített hangos köszöntés.
-   A magyar nyelvű, nőinek tűnő hangokat részesíti előnyben, különösen a Natural/Online hangokat.
-   A ténylegesen elérhető hangok a látogató böngészőjétől és operációs rendszerétől függenek.
+/* Rádió69 – előre elkészített magyar hangos köszöntés.
+   A beszédhangot a radio69-udvozles.mp3 fájl tartalmazza.
+   Tedd ezt a két fájlt ugyanabba a mappába (a weboldal gyökérmappájába).
 */
 (() => {
   'use strict';
@@ -8,9 +8,14 @@
   if (document.documentElement.dataset.radio69WelcomeLoaded === 'true') return;
   document.documentElement.dataset.radio69WelcomeLoaded = 'true';
 
+  // Ennek a szövegnek megfelelően készült az MP3-felvétel.
   const greeting = 'Üdvözlünk a Rádió69 oldalán! Örülünk, hogy benéztél hozzánk. Kapcsolódj ki, élvezd műsorainkat és a jó zenéket. Kellemes rádiózást kívánunk!';
-  const supported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
-  const synth = supported ? window.speechSynthesis : null;
+  const supported = typeof window.Audio === 'function';
+  const audio = supported ? new Audio('radio69-udvozles.mp3') : null;
+  if (audio) {
+    audio.preload = 'auto';
+    audio.volume = 0.95;
+  }
 
   function initialize() {
     if (document.getElementById('radio69WelcomeButton')) return;
@@ -41,16 +46,14 @@
     button.textContent = supported ? '🔊 Köszöntés meghallgatása' : 'A hangos köszöntés nem támogatott';
     button.setAttribute('aria-label', 'Rádió69 hangos köszöntés meghallgatása');
     button.title = supported
-      ? 'Női magyar hangot választ, ha elérhető. Ha az automatikus lejátszást a böngésző blokkolja, kattints ide.'
-      : 'Ez a böngésző nem támogatja a beépített beszédszintetizátort.';
+      ? 'Az üdvözlés előre felvett hanggal szól. Ha az automatikus lejátszást a böngésző blokkolja, kattints ide.'
+      : 'Ez a böngésző nem támogatja a hang lejátszását.';
     if (!supported) button.disabled = true;
     document.body.appendChild(button);
 
-    if (!supported) return;
+    if (!supported || !audio) return;
 
     let speaking = false;
-    let autoStartedOrAttempted = false;
-    let voiceWaitTimer = null;
 
     function resetButton() {
       speaking = false;
@@ -58,93 +61,46 @@
       button.setAttribute('aria-label', 'Rádió69 hangos köszöntés meghallgatása');
     }
 
-    function getPreferredHungarianVoice() {
-      const voices = synth.getVoices() || [];
-      const huVoices = voices.filter(voice => /^hu(?:[-_]|$)/i.test(voice.lang || '') || /hungarian|magyar/i.test(voice.name || ''));
-      if (!huVoices.length) return null;
+    function playGreeting() {
+      if (!audio) return;
 
-      // A Web Speech API nem ad külön nemet a hangokhoz, ezért név alapján csak becsülni lehet.
-      const femaleHints = /(no[eé]mi|anna|katalin|judit|ildik[oó]|[eé]va|zs[oó]fia|t[ií]mea|[aá]gnes|j[uú]lia|emese|enik[oő]|kinga|vikt[oó]ria|eszter|female|woman|n[oő]i)/i;
-      const naturalHints = /(natural|neural|online)/i;
-      const rank = voice => {
-        let score = 0;
-        const label = `${voice.name || ''} ${voice.voiceURI || ''}`;
-        if (femaleHints.test(label)) score += 100;
-        if (naturalHints.test(label)) score += 25;
-        if (voice.default) score += 5;
-        return score;
-      };
-      return huVoices.sort((a, b) => rank(b) - rank(a))[0];
-    }
-
-    function speakGreeting() {
-      if (!supported) return;
-
-      if (synth.speaking || speaking) {
-        synth.cancel();
+      if (speaking || !audio.paused) {
+        audio.pause();
+        audio.currentTime = 0;
         resetButton();
         return;
       }
 
       try {
-        synth.cancel();
-        const utterance = new SpeechSynthesisUtterance(greeting);
-        utterance.lang = 'hu-HU';
-        utterance.rate = 0.94;
-        utterance.pitch = 1.03;
-        utterance.volume = 0.95;
-
-        const selectedVoice = getPreferredHungarianVoice();
-        if (selectedVoice) utterance.voice = selectedVoice;
-
-        utterance.onstart = () => {
-          speaking = true;
-          button.textContent = '⏹ Köszöntés leállítása';
-          button.setAttribute('aria-label', 'Rádió69 hangos köszöntés leállítása');
-        };
-        utterance.onend = resetButton;
-        utterance.onerror = resetButton;
-        synth.speak(utterance);
+        audio.currentTime = 0;
+        speaking = true;
+        button.textContent = '⏹ Köszöntés leállítása';
+        button.setAttribute('aria-label', 'Rádió69 hangos köszöntés leállítása');
+        const playback = audio.play();
+        if (playback && typeof playback.then === 'function') {
+          playback.catch(resetButton);
+        }
       } catch (_error) {
         resetButton();
       }
     }
 
-    button.addEventListener('click', speakGreeting);
+    audio.addEventListener('ended', resetButton);
+    audio.addEventListener('error', resetButton);
+    button.addEventListener('click', playGreeting);
 
-    // A hanglista néhány böngészőben csak később töltődik be. Ilyenkor megvárjuk,
-    // hogy legyen esélyünk a megfelelő magyar hangot kiválasztani.
-    function attemptAutoGreeting() {
-      if (autoStartedOrAttempted || document.visibilityState !== 'visible') return;
-      autoStartedOrAttempted = true;
-      speakGreeting();
-    }
-
-    const storageKey = 'radio69WelcomeAttemptedV3';
+    // Automatikus indítás: a böngésző letilthatja, ezért a kézi indítógomb mindig elérhető.
+    const storageKey = 'radio69WelcomeAttemptedV4';
     let shouldAttempt = true;
     try {
       if (sessionStorage.getItem(storageKey)) shouldAttempt = false;
       else sessionStorage.setItem(storageKey, '1');
     } catch (_error) {
-      // Ha a tárhely nem érhető el, ettől még megpróbáljuk egyszer elindítani.
+      // A tárhely hiánya nem akadályozza a kézi hangindítást.
     }
 
     if (shouldAttempt && document.visibilityState === 'visible') {
-      if (synth.getVoices().length) {
-        attemptAutoGreeting();
-      } else {
-        const onVoicesChanged = () => {
-          if (!synth.getVoices().length) return;
-          synth.removeEventListener('voiceschanged', onVoicesChanged);
-          if (voiceWaitTimer) window.clearTimeout(voiceWaitTimer);
-          attemptAutoGreeting();
-        };
-        synth.addEventListener('voiceschanged', onVoicesChanged);
-        voiceWaitTimer = window.setTimeout(() => {
-          synth.removeEventListener('voiceschanged', onVoicesChanged);
-          attemptAutoGreeting();
-        }, 1200);
-      }
+      window.setTimeout(playGreeting, 700);
     }
   }
 
