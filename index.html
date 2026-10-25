@@ -197,6 +197,77 @@
     }
   </style>
 
+
+  <style id="hosting-credits-style">
+    .hosting-credits {
+      flex: 0 0 100%;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px 20px;
+      width: 100%;
+      margin-top: 8px;
+      padding: 16px 0 2px;
+      border-top: 1px solid rgba(167, 139, 250, 0.16);
+      color: #9696ad;
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: left;
+    }
+    .hosting-credits__label {
+      flex: 0 0 100%;
+      color: #b9b3d2;
+      font-weight: 600;
+      text-align: center;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+    .hosting-credits__item {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 190px;
+      padding: 8px 12px;
+      border: 1px solid rgba(167, 139, 250, .16);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .025);
+      color: #aeb0c6;
+      text-decoration: none;
+      transition: border-color .2s ease, background .2s ease, transform .2s ease;
+    }
+    .hosting-credits__item:hover,
+    .hosting-credits__item:focus-visible {
+      border-color: rgba(34, 211, 238, .45);
+      background: rgba(6, 182, 212, .06);
+      color: #f4f4ff;
+      transform: translateY(-1px);
+      text-decoration: none;
+      outline: none;
+    }
+    .hosting-credits__icon {
+      display: block;
+      flex: 0 0 32px;
+      width: 32px;
+      height: 32px;
+    }
+    .hosting-credits__copy { display: flex; flex-direction: column; gap: 1px; }
+    .hosting-credits__role { color: #85869e; font-size: 10px; }
+    .hosting-credits__name { color: #d8d5ee; font-size: 12px; font-weight: 700; }
+    .hosting-credits__item:hover .hosting-credits__name,
+    .hosting-credits__item:focus-visible .hosting-credits__name { color: #67e8f9; }
+    @media (max-width: 520px) {
+      .hosting-credits { gap: 8px; padding-top: 12px; }
+      .hosting-credits__item { width: min(100%, 300px); box-sizing: border-box; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hosting-credits__item { transition: none; }
+      .hosting-credits__item:hover { transform: none; }
+    }
+  </style>
+
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div><div class="ambient ambient-two" aria-hidden="true"></div>
@@ -350,7 +421,25 @@
 
   </main>
 
-  <footer class="site-footer page-width"><a class="footer-brand" href="#home"><img src="assets/radio69-icon.png" alt="" aria-hidden="true"><span>RÁDIÓ<span>69</span><small>× ZSIVÁNYOK PODCAST</small></span></a><span class="footer-middle">Zene. Történetek. Közösség.</span><a class="footer-policy-link" href="rolunk-kapcsolat.html">Rólunk / Kapcsolat</a><a class="footer-policy-link" href="dj-k.html">DJ-k</a><a class="footer-policy-link" href="adatvedelem.html">Adatvédelem</a><span class="copyright">© <span id="year"></span> Rádió69 × Zsiványok</span></footer>
+  <footer class="site-footer page-width"><a class="footer-brand" href="#home"><img src="assets/radio69-icon.png" alt="" aria-hidden="true"><span>RÁDIÓ<span>69</span><small>× ZSIVÁNYOK PODCAST</small></span></a><span class="footer-middle">Zene. Történetek. Közösség.</span><a class="footer-policy-link" href="rolunk-kapcsolat.html">Rólunk / Kapcsolat</a><a class="footer-policy-link" href="dj-k.html">DJ-k</a><a class="footer-policy-link" href="adatvedelem.html">Adatvédelem</a><span class="copyright">© <span id="year"></span> Rádió69 × Zsiványok</span>
+    <div class="hosting-credits" aria-label="Szolgáltatói információk">
+      <span class="hosting-credits__label">Szolgáltatói információk</span>
+      <a class="hosting-credits__item" href="https://pages.github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub Pages – webtárhelyszolgáltatás">
+        <svg class="hosting-credits__icon" viewBox="0 0 32 32" role="img" aria-label="GitHub ikon" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="16" fill="#242938"/>
+          <path fill="#fff" d="M16 .8C7.6.8.8 7.6.8 16c0 6.7 4.3 12.4 10.3 14.4.8.1 1.1-.3 1.1-.7v-2.5c-4.2.9-5.1-1.8-5.1-1.8-.7-1.8-1.7-2.3-1.7-2.3-1.4-1 .1-1 .1-1 1.5.1 2.3 1.5 2.3 1.5 1.3 2.2 3.3 1.6 4.1 1.2.1-1 .5-1.6.9-2-3.4-.4-7-1.7-7-7.4 0-1.6.6-2.9 1.5-3.9-.2-.4-.7-1.9.1-3.9 0 0 1.2-.4 4.1 1.5a14 14 0 0 1 7.5 0c2.8-1.9 4.1-1.5 4.1-1.5.8 2 .3 3.5.1 3.9 1 1 1.5 2.3 1.5 3.9 0 5.7-3.5 7-6.9 7.4.5.4 1 1.2 1 2.5v3.7c0 .4.3.8 1.1.7 6-2 10.3-7.7 10.3-14.4C31.2 7.6 24.4.8 16 .8Z" transform="translate(1.1 0.1) scale(.93)"/>
+        </svg>
+        <span class="hosting-credits__copy"><span class="hosting-credits__role">Webtárhely</span><span class="hosting-credits__name">GitHub Pages ↗</span></span>
+      </a>
+      <a class="hosting-credits__item" href="https://www.rackhost.hu/" target="_blank" rel="noopener noreferrer" aria-label="Rackhost – domainregisztráció">
+        <svg class="hosting-credits__icon" viewBox="0 0 32 32" role="img" aria-label="Rackhost ikon" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="rackhostIconGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e879f9"/><stop offset=".48" stop-color="#d946ef"/><stop offset="1" stop-color="#a21caf"/></linearGradient></defs>
+          <circle cx="16" cy="16" r="16" fill="url(#rackhostIconGradient)"/>
+          <path d="M9 7.6h8.1c4.1 0 6.2 2 6.2 5.2 0 2.4-1.2 4-3.4 4.8l4.1 6.7h-5.1l-3.5-6.1h-2v6.1H9V7.6Zm4.4 3.8v5h3.2c1.5 0 2.4-.8 2.4-2.5 0-1.6-.9-2.5-2.4-2.5h-3.2Z" fill="#fff"/>
+        </svg>
+        <span class="hosting-credits__copy"><span class="hosting-credits__role">Domainregisztráció</span><span class="hosting-credits__name">Rackhost ↗</span></span>
+      </a>
+    </div></footer>
   <div class="ai-chat-widget" id="aiChatWidget">
     <section class="ai-chat-panel" id="aiChatPanel" aria-label="Rádió69 AI chat" hidden>
       <header class="ai-chat-header">
