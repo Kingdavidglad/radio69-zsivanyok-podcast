@@ -84,164 +84,175 @@
   }
 })();
 
-const articles = [
-  {
-    id: 'podcast-works', category: 'Zsiványok Podcast', tag: 'PODCAST', tone: 'art-purple', icon: '🎙',
-    title: 'Mitől lesz egy beszélgetésből igazán jó podcastélmény?',
-    excerpt: 'A jó podcast több, mint mikrofon és néhány kérdés. A hangulat és a váratlan történetek teszik emlékezetessé.',
-    intro: 'A legjobb beszélgetésekben van valami megismételhetetlen: természetesek, néha meglepőek, és a hallgató úgy érzi, mintha ő is ott ülne az asztalnál.',
-    body: [
-      'A technika fontos, de önmagában nem elég. Egy jó epizód alapja a kíváncsiság: olyan kérdések, amelyekre nem előre betanult válaszok érkeznek, hanem valódi történetek.',
-      'A humor, a figyelem és a spontán reakciók segítenek abban, hogy egy beszélgetés ne egyszerű kérdés-felelet legyen. A hallgatók gyakran éppen az apró, váratlan pillanatokra emlékeznek a legtovább.',
-      'A Zsiványok Podcast világában ez adja a jó sztorik egyik legizgalmasabb alapanyagát: őszinte megszólalások, könnyed hangulat és témák, amelyekről az adás után is lehet beszélgetni.'
-    ]
-  },
-  {
-    id: 'radio-show', category: 'Kulisszák mögött', tag: 'RÁDIÓS ÉLET', tone: 'art-blue', icon: '🎚️',
-    title: 'Mi minden történik a mikrofon mögött egy rádióműsor alatt?',
-    excerpt: 'A hallgatók a kész műsort hallják, de a háttérben időzítés, előkészület és egy kis improvizáció is dolgozik.',
-    intro: 'Egy gördülékeny rádióműsor mögött több apró feladat dolgozik együtt, mint elsőre gondolnánk.',
-    body: [
-      'A felkészülés a témák, az információk és a műsor ívének összeállításával kezdődik. Fontos, hogy a műsorvezető tudja, mi következik, ugyanakkor maradjon hely a spontán reakcióknak is.',
-      'A pontos időzítés, a megfelelő hangulat és az átvezetések mind hozzájárulnak ahhoz, hogy a műsor természetesnek hasson. A hallgató ebből legtöbbször csak annyit érzékel: jó együtt lenni az adással.',
-      'A rádiózás egyszerre tervezés és pillanatnyi jelenlét — ettől tud egy műsor személyes és élő lenni.'
-    ]
-  },
-  {
-    id: 'music-trends', category: 'Zene', tag: 'ZENE', tone: 'art-pink', icon: '🎵',
-    title: 'Miért ragad meg bennünk egy refrén már első hallásra?',
-    excerpt: 'A dallam, a ritmus és az ismétlés együtt könnyen emlékezetessé tehet egy zenei pillanatot.',
-    intro: 'Van az a dal, amelynek a refrénjét akkor is dúdoljuk, amikor már rég kikapcsoltuk a zenét. Ennek több oka is lehet.',
-    body: [
-      'Az egyszerűen követhető dallamfordulatok és az ismétlődő motívumok segítenek az agynak felismerni, majd megjegyezni a zenét. A ritmus pedig testi élménnyé is teszi a hallgatást.',
-      'A hangzás, a szöveg és az érzelmi kapcsolódás szintén szerepet játszik. Egy refrén sokszor azért marad velünk, mert egy adott időszakhoz, helyzethez vagy emlékhez kötődik.',
-      'A sláger születése persze nem pontos recept — éppen az teszi különlegessé a zenét, hogy a váratlan ötletek is működhetnek.'
-    ]
-  },
-  {
-    id: 'short-video', category: 'Digitális kultúra', tag: 'ONLINE VILÁG', tone: 'art-orange', icon: '📱',
-    title: 'Rövid videók, nagy ötletek: mitől állunk meg görgetés közben?',
-    excerpt: 'Egy erős nyitás felkelti a figyelmet, de a tartalomnak utána is meg kell tartania a nézőt.',
-    intro: 'A rövid videók versenyében az első másodpercek sokat számítanak — de az erős kezdés önmagában még nem minden.',
-    body: [
-      'A néző gyorsan szeretné megérteni, miről szól a videó, ezért sokat segít egy világos helyzet, egy érdekes kérdés vagy egy meglepő képi pillanat.',
-      'A legjobb rövid tartalmaknak van ívük: ígéretet tesznek, majd valóban adnak is valamit a nézőnek — egy nevetést, egy információt vagy egy felismerést.',
-      'Az alkotóknak érdemes figyelniük a visszajelzésekre, de közben megtalálniuk azt a saját hangot is, amely miatt a közönség később is visszatér.'
-    ]
-  },
-  {
-    id: 'behind-scenes', category: 'Kulisszák mögött', tag: 'KULISSZATITOK', tone: 'art-green', icon: '✨',
-    title: 'A bakik és spontán pillanatok néha a legjobb történetek',
-    excerpt: 'Nem minden emlékezetes pillanat szerepel a forgatókönyvben. Néha épp az improvizáció teszi emberivé a műsort.',
-    intro: 'A tervezés biztonságot ad, de egy élő beszélgetés vagy forgatás pont attól lehet izgalmas, hogy nem lehet minden pillanatát előre kiszámítani.',
-    body: [
-      'Egy elrontott szó, egy váratlan nevetés vagy egy különös közjáték elsőre hibának tűnhet, de megfelelő helyzetben oldhatja a feszültséget és közelebb hozhatja egymáshoz a szereplőket.',
-      'Persze nem minden baki való a végleges anyagba. A lényeg az, hogy a spontán pillanatok ne legyenek erőltetettek, és illeszkedjenek a tartalom hangulatához.',
-      'A kulisszák mögötti történetek azért is népszerűek, mert megmutatják az elkészült műsor emberi oldalát.'
-    ]
-  },
-  {
-    id: 'artist-story', category: 'Zene', tag: 'ELŐADÓK', tone: 'art-indigo', icon: '🌟',
-    title: 'Egy előadó története sokszor legalább olyan izgalmas, mint a dalai',
-    excerpt: 'A zene mellett az inspiráció, a pályakezdés és a meghatározó pillanatok is közelebb hozhatják az előadókat.',
-    intro: 'Egy dal önmagában is hatásos lehet, de a mögötte álló történet új rétegeket adhat a hallgatói élményhez.',
-    body: [
-      'Mi inspirálta a dalt? Milyen út vezetett az első fellépéstől a nagyobb színpadokig? Az ilyen kérdések segíthetnek jobban megérteni az előadó hangzását és döntéseit.',
-      'A háttértörténet nem helyettesíti a zenét, inkább kiegészíti azt. Egy új információ után gyakran más füllel hallgatjuk meg ugyanazt a számot.',
-      'Ezért is izgalmasak a zenei portrék és a személyes beszélgetések: a slágerek mögött emberek, élmények és kreatív döntések vannak.'
-    ]
+/* Olvasnivalók – a cikkadatokat az articles.js szolgáltatja. */
+(() => {
+  const articleData = window.RADIO69_ARTICLES;
+  if (!Array.isArray(articleData)) {
+    console.warn('Az articles.js cikklistája nem érhető el; a beépített HTML-listát megtartom.');
+    return;
   }
-];
 
-const grid = document.getElementById('articleGrid');
-const searchInput = document.getElementById('articleSearch');
-const filterButtons = [...document.querySelectorAll('.filter-chip')];
-const emptyState = document.getElementById('emptyState');
-const dialog = document.getElementById('articleDialog');
-let currentFilter = 'Összes';
+  const articles = articleData.filter(article => article && article.draft !== true);
+  const grid = document.getElementById('articleGrid');
+  if (!grid) return; // Ne fusson a cikklista-kód a többi HTML-oldalon.
 
-function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, character => ({
+  const searchInput = document.getElementById('articleSearch');
+  const sortSelect = document.getElementById('articleSort');
+  const countLabel = document.getElementById('articleCount');
+  const emptyState = document.getElementById('emptyState');
+  const picksGrid = document.getElementById('editorPicks');
+  const filterButtons = Array.from(document.querySelectorAll('.filter-chip'));
+  const quickFilterLinks = Array.from(document.querySelectorAll('[data-quick-filter]'));
+  let currentFilter = 'Összes';
+
+  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-  }[character]));
-}
+  }[char]));
 
-function renderArticles() {
-  const query = searchInput.value.trim().toLocaleLowerCase('hu-HU');
-  const visibleArticles = articles.filter(article => {
-    const matchesFilter = currentFilter === 'Összes' || article.category === currentFilter;
-    const searchable = `${article.title} ${article.excerpt} ${article.category} ${article.tag}`.toLocaleLowerCase('hu-HU');
-    return matchesFilter && searchable.includes(query);
-  });
-  grid.innerHTML = visibleArticles.map(article => `
-    <article class="article-card">
-      <div class="article-art ${article.tone}"><span class="art-tag">${escapeHtml(article.tag)}</span><span class="art-symbol" aria-hidden="true">${article.icon}</span></div>
-      <div class="article-card-body">
-        <div class="article-meta">${escapeHtml(article.category.toLocaleUpperCase('hu-HU'))}</div>
-        <h3>${escapeHtml(article.title)}</h3>
-        <p>${escapeHtml(article.excerpt)}</p>
-        <div class="card-bottom"><span>ÉRDEKESSÉG • SZERKESZTŐSÉGI TÉMA</span><button type="button" data-open-article="${escapeHtml(article.id)}">Tovább <span>↗</span></button></div>
-      </div>
-    </article>`).join('');
-  emptyState.hidden = visibleArticles.length > 0;
-}
+  const minutesFrom = value => {
+    const match = String(value || '').match(/\d+/);
+    return match ? Number(match[0]) : 3;
+  };
 
-function openArticle(articleId) {
-  const article = articles.find(item => item.id === articleId);
-  if (!article) return;
-  document.getElementById('dialogCategory').textContent = `${article.category.toLocaleUpperCase('hu-HU')}  /  ${article.tag}`;
-  document.getElementById('dialogTitle').textContent = article.title;
-  document.getElementById('dialogIntro').textContent = article.intro;
-  document.getElementById('dialogBody').innerHTML = article.body.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('');
-  if (typeof dialog.showModal === 'function') dialog.showModal();
-  else dialog.setAttribute('open', '');
-}
-
-filterButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    currentFilter = button.dataset.filter;
-    filterButtons.forEach(item => {
-      const selected = item === button;
-      item.classList.toggle('selected', selected);
-      item.setAttribute('aria-pressed', String(selected));
+  const formatDate = value => {
+    if (!value) return '';
+    const date = new Date(`${value}T00:00:00Z`);
+    if (Number.isNaN(date.getTime())) return '';
+    return date.toLocaleDateString('hu-HU', {
+      year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC'
     });
-    renderArticles();
-  });
-  button.setAttribute('aria-pressed', String(button.classList.contains('selected')));
-});
-searchInput.addEventListener('input', renderArticles);
-document.addEventListener('click', event => {
-  const trigger = event.target.closest('[data-open-article]');
-  if (trigger) openArticle(trigger.dataset.openArticle);
-  const quickFilter = event.target.closest('[data-quick-filter]');
-  if (quickFilter) {
-    currentFilter = quickFilter.dataset.quickFilter;
+  };
+
+  const articleHref = article => `cikkek/${encodeURIComponent(article.id)}.html`;
+
+  function renderHero() {
+    const hero = document.querySelector('.hero-feature');
+    const article = articles.find(item => item.featured) || articles[0];
+    if (!hero || !article) return;
+
+    hero.href = articleHref(article);
+    hero.setAttribute('aria-label', `Kiemelt cikk: ${article.title || ''}`);
+    const image = hero.querySelector('img');
+    if (image && article.image) {
+      image.src = article.image;
+      image.alt = article.imageAlt || article.title || '';
+    }
+    const kicker = hero.querySelector('.mini-kicker');
+    if (kicker) kicker.textContent = `${article.category || ''} · ${article.tag || ''}`;
+    const title = hero.querySelector('strong');
+    if (title) title.textContent = article.title || '';
+    const read = hero.querySelector('.hero-read');
+    if (read) read.innerHTML = `${escapeHtml(article.readTime || '3 perc')} olvasás <span>↗</span>`;
+  }
+
+  function renderEditorPicks() {
+    if (!picksGrid) return;
+    const picks = articles.filter(item => item.editorPick || item.featured).slice(0, 3);
+    picksGrid.innerHTML = picks.map((article, index) => `
+      <a class="editor-pick" href="${escapeHtml(articleHref(article))}">
+        <span class="editor-pick-number">0${index + 1}</span>
+        <span class="editor-pick-copy">
+          <small>${escapeHtml(article.tag || article.category || 'AJÁNLÓ')}</small>
+          <strong>${escapeHtml(article.title || '')}</strong>
+          <span>${escapeHtml(article.readTime || '3 perc')} olvasás</span>
+        </span>
+        <span class="editor-pick-arrow" aria-hidden="true">↗</span>
+      </a>
+    `).join('');
+  }
+
+  function updateFilterButtons() {
     filterButtons.forEach(button => {
       const selected = button.dataset.filter === currentFilter;
       button.classList.toggle('selected', selected);
       button.setAttribute('aria-pressed', String(selected));
     });
-    renderArticles();
   }
-});
 
-document.getElementById('dialogClose').addEventListener('click', () => dialog.close());
-document.getElementById('dialogDone').addEventListener('click', () => dialog.close());
-dialog.addEventListener('click', event => {
-  if (event.target === dialog) dialog.close();
-});
-document.getElementById('year').textContent = new Date().getFullYear();
+  function renderArticles() {
+    const query = (searchInput?.value || '').trim().toLocaleLowerCase('hu-HU');
+    let visible = articles.filter(article => {
+      const matchesFilter = currentFilter === 'Összes' || article.category === currentFilter;
+      const searchable = [
+        article.title, article.excerpt, article.category, article.tag, article.intro,
+        ...(Array.isArray(article.body) ? article.body : [])
+      ].join(' ').toLocaleLowerCase('hu-HU');
+      return matchesFilter && searchable.includes(query);
+    });
 
-const menuToggle = document.getElementById('menuToggle');
-const mainNav = document.getElementById('mainNav');
-menuToggle.addEventListener('click', () => {
-  const isOpen = mainNav.classList.toggle('open');
-  menuToggle.setAttribute('aria-expanded', String(isOpen));
-  menuToggle.setAttribute('aria-label', isOpen ? 'Navigáció bezárása' : 'Navigáció megnyitása');
-});
-mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
-  mainNav.classList.remove('open');
-  menuToggle.setAttribute('aria-expanded', 'false');
-}));
+    const sortMode = sortSelect?.value || 'recommended';
+    if (sortMode === 'title') {
+      visible = [...visible].sort((a, b) => String(a.title || '').localeCompare(String(b.title || ''), 'hu'));
+    } else if (sortMode === 'short') {
+      visible = [...visible].sort((a, b) => minutesFrom(a.readTime) - minutesFrom(b.readTime));
+    }
 
-renderArticles();
+    grid.innerHTML = visible.map(article => `
+      <a class="article-card" href="${escapeHtml(articleHref(article))}">
+        <div class="card-image">
+          <img src="${escapeHtml(article.image || '')}"
+               alt="${escapeHtml(article.imageAlt || article.title || '')}"
+               loading="lazy" decoding="async"
+               onerror="this.style.display='none';this.parentElement.classList.add('image-fallback')">
+          <span class="image-category">${escapeHtml(article.tag || article.category || '')}</span>
+          <span class="image-arrow" aria-hidden="true">↗</span>
+        </div>
+        <div class="article-card-body">
+          <div class="article-meta">${escapeHtml(article.category || '')}<span>·</span>${escapeHtml(formatDate(article.publishedAt || article.updatedAt))}<span>·</span>${escapeHtml(article.readTime || '3 perc')}</div>
+          <h3>${escapeHtml(article.title || '')}</h3>
+          <p>${escapeHtml(article.excerpt || '')}</p>
+          <span class="card-link">Tovább olvasom <span>↗</span></span>
+        </div>
+      </a>
+    `).join('');
+
+    if (countLabel) countLabel.textContent = `${visible.length} olvasnivaló`;
+    if (emptyState) emptyState.hidden = visible.length > 0;
+  }
+
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      currentFilter = button.dataset.filter || 'Összes';
+      updateFilterButtons();
+      renderArticles();
+    });
+  });
+
+  quickFilterLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      currentFilter = link.dataset.quickFilter || 'Összes';
+      updateFilterButtons();
+      renderArticles();
+    });
+  });
+
+  if (searchInput) searchInput.addEventListener('input', renderArticles);
+  if (sortSelect) sortSelect.addEventListener('change', renderArticles);
+
+  renderHero();
+  renderEditorPicks();
+  updateFilterButtons();
+  renderArticles();
+})();
+
+/* Egyéb, minden oldalon biztonságosan használható felületi funkciók. */
+(() => {
+  const year = document.getElementById('year');
+  if (year) year.textContent = new Date().getFullYear();
+
+  const menuToggle = document.getElementById('menuToggle');
+  const mainNav = document.getElementById('mainNav');
+  if (menuToggle && mainNav) {
+    menuToggle.addEventListener('click', () => {
+      const isOpen = mainNav.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+      menuToggle.setAttribute('aria-label', isOpen ? 'Navigáció bezárása' : 'Navigáció megnyitása');
+    });
+    mainNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mainNav.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+})();
