@@ -44,7 +44,7 @@
 <script src="supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (()=>{'use strict';
-const $=id=>document.getElementById(id);const cfg=window.RADIO69_SUPABASE_CONFIG||{};const ready=!!(window.supabase&&window.supabase.createClient&&/^https:\/\/.+\.supabase\.co$/.test(cfg.url||'')&&typeof cfg.publishableKey==='string'&&cfg.publishableKey.length>20&&!cfg.publishableKey.startsWith('IDE_')&&!String(cfg.url).includes('IDE-SUPABASE'));
+const $=id=>document.getElementById(id);const rawCfg=window.RADIO69_SUPABASE_CONFIG||{};const cfg={...rawCfg,url:String(rawCfg.url||'').trim().replace(/\/rest\/v1\/?$/i,'').replace(/\/+$/,'')};
 const loginView=$('loginView'),appView=$('appView');let db=null,user=null,profile=null,items=[],selected=null,loading=false,manualId=false;
 function message(where,text,isError=false){const el=$(where);el.textContent=text;el.classList.add('show');el.classList.toggle('error',isError);}
 function clearMessage(where){const el=$(where);el.textContent='';el.classList.remove('show','error');}
