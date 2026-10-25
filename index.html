@@ -620,5 +620,53 @@
   </footer>
 
   <script src="articles.js"></script><script src="script.js"></script>
+
+  <!-- Rádió69 automatikus üdvözlő hang: csak a főoldalon -->
+  <audio id="radio69WelcomeAudio" preload="auto" src="radio69-udvozles.mp3" aria-label="Rádió69 hangos üdvözlése"></audio>
+  <style id="radio69WelcomeAudioStyle">
+    .radio69-welcome-replay {
+      position: fixed; right: 18px; bottom: 18px; z-index: 9999;
+      border: 1px solid rgba(103, 232, 249, .55); border-radius: 999px;
+      padding: 11px 16px; background: #17132b; color: #f7f5ff;
+      font: 700 13px/1.2 'DM Sans', sans-serif; cursor: pointer;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, .28);
+    }
+    .radio69-welcome-replay[hidden] { display: none !important; }
+    .radio69-welcome-replay:focus-visible { outline: 2px solid #67e8f9; outline-offset: 3px; }
+  </style>
+  <button id="radio69WelcomeReplay" class="radio69-welcome-replay" type="button" hidden>🔊 Hangos üdvözlés</button>
+  <script id="radio69WelcomeAudioScript">
+    (function () {
+      const audio = document.getElementById('radio69WelcomeAudio');
+      const replayButton = document.getElementById('radio69WelcomeReplay');
+      if (!audio || !replayButton) return;
+
+      function playWelcome() {
+        audio.currentTime = 0;
+        const playback = audio.play();
+        if (playback && typeof playback.then === 'function') {
+          playback.then(function () {
+            replayButton.hidden = true;
+          }).catch(function () {
+            // A böngésző letilthatja a hang automatikus indítását.
+            replayButton.hidden = false;
+          });
+        }
+      }
+
+      replayButton.addEventListener('click', function () {
+        playWelcome();
+      });
+
+      if (document.readyState === 'complete') {
+        window.setTimeout(playWelcome, 700);
+      } else {
+        window.addEventListener('load', function () {
+          window.setTimeout(playWelcome, 700);
+        }, { once: true });
+      }
+    })();
+  </script>
+
 </body>
 </html>
