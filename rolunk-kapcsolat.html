@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="stylesheet" href="style.css?v=dj-page-20261022">
+  <link rel="stylesheet" href="style.css?v=rolunk-menu-20261025">
   <script type="application/ld+json">{
     "@context":"https://schema.org",
     "@type":"AboutPage",
@@ -35,6 +35,52 @@
     "inLanguage":"hu-HU",
     "isPartOf":{"@type":"WebSite","name":"Rádió69 × Zsiványok Podcast","url":"https://kingdavidglad.github.io/radio69-zsivanyok-podcast/"}
   }</script>
+
+  <style id="rolunk-navigation-fix">
+    /* A Médiaajánlat link legyen jól felismerhető, de illeszkedjen a közös fejlécbe. */
+    .main-nav a.nav-media-link {
+      border: 1px solid rgba(139, 92, 246, .42);
+      border-radius: 999px;
+      padding: 8px 11px;
+      color: #d8ccff;
+      background: rgba(124, 58, 237, .10);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .main-nav a.nav-media-link:hover,
+    .main-nav a.nav-media-link:focus-visible {
+      color: #fff;
+      border-color: rgba(34, 211, 238, .72);
+      background: rgba(6, 182, 212, .10);
+    }
+    /* Több menüpont esetén váltsunk hamburger menüre, hogy a linkek ne lógjanak le a képernyőről. */
+    @media (min-width: 761px) and (max-width: 1350px) {
+      .site-header { gap: 12px; }
+      .menu-toggle { display: flex; margin-left: auto; }
+      .header-link { display: none; }
+      .main-nav {
+        position: absolute;
+        top: 75px;
+        left: 0;
+        right: 0;
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 8px;
+        border: 1px solid rgba(255,255,255,.105);
+        border-radius: 15px;
+        background: rgba(17,16,28,.97);
+        backdrop-filter: blur(20px);
+        box-shadow: 0 15px 35px rgba(0,0,0,.5);
+      }
+      .main-nav.open { display: flex; }
+      .main-nav a { font-size: 13px; padding: 13px 12px; }
+      .main-nav a.active:after { display: none; }
+      .main-nav a.active { background: rgba(181,138,255,.08); border-radius: 8px; }
+    }
+  </style>
+
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div>
@@ -54,8 +100,10 @@
       <a href="index.html#radio69">Rádió69</a>
       <a href="index.html#podcast">Zsiványok Podcast</a>
       <a href="dj-k.html">DJ-k</a>
+      <a href="rendezvenyek.html">Rendezvények</a>
       <a href="index.html#kozosseg">Közösség</a>
-      <a class="active" href="#rolunk">Rólunk</a>
+      <a href="mediaajanlat.html" class="nav-media-link">Médiaajánlat</a>
+      <a class="active" href="#rolunk" aria-current="page">Rólunk</a>
     </nav>
     <a class="header-link" href="#kapcsolat">KAPCSOLAT <span>↗</span></a>
   </header>
