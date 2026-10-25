@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100d20">
+  <meta name="description" content="A Rádió69 és a Zsiványok Podcast weboldala folyamatosan fejlődik. Fedezd fel a legfrissebb híreket, műsorokat és olvasnivalókat!">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Folyamatosan fejlődünk | Rádió69 × Zsiványok Podcast">
+  <meta property="og:description" content="Friss tartalmak, rádiós újdonságok és egyre jobb online élmény – dolgozunk a weboldalunk fejlesztésén.">
+  <meta property="og:url" content="https://radio69zsivanyok.hu/folyamatos-fejlesztes.html">
+  <title>Folyamatosan fejlődünk | Rádió69 × Zsiványok Podcast</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0d0b18;
+      --panel: rgba(24, 20, 43, .82);
+      --panel-border: rgba(167, 139, 250, .22);
+      --text: #f8f7ff;
+      --muted: #b8b4cc;
+      --purple: #a78bfa;
+      --violet: #7c3aed;
+      --cyan: #22d3ee;
+      --pink: #ec4899;
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 15% 8%, rgba(124, 58, 237, .25), transparent 34rem),
+        radial-gradient(ellipse at 88% 36%, rgba(6, 182, 212, .14), transparent 31rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+    a { color: inherit; }
+    a:focus-visible { outline: 3px solid var(--cyan); outline-offset: 4px; }
+    .wrap { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
+    .site-header { padding: 22px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; min-width: 0; }
+    .brand-mark {
+      display: grid; place-items: center; width: 46px; height: 46px; flex: 0 0 46px;
+      border-radius: 15px; color: white; font-size: 21px; font-weight: 900;
+      background: linear-gradient(135deg, var(--violet), var(--pink) 56%, var(--cyan));
+      box-shadow: 0 0 28px rgba(124,58,237,.3);
+    }
+    .brand-name { display: block; font-weight: 800; letter-spacing: -.03em; line-height: 1.2; }
+    .brand-sub { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+    .nav a { color: #d7d3e7; text-decoration: none; padding: 9px 12px; border-radius: 999px; font-size: 13px; transition: background .2s ease, color .2s ease; }
+    .nav a:hover { color: white; background: rgba(167,139,250,.15); }
+    main { padding: clamp(48px, 8vw, 98px) 0 72px; }
+    .hero { position: relative; overflow: hidden; isolation: isolate; padding: clamp(28px, 6vw, 66px); border: 1px solid var(--panel-border); border-radius: 32px; background: linear-gradient(135deg, rgba(30,22,54,.96), rgba(17,26,43,.9)); box-shadow: 0 25px 90px rgba(0,0,0,.22); }
+    .hero::before, .hero::after { content: ""; position: absolute; z-index: -1; pointer-events: none; border-radius: 999px; filter: blur(2px); }
+    .hero::before { width: 310px; height: 310px; right: -95px; top: -135px; background: radial-gradient(circle, rgba(124,58,237,.35), transparent 70%); }
+    .hero::after { width: 260px; height: 260px; right: 18%; bottom: -205px; background: radial-gradient(circle, rgba(34,211,238,.2), transparent 70%); }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; padding: 8px 13px; border: 1px solid rgba(34,211,238,.3); border-radius: 999px; background: rgba(8,145,178,.1); color: #a5f3fc; font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 5px rgba(34,211,238,.12), 0 0 15px var(--cyan); }
+    h1 { max-width: 830px; margin: 24px 0 20px; font-size: clamp(2.25rem, 6.2vw, 5rem); line-height: 1.03; letter-spacing: -.06em; }
+    .gradient-text { background: linear-gradient(95deg, #c4b5fd 5%, #f0abfc 47%, #67e8f9 92%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .lead { max-width: 700px; color: #d0cce0; font-size: clamp(1rem, 2vw, 1.18rem); }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .button { display: inline-flex; justify-content: center; align-items: center; gap: 10px; min-height: 48px; padding: 12px 19px; border: 1px solid transparent; border-radius: 14px; font-weight: 750; text-decoration: none; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
+    .button:hover { transform: translateY(-2px); }
+    .button-primary { color: #100d20; background: linear-gradient(100deg, #c4b5fd, #67e8f9); box-shadow: 0 10px 32px rgba(34,211,238,.13); }
+    .button-secondary { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.15); }
+    .section-heading { margin: 58px 0 20px; }
+    .section-heading .label { color: var(--cyan); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; }
+    .section-heading h2 { margin: 8px 0 5px; font-size: clamp(1.6rem, 3.4vw, 2.4rem); letter-spacing: -.045em; line-height: 1.15; }
+    .section-heading p { margin: 0; max-width: 670px; color: var(--muted); }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .feature { min-height: 215px; padding: 24px; border: 1px solid var(--panel-border); border-radius: var(--radius); background: var(--panel); }
+    .feature-icon { display: grid; place-items: center; width: 50px; height: 50px; border-radius: 16px; margin-bottom: 22px; font-size: 24px; background: linear-gradient(135deg, rgba(124,58,237,.27), rgba(34,211,238,.12)); border: 1px solid rgba(167,139,250,.22); }
+    .feature h3 { margin: 0 0 8px; font-size: 1.1rem; }
+    .feature p { margin: 0; color: var(--muted); font-size: .94rem; }
+    .promise { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: start; margin-top: 22px; padding: 25px; border: 1px solid rgba(236,72,153,.23); border-radius: var(--radius); background: linear-gradient(105deg, rgba(124,58,237,.12), rgba(236,72,153,.07), rgba(34,211,238,.06)); }
+    .promise-icon { font-size: 26px; }
+    .promise h2 { margin: 0 0 6px; font-size: 1.2rem; }
+    .promise p { margin: 0; color: var(--muted); }
+    .site-footer { padding: 24px 0 34px; border-top: 1px solid rgba(255,255,255,.08); color: var(--muted); font-size: 13px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+    .footer-inner p { margin: 0; }
+    .footer-links { display: flex; gap: 15px; flex-wrap: wrap; }
+    .footer-links a { color: #d6d2e6; text-decoration: none; }
+    .footer-links a:hover { color: var(--cyan); }
+    @media (max-width: 760px) {
+      .header-inner { align-items: flex-start; flex-direction: column; }
+      .nav { justify-content: flex-start; width: 100%; }
+      .nav a { padding-inline: 10px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .feature { min-height: 0; }
+      .hero { border-radius: 24px; }
+      .promise { grid-template-columns: 1fr; gap: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html" aria-label="Rádió69 és Zsiványok Podcast – főoldal">
+        <span class="brand-mark" aria-hidden="true">69</span>
+        <span>
+          <span class="brand-name">Rádió69 × Zsiványok Podcast</span>
+          <span class="brand-sub">Hangok, történetek, közösség</span>
+        </span>
+      </a>
+      <nav class="nav" aria-label="Fő navigáció">
+        <a href="index.html">Főoldal</a>
+        <a href="index.html#radio69">Rádió69</a>
+        <a href="index.html#friss">Olvasnivalók</a>
+        <a href="mediaajanlat.html">Médiaajánlat</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero" aria-labelledby="main-title">
+      <span class="eyebrow"><span class="pulse" aria-hidden="true"></span> Folyamatos fejlesztés</span>
+      <h1 id="main-title">Nem állunk meg — <span class="gradient-text">folyamatosan fejlődünk.</span></h1>
+      <p class="lead">A Rádió69 és a Zsiványok Podcast online otthonán folyamatosan dolgozunk. Célunk, hogy könnyebben megtaláld a műsorainkat, a legfrissebb olvasnivalókat és a kulisszák mögötti történeteket — akár számítógépről, akár mobilról érkezel.</p>
+      <div class="actions">
+        <a class="button button-primary" href="index.html#friss">Felfedezem az olvasnivalókat <span aria-hidden="true">↗</span></a>
+        <a class="button button-secondary" href="index.html#radio69">Vissza a Rádió69-hez</a>
+      </div>
+    </section>
+
+    <section aria-labelledby="next-title">
+      <div class="section-heading">
+        <span class="label">Lépésről lépésre</span>
+        <h2 id="next-title">A weboldalunk együtt fejlődik velünk</h2>
+        <p>Folyamatosan finomítjuk az online felületet, és bővítjük a látogatóknak szóló tartalmakat.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature">
+          <div class="feature-icon" aria-hidden="true">📰</div>
+          <h3>Friss olvasnivalók</h3>
+          <p>Új cikkek, hírek és érdekességek a rádiózás, a zene és a podcastok világából.</p>
+        </article>
+        <article class="feature">
+          <div class="feature-icon" aria-hidden="true">🎙️</div>
+          <h3>Rádió és podcast</h3>
+          <p>A Rádió69 műsorai és a Zsiványok Podcast történetei egy helyen, könnyen áttekinthetően.</p>
+        </article>
+        <article class="feature">
+          <div class="feature-icon" aria-hidden="true">✨</div>
+          <h3>Kényelmesebb böngészés</h3>
+          <p>Dolgozunk azon, hogy az oldal átlátható, jól használható és mobilon is kényelmes legyen.</p>
+        </article>
+      </div>
+      <div class="promise">
+        <div class="promise-icon" aria-hidden="true">💜</div>
+        <div>
+          <h2>Köszönjük, hogy velünk tartasz!</h2>
+          <p>Az oldal folyamatosan alakul — látogass vissza, és nézd meg, milyen újdonságokkal bővültünk. Köszönjük a türelmedet és a támogatásodat!</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>© <span id="year">2026</span> Rádió69 × Zsiványok Podcast</p>
+      <div class="footer-links">
+        <a href="index.html">Főoldal</a>
+        <a href="index.html#friss">Olvasnivalók</a>
+        <a href="mediaajanlat.html">Médiaajánlat</a>
+      </div>
+    </div>
+  </footer>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
