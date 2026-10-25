@@ -4,6 +4,6 @@
  * IDE SOHA NE MÁSOLD be a secret/service_role kulcsot!
  */
 window.RADIO69_SUPABASE_CONFIG = {
-  url: 'https://zmejdydtgxotkscluqlo.supabase.co/rest/v1/',
+url: 'https://zmejdydtgxotkscluqlo.supabase.co',
   publishableKey: 'sb_publishable_a993c9LoJScmBMKgnmYnJA_7uy7fGSE'
 };
