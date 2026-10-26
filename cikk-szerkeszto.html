@@ -53,9 +53,38 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 function statusName(s){return s==='published'?'PUBLIKÁLT':s==='pending'?'JÓVÁHAGYÁSRA VÁR':'VÁZLAT';}
 function canEdit(a){return profile?.role==='chief_editor'||(a.author_id===user?.id&&['draft','pending'].includes(a.status));}
 function updateBadge(s){const b=$('statusBadge');b.textContent=statusName(s);b.className='status '+s;}
-function safeImage(s){const v=String(s||'').trim();if(/^https:\/\//i.test(v))return v;if(/^assets\/[a-z0-9_./-]+$/i.test(v)&&!v.includes('..'))return v;return '';}
+function safeImage(input) {
+  const value = String(input ?? '').trim();
+  if (!value) return '';
+
+  // Local images are restricted to the site's assets/ directory.
+  if (/^assets\/[a-z0-9_./-]+$/i.test(value) && !value.includes('..')) {
+    try {
+      const localUrl = new URL(value, `${window.location.origin}/`);
+      if (localUrl.origin === window.location.origin && localUrl.pathname.startsWith('/assets/')) {
+        return localUrl.href;
+      }
+    } catch (_) {
+      return '';
+    }
+    return '';
+  }
+
+  // Remote image URLs must be absolute HTTPS URLs. Parsing and checking the
+  // protocol prevents javascript:, data:, and other executable URL schemes.
+  let parsed;
+  try {
+    parsed = new URL(value);
+  } catch (_) {
+    return '';
+  }
+  if (parsed.protocol !== 'https:' || !parsed.hostname || parsed.username || parsed.password) {
+    return '';
+  }
+  return parsed.href;
+}
 function formValues(){return {id:$('id').value.trim()||slugify($('title').value),title:$('title').value.trim(),category:$('category').value.trim(),tag:$('tag').value.trim(),excerpt:$('excerpt').value.trim(),image_url:safeImage($('image_url').value),image_alt:$('image_alt').value.trim(),image_caption:$('image_caption').value.trim(),published_at:$('published_at').value,content_updated_at:$('content_updated_at').value||$('published_at').value,read_time:$('readTime').value.trim()||'3 perc',intro:$('intro').value.trim(),body:$('body').value.split(/\n\s*\n|\r?\n/).map(s=>s.trim()).filter(Boolean),sources:$('sources').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).map(line=>{const p=line.split('|').map(s=>s.trim());if(!p[0]||!p[1])throw new Error('Hibás forrássor. Formátum: Megnevezés | https://hivatkozas.hu | Megjegyzés');let u;try{u=new URL(p[1]);}catch{throw new Error('A forrás URL-je nem érvényes.');}if(!['http:','https:'].includes(u.protocol))throw new Error('A forrás csak HTTP/HTTPS hivatkozás lehet.');return {label:p[0],url:u.href,note:p.slice(2).join(' | ')};}),source_note:$('source_note').value.trim(),seo_title:$('seo_title').value.trim()};}
-function renderList(){
+function renderList() {
   const el = $('articleList');
   el.replaceChildren();
 
@@ -69,12 +98,10 @@ function renderList(){
 
   for (const article of items) {
     const allowed = canEdit(article);
-    const articleId = String(article.id ?? '');
     const button = document.createElement('button');
     button.type = 'button';
     button.classList.add('list-item');
     if (selected === article.id) button.classList.add('active');
-    button.dataset.id = articleId;
     button.disabled = !allowed;
 
     const title = document.createElement('strong');
@@ -84,13 +111,13 @@ function renderList(){
     const category = document.createElement('span');
     category.textContent = article.category || '';
 
-    const knownStatuses = ['draft', 'pending', 'published'];
-    const statusValue = knownStatuses.includes(article.status) ? article.status : 'draft';
+    const allowedStatuses = ['draft', 'pending', 'published'];
+    const safeStatus = allowedStatuses.includes(article.status) ? article.status : 'draft';
     const status = document.createElement('span');
-    status.classList.add('status', statusValue);
-    status.textContent = statusName(statusValue);
-    details.append(category, status);
+    status.classList.add('status', safeStatus);
+    status.textContent = statusName(safeStatus);
 
+    details.append(category, status);
     if (!allowed) {
       const readOnly = document.createElement('span');
       readOnly.textContent = 'csak megtekinthető';
@@ -99,8 +126,8 @@ function renderList(){
 
     button.append(title, details);
     button.addEventListener('click', () => {
-      const selectedArticle = items.find(item => String(item.id) === button.dataset.id);
-      if (selectedArticle && canEdit(selectedArticle)) loadForm(selectedArticle);
+      const current = items.find(item => item.id === article.id);
+      if (current && canEdit(current)) loadForm(current);
     });
     el.appendChild(button);
   }
@@ -108,7 +135,26 @@ function renderList(){
 function loadForm(a=null){selected=a?.id||null;manualId=!!a;const v=a||{id:'',title:'',category:'Rádió69',tag:'HÍR',excerpt:'',image_url:'',image_alt:'',image_caption:'',published_at:new Date().toISOString().slice(0,10),content_updated_at:new Date().toISOString().slice(0,10),read_time:'3 perc',intro:'',body:[],sources:[],source_note:'',seo_title:'',featured:false,editor_pick:false,status:'draft'};
 for(const [field,key] of [['id','id'],['title','title'],['category','category'],['tag','tag'],['excerpt','excerpt'],['image_url','image_url'],['image_alt','image_alt'],['image_caption','image_caption'],['published_at','published_at'],['content_updated_at','content_updated_at'],['readTime','read_time'],['intro','intro'],['body','body'],['sources','sources'],['source_note','source_note'],['seo_title','seo_title']]){$(field).value=key==='body'?(Array.isArray(v.body)?v.body.join('\n\n'):''):key==='sources'?(Array.isArray(v.sources)?v.sources.map(x=>[x.label,x.url,x.note||''].filter(Boolean).join(' | ')).join('\n'):''):(v[key]??'');}
 $('featured').checked=!!v.featured;$('editor_pick').checked=!!v.editor_pick;$('formTitle').textContent=a?'Cikk szerkesztése':'Új cikk készítése';$('id').readOnly=!!a;$('adminStatus').value=v.status||'draft';$('adminStatusWrap').classList.toggle('hidden',profile?.role!=='chief_editor');$('submitBtn').classList.toggle('hidden',profile?.role!=='author');$('publishBtn').classList.toggle('hidden',profile?.role!=='chief_editor');$('featured').disabled=profile?.role!=='chief_editor';$('editor_pick').disabled=profile?.role!=='chief_editor';$('deleteBtn').classList.toggle('hidden',!a||!(profile?.role==='chief_editor'||(a.author_id===user.id&&['draft','pending'].includes(a.status))));$('saveBtn').textContent=profile?.role==='chief_editor'?'Mentés az állapot szerint':'Vázlat mentése';updateBadge(v.status||'draft');updatePreview();renderList();$('saveState').textContent='Módosítások itt mentődnek a központi adatbázisba.';}
-function updatePreview(){const img=$('previewImg'),url=safeImage($('image_url').value);if(url){img.src=url;img.style.display='block';}else{img.removeAttribute('src');img.style.display='none';}img.alt=$('image_alt').value;$('previewTitle').textContent=$('title').value||'A cikk címe itt jelenik meg';$('previewExcerpt').textContent=$('excerpt').value||'A rövid ajánló előnézete.';$('previewMeta').textContent=($('category').value||'KATEGÓRIA')+' · '+($('published_at').value||'DÁTUM');if(!$('id').readOnly&&!manualId&&$('title').value.trim())$('id').value=slugify($('title').value);}
+function updatePreview() {
+  const img = $('previewImg');
+  const validatedImageUrl = safeImage($('image_url').value);
+  // Re-check the allowed URL prefixes immediately before the DOM URL sink.
+  // safeImage only returns an absolute HTTPS URL or a same-origin assets URL.
+  const safePreviewSource = validatedImageUrl.startsWith('https://') ||
+    validatedImageUrl.startsWith(`${window.location.origin}/assets/`);
+  if (validatedImageUrl && safePreviewSource) {
+    img.src = validatedImageUrl;
+    img.style.display = 'block';
+  } else {
+    img.removeAttribute('src');
+    img.style.display = 'none';
+  }
+  img.alt = $('image_alt').value;
+  $('previewTitle').textContent = $('title').value || 'A cikk címe itt jelenik meg';
+  $('previewExcerpt').textContent = $('excerpt').value || 'A rövid ajánló előnézete.';
+  $('previewMeta').textContent = ($('category').value || 'KATEGÓRIA') + ' · ' + ($('published_at').value || 'DÁTUM');
+  if (!$('id').readOnly && !manualId && $('title').value.trim()) $('id').value = slugify($('title').value);
+}
 async function refreshList(keep=true){const previous=selected;const {data,error}=await db.from('articles').select('*').order('updated_at',{ascending:false});if(error)throw error;items=data||[];renderList();if(keep&&previous){const found=items.find(a=>a.id===previous);if(found&&canEdit(found))loadForm(found);else loadForm();}}
 async function save(status){if(loading)return;loading=true;clearMessage('appMessage');try{let v=formValues();if(!v.title||!v.category||!v.tag||!v.excerpt||!v.image_url||!v.image_alt||!v.published_at||!v.intro||!v.body.length)throw new Error('Töltsd ki az összes kötelező mezőt, és adj meg érvényes https kép-URL-t.');if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.id))throw new Error('A cikkazonosító csak angol kisbetűt, számot és kötőjelet tartalmazhat.');const existing=items.find(a=>a.id===selected);if(selected&&!existing)throw new Error('A cikket nem találom a központi listában. Frissítsd az oldalt.');if(existing&&!canEdit(existing))throw new Error('Ehhez a cikkhez nincs szerkesztési jogosultságod.');if(!existing&&items.some(a=>a.id===v.id))throw new Error('Ez a cikkazonosító már létezik. Válassz másikat.');const role=profile.role;const finalStatus=role==='chief_editor'?(status||$('adminStatus').value):status; if(role!=='chief_editor'&&!['draft','pending'].includes(finalStatus))throw new Error('Szerzőként csak vázlatot menthetsz vagy jóváhagyásra küldheted.');const payload={...v,status:finalStatus,featured:role==='chief_editor'?$('featured').checked:false,editor_pick:role==='chief_editor'?$('editor_pick').checked:false,author_id:existing?existing.author_id:user.id,approved_by:finalStatus==='published'?user.id:null,approved_at:finalStatus==='published'?new Date().toISOString():null};
 let result;if(existing){result=await db.from('articles').update(payload).eq('id',existing.id);}else{result=await db.from('articles').insert(payload);}if(result.error)throw result.error;selected=v.id;message('appMessage',finalStatus==='published'?'A cikk megjelent a weboldalon.':finalStatus==='pending'?'A cikk bekerült a jóváhagyásra váró listába.':'A vázlat elmentve a központi adatbázisba.');await refreshList(true);}catch(e){message('appMessage',e.message||'Nem sikerült menteni a cikket.',true);}finally{loading=false;}}
