@@ -1,0 +1,52 @@
+
+name: Update article social previews
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/generate-social-previews.mjs'
+      - 'supabase-config.js'
+      - '.github/workflows/update-social-previews.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: article-social-previews
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    name: Generate static Open Graph pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generate previews from published articles
+        run: node scripts/generate-social-previews.mjs
+
+      - name: Commit generated preview pages when changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A social-previews
+          if git diff --cached --quiet; then
+            echo "No social preview changes."
+            exit 0
+          fi
+          git commit -m "chore: refresh article social previews [skip-social-previews]"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
