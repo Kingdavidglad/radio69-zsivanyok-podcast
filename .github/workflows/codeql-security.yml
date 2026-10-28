@@ -1,52 +1,31 @@
 
-name: Update article social previews
+name: CodeQL security scan
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '*/15 * * * *'
   push:
     branches: [main]
-    paths:
-      - 'scripts/generate-social-previews.mjs'
-      - 'supabase-config.js'
-      - '.github/workflows/update-social-previews.yml'
-
-permissions:
-  contents: write
-
-concurrency:
-  group: article-social-previews
-  cancel-in-progress: true
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '30 2 * * 1'
 
 jobs:
-  generate:
-    name: Generate static Open Graph pages
+  analyze:
+    name: Analyze JavaScript
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
         with:
-          ref: ${{ github.ref_name }}
-          fetch-depth: 0
+          languages: javascript-typescript
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Generate previews from published articles
-        run: node scripts/generate-social-previews.mjs
-
-      - name: Commit generated preview pages when changed
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A social-previews
-          if git diff --cached --quiet; then
-            echo "No social preview changes."
-            exit 0
-          fi
-          git commit -m "chore: refresh article social previews [skip-social-previews]"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
