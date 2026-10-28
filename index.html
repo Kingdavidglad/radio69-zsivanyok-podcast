@@ -471,6 +471,12 @@
     @media (prefers-reduced-motion: reduce) { .story-wheel-button { transition: none; } .story-wheel-disc { transition-duration: 1ms; } }
   </style>
 
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="application-name" content="Rádió69">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Rádió69">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div><div class="ambient ambient-two" aria-hidden="true"></div>
@@ -713,5 +719,6 @@
   <script src="radio69-sztorikerek.js"></script>
   <script src="welcome-voice.js"></script>
 
+  <script src="/pwa.js" defer></script>
 </body>
 </html>

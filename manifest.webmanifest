@@ -1,0 +1,41 @@
+{
+  "id": "/",
+  "name": "Rádió69 × Zsiványok Podcast",
+  "short_name": "Rádió69",
+  "description": "A Rádió69 és a Zsiványok Podcast hírei, műsorai és érdekességei.",
+  "lang": "hu-HU",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "background_color": "#090912",
+  "theme_color": "#090912",
+  "categories": [
+    "music",
+    "entertainment",
+    "news"
+  ],
+  "icons": [
+    {
+      "src": "/assets/pwa-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/pwa-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/pwa-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

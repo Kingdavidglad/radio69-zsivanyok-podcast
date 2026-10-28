@@ -86,6 +86,12 @@
     @media (max-width: 560px) { .shell { width: min(100% - 28px, 1120px); } .cards, .packages, .audience-wrap { grid-template-columns: 1fr; } .hero { padding-top: 58px; } .button { width: 100%; } .nav-links a { font-size: .86rem; } }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; } }
   </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="application-name" content="Rádió69">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Rádió69">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
   <header class="site-header">
@@ -260,5 +266,6 @@
     const year = document.getElementById('year');
     if (year) year.textContent = new Date().getFullYear();
   </script>
+  <script src="/pwa.js" defer></script>
 </body>
 </html>

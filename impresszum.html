@@ -30,6 +30,12 @@
     footer{border-top:1px solid var(--border);padding:22px 0 32px;color:var(--muted);font-size:.9rem}.footer-inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
     @media(max-width:640px){.nav{align-items:flex-start}.nav-links{gap:10px 14px}main{padding:42px 0 52px}.panel{border-radius:17px}}
   </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="application-name" content="Rádió69">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Rádió69">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
   <header>
@@ -69,5 +75,6 @@
   </main>
   <footer><div class="shell footer-inner"><span>© <span id="year">2026</span> Rádió69 × Zsiványok Podcast</span><a href="index.html#home">Vissza a főoldalra ↑</a></div></footer>
   <script>const year=document.getElementById('year');if(year)year.textContent=new Date().getFullYear();</script>
+  <script src="/pwa.js" defer></script>
 </body>
 </html>
