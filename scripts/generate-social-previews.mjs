@@ -10,6 +10,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, '..');
 const OUTPUT_DIR = path.join(ROOT, 'social-previews');
+const SITEMAP_FILE = path.join(ROOT, 'sitemap.xml');
+const ARTICLES_DIR = path.join(ROOT, 'cikkek');
 const SITE_ORIGIN = 'https://radio69zsivanyok.hu';
 const FALLBACK_IMAGE = `${SITE_ORIGIN}/assets/R%C3%A1di%C3%B369.jpg`;
 
@@ -70,13 +72,13 @@ function normalizeSources(value) {
   return [];
 }
 
-export function renderSocialPreview(article) {
+export function renderSocialPreview(article, options = {}) {
   const id = textValue(article?.id);
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) throw new Error(`Invalid article id: ${id || '(empty)'}`);
 
   const title = textValue(article.seo_title) || textValue(article.title) || 'Rádió69 × Zsiványok Podcast';
   const description = textValue(article.excerpt) || textValue(article.intro) || 'Olvasd a Rádió69 × Zsiványok Podcast cikkét.';
-  const canonicalUrl = `${SITE_ORIGIN}/cikk.html?id=${encodeURIComponent(id)}`;
+  const canonicalUrl = textValue(options.canonicalUrl) || `${SITE_ORIGIN}/cikk.html?id=${encodeURIComponent(id)}`;
   const shareUrl = `${SITE_ORIGIN}/social-previews/${encodeURIComponent(id)}/`;
   const imageUrl = safeImageUrl(article.image_url || article.image);
   const imageAlt = textValue(article.image_alt || article.imageAlt) || title;
@@ -109,7 +111,7 @@ export function renderSocialPreview(article) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090912">
-  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="robots" content="noindex,follow,max-image-preview:large">
   <meta name="author" content="Rádió69 × Zsiványok Podcast">
   <meta name="description" content="${escapeHtml(description)}">
   <title>${escapeHtml(title)} | Rádió69 × Zsiványok Podcast</title>
@@ -205,6 +207,107 @@ async function fetchPublishedArticles({ url, key }) {
   return articles;
 }
 
+
+function getTagAttribute(tag, attributeName) {
+  const regex = new RegExp(`(?:^|\\s)${attributeName}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, 'i');
+  const match = tag.match(regex);
+  return match ? (match[1] ?? match[2] ?? match[3] ?? '').trim() : '';
+}
+
+function hasNoindexDirective(html) {
+  const tags = html.match(/<meta\b[^>]*>/gi) || [];
+  return tags.some(tag => {
+    const name = getTagAttribute(tag, 'name').toLowerCase();
+    if (name !== 'robots' && name !== 'googlebot') return false;
+    return /\bnoindex\b/i.test(getTagAttribute(tag, 'content'));
+  });
+}
+
+function canonicalFromHtml(html) {
+  const tags = html.match(/<link\b[^>]*>/gi) || [];
+  for (const tag of tags) {
+    const rel = getTagAttribute(tag, 'rel').toLowerCase().split(/\s+/);
+    if (rel.includes('canonical')) return getTagAttribute(tag, 'href');
+  }
+  return '';
+}
+
+function isCanonicalSiteUrl(value) {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === 'https:' && parsed.origin === SITE_ORIGIN && !parsed.hash;
+  } catch {
+    return false;
+  }
+}
+
+async function getStaticArticleIds() {
+  try {
+    const entries = await fs.readdir(ARTICLES_DIR, { withFileTypes: true });
+    return new Set(entries
+      .filter(entry => entry.isFile() && /^[a-z0-9]+(?:-[a-z0-9]+)*\.html$/i.test(entry.name))
+      .map(entry => entry.name.replace(/\.html$/i, '')));
+  } catch (error) {
+    if (error.code === 'ENOENT') return new Set();
+    throw error;
+  }
+}
+
+export async function buildSitemapXml(publishedArticles = [], staticArticleIds = undefined) {
+  const urls = new Set();
+  const publicPages = [
+    { file: 'index.html', fallback: `${SITE_ORIGIN}/` },
+    { file: 'a-csapat.html', fallback: `${SITE_ORIGIN}/a-csapat.html` },
+    { file: 'adatvedelem.html', fallback: `${SITE_ORIGIN}/adatvedelem.html` },
+    { file: 'dj-k.html', fallback: `${SITE_ORIGIN}/dj-k.html` },
+    { file: 'folyamatos-fejlesztes.html', fallback: `${SITE_ORIGIN}/folyamatos-fejlesztes.html` },
+    { file: 'fotogaleria.html', fallback: `${SITE_ORIGIN}/fotogaleria.html` },
+    { file: 'impresszum.html', fallback: `${SITE_ORIGIN}/impresszum.html` },
+    { file: 'mediaajanlat.html', fallback: `${SITE_ORIGIN}/mediaajanlat.html` },
+    { file: 'rendezvenyek.html', fallback: `${SITE_ORIGIN}/rendezvenyek.html` },
+    { file: 'rolunk-kapcsolat.html', fallback: `${SITE_ORIGIN}/rolunk-kapcsolat.html` }
+  ];
+
+  for (const page of publicPages) {
+    try {
+      const html = await fs.readFile(path.join(ROOT, page.file), 'utf8');
+      if (hasNoindexDirective(html)) continue;
+      const canonical = canonicalFromHtml(html) || page.fallback;
+      if (isCanonicalSiteUrl(canonical)) urls.add(canonical);
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
+  }
+
+  const actualStaticArticleIds = staticArticleIds || await getStaticArticleIds();
+  try {
+    const entries = await fs.readdir(ARTICLES_DIR, { withFileTypes: true });
+    for (const entry of entries) {
+      if (!entry.isFile() || !/^[a-z0-9]+(?:-[a-z0-9]+)*\.html$/i.test(entry.name)) continue;
+      const html = await fs.readFile(path.join(ARTICLES_DIR, entry.name), 'utf8');
+      if (hasNoindexDirective(html)) continue;
+      const fallback = `${SITE_ORIGIN}/cikkek/${entry.name}`;
+      const canonical = canonicalFromHtml(html) || fallback;
+      if (isCanonicalSiteUrl(canonical)) urls.add(canonical);
+    }
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+
+  for (const article of publishedArticles) {
+    const id = textValue(article?.id);
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id) || !textValue(article?.title)) continue;
+    if (actualStaticArticleIds.has(id)) continue;
+    urls.add(`${SITE_ORIGIN}/cikk.html?id=${encodeURIComponent(id)}`);
+  }
+
+  const xmlEscape = value => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+  return '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    [...urls].sort().map(url => `  <url><loc>${xmlEscape(url)}</loc></url>`).join('\n') +
+    '\n</urlset>\n';
+}
+
 async function main() {
   const { url, key } = await readSupabaseConfig();
   const articles = await fetchPublishedArticles({ url, key });
@@ -220,6 +323,7 @@ async function main() {
     }
   }
 
+  const staticArticleIds = await getStaticArticleIds();
   const nextDir = `${OUTPUT_DIR}.next`;
   await fs.rm(nextDir, { recursive: true, force: true });
   await fs.mkdir(nextDir, { recursive: true });
@@ -228,13 +332,19 @@ async function main() {
     const id = textValue(article.id);
     const articleDir = path.join(nextDir, id);
     await fs.mkdir(articleDir, { recursive: true });
-    await fs.writeFile(path.join(articleDir, 'index.html'), renderSocialPreview(article), 'utf8');
+    const canonicalUrl = staticArticleIds.has(id)
+      ? `${SITE_ORIGIN}/cikkek/${encodeURIComponent(id)}.html`
+      : `${SITE_ORIGIN}/cikk.html?id=${encodeURIComponent(id)}`;
+    await fs.writeFile(path.join(articleDir, 'index.html'), renderSocialPreview(article, { canonicalUrl }), 'utf8');
     generated += 1;
   }
 
   await fs.rm(OUTPUT_DIR, { recursive: true, force: true });
   await fs.rename(nextDir, OUTPUT_DIR);
+  const sitemapXml = await buildSitemapXml(validArticles, staticArticleIds);
+  await fs.writeFile(SITEMAP_FILE, sitemapXml, 'utf8');
   console.log(`Kész: ${generated} publikált cikk megosztási előnézete frissült.`);
+  console.log(`Kész: ${sitemapXml.match(/<url>/g)?.length || 0} indexelhető URL került a sitemap.xml fájlba.`);
 }
 
 const invokedPath = process.argv[1] ? path.resolve(process.argv[1]) : '';

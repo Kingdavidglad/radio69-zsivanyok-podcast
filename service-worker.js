@@ -1,12 +1,15 @@
 /* Rádió69 × Zsiványok Podcast — lightweight PWA cache. */
 'use strict';
 
-const CACHE_NAME = 'radio69-pwa-v2-analytics-20261028';
+const CACHE_NAME = 'radio69-pwa-v3-performance-events-20261028';
 const APP_SHELL = [
   '/',
   '/index.html',
   '/manifest.webmanifest',
   '/style.css?v=nav-menu-responsive-20261025-v2',
+  '/mediaajanlat.html',
+  '/barter-inquiry.js',
+  '/supabase-config.js',
   '/script.js',
   '/articles.js',
   '/article.js',

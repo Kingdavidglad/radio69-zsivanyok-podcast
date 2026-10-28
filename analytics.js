@@ -156,4 +156,121 @@
   } else {
     init();
   }
+
+  // Public event API. The function sends data only after GA4 was activated
+  // by the visitor's analytics consent; it never accepts user-entered form data.
+  function trackEvent(eventName, params = {}) {
+    if (!googleTagStarted || typeof window.gtag !== 'function') return false;
+    const safeNames = new Set([
+      'article_view', 'article_read', 'share_dialog_open', 'share_click',
+      'outbound_click', 'barter_inquiry_start', 'barter_inquiry_submit',
+      'barter_inquiry_success', 'barter_inquiry_error', 'scroll_depth'
+    ]);
+    if (!safeNames.has(String(eventName))) return false;
+    window.gtag('event', String(eventName), params && typeof params === 'object' ? params : {});
+    return true;
+  }
+  window.RADIO69_ANALYTICS = { track: trackEvent };
+
+  function setupUsageEvents() {
+    const pathname = window.location.pathname || '/';
+    const isDynamicArticle = /\/(?:cikk|article)\.html$/i.test(pathname);
+    const isArticle = /\/cikkek\//i.test(pathname) || isDynamicArticle;
+    let articleViewSent = false;
+    const sendArticleViewWhenReady = () => {
+      if (articleViewSent) return true;
+      const heading = document.querySelector('main h1, article h1, h1');
+      const title = (heading?.textContent || '').trim();
+      if (!title || /betöltés|loading|nem található/i.test(title)) return false;
+      articleViewSent = trackEvent('article_view', {
+        content_type: 'article',
+        content_title: title.slice(0, 140),
+        content_path: pathname
+      });
+      return articleViewSent;
+    };
+    if (isArticle) {
+      if (isDynamicArticle) {
+        if (!sendArticleViewWhenReady()) {
+          const root = document.getElementById('articleRoot') || document.querySelector('main') || document.body;
+          const observer = new MutationObserver(() => {
+            if (sendArticleViewWhenReady()) observer.disconnect();
+          });
+          observer.observe(root, { subtree: true, childList: true, characterData: true });
+          window.setTimeout(() => observer.disconnect(), 15000);
+        }
+      } else {
+        sendArticleViewWhenReady();
+      }
+    }
+
+    let articleReadSent = false;
+    let scroll50Sent = false;
+    function checkScrollDepth() {
+      const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const percent = Math.round((window.scrollY / scrollable) * 100);
+      if (!scroll50Sent && percent >= 50) {
+        scroll50Sent = true;
+        trackEvent('scroll_depth', { percent_scrolled: 50, page_path: pathname });
+      }
+      if (isArticle && !articleReadSent && percent >= 75) {
+        articleReadSent = true;
+        trackEvent('article_read', {
+          content_type: 'article',
+          content_path: pathname,
+          content_title: (document.querySelector('main h1, article h1, h1')?.textContent || document.title || '').trim().slice(0, 140),
+          percent_scrolled: 75
+        });
+      }
+    }
+    window.addEventListener('scroll', checkScrollDepth, { passive: true });
+
+    const outboundGuard = new WeakSet();
+    let barterFormStartSent = false;
+    document.addEventListener('click', (event) => {
+      const target = event.target instanceof Element ? event.target : null;
+      if (!target) return;
+      if (!barterFormStartSent && target.closest('#mediaInquiryForm')) {
+        barterFormStartSent = trackEvent('barter_inquiry_start', { form_name: 'media_inquiry' });
+      }
+      const shareTrigger = target.closest('#shareArticle, #shareArticleBottom');
+      if (shareTrigger) {
+        trackEvent('share_dialog_open', { content_path: pathname });
+        return;
+      }
+      const shareOption = target.closest('.radio69-share-option');
+      if (shareOption) {
+        const methodClasses = ['facebook', 'whatsapp', 'telegram', 'xshare', 'email', 'native', 'copy'];
+        const method = methodClasses.find(name => shareOption.classList.contains(name)) || 'other';
+        trackEvent('share_click', { share_method: method, content_path: pathname });
+        return;
+      }
+      const link = target.closest('a[href]');
+      if (!link || outboundGuard.has(link)) return;
+      try {
+        const url = new URL(link.href, window.location.href);
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
+        if (url.hostname !== window.location.hostname) {
+          outboundGuard.add(link);
+          trackEvent('outbound_click', {
+            link_domain: url.hostname.slice(0, 100),
+            link_text: (link.textContent || link.getAttribute('aria-label') || '').trim().slice(0, 100),
+            page_path: pathname
+          });
+        }
+      } catch (_) { /* Ignore invalid/non-web links. */ }
+    }, true);
+    document.addEventListener('focusin', (event) => {
+      const target = event.target instanceof Element ? event.target : null;
+      if (barterFormStartSent || !target || !target.closest('#mediaInquiryForm')) return;
+      barterFormStartSent = trackEvent('barter_inquiry_start', { form_name: 'media_inquiry' });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupUsageEvents, { once: true });
+  } else {
+    setupUsageEvents();
+  }
+
 })();

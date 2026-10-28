@@ -4,15 +4,15 @@
  * majd adj hozzá egy elemet a listához. A kártyán csak a fotó és a név jelenik meg.
  */
 window.RADIO69_DJS = [
-  { name: "DJ Effect", image: "assets/djs/dj-effect.jpg" },
-  { name: "DJ Veronic", image: "assets/djs/dj-veronic.jpg" },
-  { name: "DJ Hlásznyik", image: "assets/djs/dj-hlasznyik.jpg" },
-  { name: "DJ Daniel", image: "assets/djs/dj-daniel.jpg" },
-  { name: "Carver", image: "assets/djs/dj-carver.jpg" },
-  { name: "MATT.T.", image: "assets/djs/dj-matt-t.jpg" },
-  { name: "TERENCE", image: "assets/djs/dj-terence.jpg" },
-  { name: "ADAMO", image: "assets/djs/dj-adamo.jpg" },
-  { name: "FRIGYES", image: "assets/djs/dj-frigyes.jpg" }
+  { name: "DJ Effect", image: "assets/djs/dj-effect.webp" },
+  { name: "DJ Veronic", image: "assets/djs/dj-veronic.webp" },
+  { name: "DJ Hlásznyik", image: "assets/djs/dj-hlasznyik.webp" },
+  { name: "DJ Daniel", image: "assets/djs/dj-daniel.webp" },
+  { name: "Carver", image: "assets/djs/dj-carver.webp" },
+  { name: "MATT.T.", image: "assets/djs/dj-matt-t.webp" },
+  { name: "TERENCE", image: "assets/djs/dj-terence.webp" },
+  { name: "ADAMO", image: "assets/djs/dj-adamo.webp" },
+  { name: "FRIGYES", image: "assets/djs/dj-frigyes.webp" }
 ];
 
 (() => {

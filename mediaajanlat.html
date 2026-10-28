@@ -119,6 +119,11 @@
     .form-footer .button { cursor: pointer; font: inherit; }
     .form-note { color: #a79bbf; font-size: .82rem; line-height: 1.6; margin: 16px 0 0; }
     .form-status { min-height: 1.5em; color: var(--cyan); font-size: .9rem; }
+    .form-honeypot { position:absolute !important; left:-10000px !important; top:auto !important; width:1px !important; height:1px !important; overflow:hidden !important; }
+    .email-fallback[hidden] { display:none !important; }
+    .privacy-ack-field .check-option { align-items:flex-start; line-height:1.55; }
+    .privacy-ack-field input { margin-top:.25em; flex:0 0 auto; }
+    .privacy-ack-field a { color:var(--cyan); text-underline-offset:3px; }
     .inquiry-aside h3 { font-size: 1.35rem; }
     .inquiry-aside p, .inquiry-aside li { color: var(--muted); font-size: .94rem; }
     .inquiry-aside ul { padding-left: 20px; }
@@ -181,7 +186,7 @@
     <div class="shell hero">
       <span class="eyebrow">Kizárólag barter együttműködés</span>
       <h1>Dolgozzunk együtt <span class="gradient">barterben</span> – kölcsönös értékteremtéssel.</h1>
-      <p class="lead">A Rádió69 és a Zsiványok Podcast kizárólag barter program keretében vállal együttműködéseket. Termék, szolgáltatás, kedvezmény, belépő, helyszín vagy más egyeztetett érték felajánlásáért cserébe közösen kialakított megjelenést biztosíthatunk. Pénzbeli díjazású hirdetési csomagokat nem kínálunk.</p>
+      <p class="lead">A Rádió69 és a Zsiványok Podcast kizárólag barterprogram keretében vállal együttműködéseket. A megkeresés ezen az űrlapon közvetlenül rögzül a partneri megkeresések nyilvántartásába. Pénzbeli díjazású hirdetési csomagokat nem kínálunk.</p>
       <div class="hero-actions">
         <a class="button button-primary" href="#lehetosegek">Barter lehetőségek <span aria-hidden="true">↘</span></a>
         <a class="button button-secondary" href="#ajanlatkeres">Barter ajánlatot teszek</a>
@@ -341,10 +346,11 @@
       <div class="shell">
         <div class="section-heading">
           <h2>Küldj barter együttműködési megkeresést</h2>
-          <p>Írd le, mit tudsz felajánlani barterben, és milyen megjelenést szeretnél cserébe. Az űrlap előre kitöltött e-mailt készít, amelyet elküldés előtt még ellenőrizhetsz és módosíthatsz.</p>
+          <p>Írd le, mit tudsz felajánlani barterben, és milyen megjelenést szeretnél cserébe. Beküldés után a megkeresés rögzül a partneri adatbázisban; e-mailes visszaigazolás nem automatikus.</p>
         </div>
         <div class="inquiry-layout">
-          <form class="inquiry-form" id="mediaInquiryForm">
+          <form class="inquiry-form" id="mediaInquiryForm" novalidate>
+            <div class="form-honeypot" aria-hidden="true"><label for="businessWebsite">Weboldal (hagyd üresen)</label><input id="businessWebsite" name="website" type="text" tabindex="-1" autocomplete="off"></div>
             <div class="field-grid">
               <div class="form-field"><label for="businessName">Vállalkozás / szervezet neve *</label><input id="businessName" name="businessName" maxlength="120" autocomplete="organization" required placeholder="A vállalkozás neve"></div>
               <div class="form-field"><label for="contactName">Kapcsolattartó neve *</label><input id="contactName" name="contactName" maxlength="100" autocomplete="name" required placeholder="Kapcsolattartó"></div>
@@ -363,9 +369,10 @@
               <div class="form-field"><label for="barterValue">A felajánlás becsült értéke (opcionális)</label><input id="barterValue" name="barterValue" maxlength="100" placeholder="Pl. a termék/szolgáltatás hozzávetőleges értéke"></div>
               <div class="form-field full"><label for="campaignAudience">Célközönség / földrajzi fókusz</label><input id="campaignAudience" name="campaignAudience" maxlength="180" placeholder="Pl. Békés vármegye, zenei érdeklődésű közönség"></div>
               <div class="form-field full"><label for="campaignDetails">A barter felajánlás és a megjelenés részletei</label><textarea id="campaignDetails" name="campaignDetails" maxlength="1500" placeholder="Mit ajánlasz fel barterben, és milyen megjelenést szeretnél cserébe? Mik a legfontosabb feltételek vagy határidők?"></textarea></div>
+              <div class="form-field full privacy-ack-field"><label class="check-option" for="privacyAcknowledged"><input id="privacyAcknowledged" name="privacyAcknowledged" type="checkbox" required> Elolvastam az <a href="adatvedelem.html" target="_blank" rel="noopener noreferrer">adatvédelmi tájékoztatót</a>, és tudomásul veszem, hogy a megadott adataimat a bartermegkeresés megválaszolásához kezelitek. *</label></div>
             </div>
-            <div class="form-footer"><button class="button button-primary" type="submit">Bartermegkereső e-mail összeállítása <span aria-hidden="true">↗</span></button><a class="button button-secondary" href="mailto:zsivanyokpodcast@gmail.com?subject=Barter%20egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9s%20-%20R%C3%A1di%C3%B369%20%C3%97%20Zsiv%C3%A1nyok%20Podcast">Barter e-mail megnyitása</a></div>
-            <p class="form-note">Adatkezelési tájékoztató: az űrlap adatait ez az oldal nem küldi szerverre és nem menti el. A gomb a levelezőprogramodat nyitja meg előre kitöltött levéllel; a levelet csak te küldöd el. A megkeresés elküldése előtt ellenőrizd a tartalmát.</p>
+            <div class="form-footer"><button class="button button-primary" id="barterSubmitButton" type="submit">Bartermegkeresés biztonságos beküldése <span aria-hidden="true">↗</span></button><a class="button button-secondary" href="mailto:zsivanyokpodcast@gmail.com?subject=Barter%20egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9s%20-%20R%C3%A1di%C3%B369%20%C3%97%20Zsiv%C3%A1nyok%20Podcast">E-mailes alternatíva</a><a class="button button-secondary email-fallback" id="emailFallback" href="#" hidden>E-mailes alternatíva használata</a></div>
+            <p class="form-note">Az űrlap a megkeresés adatait biztonságosan, a Supabase adatbázisába küldi. Nyilvánosan nem olvasható táblába kerül, és a megkeresést a Supabase felületén tudod megtekinteni. Automatikus e-mail-értesítés nincs bekapcsolva. Részletek az <a href="adatvedelem.html">adatvédelmi tájékoztatóban</a>.</p>
             <p class="form-status" id="mediaInquiryStatus" role="status" aria-live="polite"></p>
           </form>
           <aside class="inquiry-aside">
@@ -377,7 +384,7 @@
               <li>A kívánt megjelenés és a tervezett időszak.</li>
               <li>Ha van, a weboldal vagy a felajánlás leírását bemutató link.</li>
             </ul>
-            <p>A felajánlás leírása szükséges, a becsült érték és a részletes kampányterv opcionális. Az űrlap elküldése nem jelent automatikus elfogadást.</p>
+            <p>A felajánlás leírása szükséges, a becsült érték és a részletes kampányterv opcionális. Az űrlap elküldése nem jelent automatikus elfogadást. A beérkezett megkeresések a Supabase Dashboard Table Editor felületén, a <code>barter_inquiries</code> táblában jelennek meg.</p>
             <a class="contact-email" href="mailto:zsivanyokpodcast@gmail.com">zsivanyokpodcast@gmail.com</a>
           </aside>
         </div>
@@ -411,45 +418,12 @@
   <script>
     const year = document.getElementById('year');
     if (year) year.textContent = new Date().getFullYear();
-
-    const mediaForm = document.getElementById('mediaInquiryForm');
-    if (mediaForm) {
-      mediaForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-        if (!mediaForm.reportValidity()) return;
-        const value = (id) => (document.getElementById(id)?.value || '').trim();
-        const formats = Array.from(mediaForm.querySelectorAll('input[name="format"]:checked')).map((item) => item.value);
-        const lines = [
-          'Barter együttműködési megkeresés – Rádió69 × Zsiványok Podcast',
-          '',
-          'Vállalkozás / szervezet: ' + value('businessName'),
-          'Kapcsolattartó: ' + value('contactName'),
-          'Kapcsolati e-mail-cím: ' + value('contactEmail'),
-          'Együttműködés célja: ' + value('campaignGoal'),
-          'Érdeklődő megjelenések: ' + (formats.length ? formats.join(', ') : 'Még nincs kiválasztva'),
-          'Barterben felajánlott termék / szolgáltatás: ' + value('barterOffer'),
-          'Tervezett időszak: ' + (value('campaignPeriod') || 'Nincs megadva'),
-          'A felajánlás becsült értéke: ' + (value('barterValue') || 'Nincs megadva'),
-          'Célközönség / földrajzi fókusz: ' + (value('campaignAudience') || 'Nincs megadva'),
-          '',
-          'A barter felajánlás és a megjelenés részletei:',
-          value('campaignDetails') || 'Nincs megadva',
-          '',
-          'A bartermegkeresést a radio69zsivanyok.hu oldalán állítottam össze. Tudomásul veszem, hogy az együttműködés csak előzetes, kölcsönös egyeztetés után jöhet létre.'
-        ];
-        const subject = 'Barter együttműködési megkeresés – ' + value('businessName');
-        const url = 'mailto:zsivanyokpodcast@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
-        const status = document.getElementById('mediaInquiryStatus');
-        if (status) status.textContent = 'Előkészítettük a bartermegkereső e-mailt. A levelezőprogramban ellenőrizd az adatokat, majd küldd el.';
-        window.location.href = url;
-      });
-    }
-
     const printButton = document.getElementById('printMediaKit');
     if (printButton) printButton.addEventListener('click', function () { window.print(); });
   </script>
+  <script src="/supabase-config.js"></script>
+  <script src="/barter-inquiry.js" defer></script>
   <script src="/pwa.js" defer></script>
-
   <script src="/analytics.js?v=radio69-analytics-20261028" defer></script>
 </body>
 </html>
