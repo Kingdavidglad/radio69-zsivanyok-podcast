@@ -1,7 +1,7 @@
 /* Rádió69 × Zsiványok Podcast — lightweight PWA cache. */
 'use strict';
 
-const CACHE_NAME = 'radio69-pwa-v1-20261028';
+const CACHE_NAME = 'radio69-pwa-v2-analytics-20261028';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -12,6 +12,8 @@ const APP_SHELL = [
   '/article.js',
   '/share.js',
   '/pwa.js',
+  '/analytics.js?v=radio69-analytics-20261028',
+  '/analytics-config.json',
   '/assets/favicon.png',
   '/assets/pwa-192.png',
   '/assets/pwa-512.png',
@@ -51,6 +53,22 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+  if (url.pathname === '/analytics-config.json') {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      try {
+        const response = await fetch(request, { cache: 'no-store' });
+        if (response && response.ok && response.type === 'basic') {
+          await cache.put('/analytics-config.json', response.clone());
+        }
+        return response;
+      } catch (_) {
+        return (await cache.match('/analytics-config.json')) || Response.error();
+      }
+    })());
+    return;
+  }
+
   // Never cache editor pages; this avoids showing a stale private/admin interface offline.
   if (url.pathname.includes('cikk-szerkeszto')) return;
 

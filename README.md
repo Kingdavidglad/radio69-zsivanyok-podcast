@@ -87,3 +87,10 @@ Mobilos javítás (2026-10-22): a stíluslap hivatkozása verziózott `?v=mobile
 - A nyilvános oldalon csak a DJ portréja és alatta a neve látszik.
 - GitHub Pages statikus tárhely, ezért nincs közvetlen, weboldalon belüli fájlfeltöltő adminfelület: a képeket és a `djs.js` fájlt GitHubon kell feltölteni/módosítani.
 - Mivel már szerepel rajta DJ-profil, a `dj-k.html` indexelhető metaadatot kapott, és bekerült a `sitemap.xml` fájlba.
+
+
+## Látogatottsági statisztikák (GA4)
+- Az `analytics.js` hozzájáruláskezelést biztosít; a Google Analytics kód csak kifejezett elfogadás után töltődik be.
+- Az `analytics-config.json` kezdetben üres mérési azonosítót tartalmaz. A működéshez saját GA4 azonosító szükséges.
+- Részletes magyar útmutató: `ANALITIKA-BEALLITASI-UTMUTATO.md`.
+- Az analitikát ne aktiváld az adatkezelői adatok és a tényleges adatkezelési tájékoztató ellenőrzése nélkül.

@@ -42,4 +42,6 @@
   <script src="../chat.js"></script><script>document.getElementById('year').textContent = new Date().getFullYear(); const share = async () => { const url=window.location.href; const title="Így készül egy Zsiványok Podcast-adás: az ötlettől az utómunkáig"; const text="A téma kiválasztásától a technikai ellenőrzésen át a vágásig több lépésből áll, mire elkészül egy Zsiványok Podcast-adás."; try { if (navigator.share) await navigator.share({title,text,url}); else if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(url); const n=document.querySelector('#shareArticle span'); if(n)n.textContent='Link másolva'; } else window.prompt('Másold ki a cikk hivatkozását:',url); } catch(e) { if(e.name!=='AbortError') window.prompt('Másold ki a cikk hivatkozását:',url); } }; document.getElementById('shareArticle')?.addEventListener('click',share); document.getElementById('shareArticleBottom')?.addEventListener('click',share); document.getElementById('printArticle')?.addEventListener('click',()=>window.print());</script>
   <script src="../share.js"></script>
   <script src="/pwa.js" defer></script>
+
+  <script src="/analytics.js?v=radio69-analytics-20261028" defer></script>
 </body></html>
