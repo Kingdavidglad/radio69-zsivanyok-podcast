@@ -183,16 +183,43 @@
     });
   };
 
-  const openDialog = trigger => {
+  const resolveSocialPreviewUrl = async article => {
+    const pageUrl = new URL(window.location.href);
+    if (!/(^|\/)cikk\.html$/.test(pageUrl.pathname)) return article.url;
+    const id = pageUrl.searchParams.get('id') || '';
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) return article.url;
+
+    const previewUrl = `https://radio69zsivanyok.hu/social-previews/${encodeURIComponent(id)}/`;
+    try {
+      // GitHub Pages needs a static HTML page for crawlers to read per-article OG tags.
+      // If the scheduled generator has not run yet, safely keep the working article URL.
+      const response = await fetch(previewUrl, { method: 'HEAD', cache: 'no-store' });
+      if (response.ok) return previewUrl;
+    } catch (error) {
+      // Cross-origin/local preview checks may fail; the existing article link remains valid.
+    }
+    return article.url;
+  };
+
+  const openDialog = async trigger => {
     activeTrigger = trigger;
     activeArticle = articleDetails();
+    const requestedArticle = activeArticle;
     ensureDialog();
     overlay.querySelector('#radio69ShareArticleTitle').textContent = activeArticle.title;
-    showStatus('');
+    showStatus('A cikk megosztási előnézetének ellenőrzése…');
     updateLinks();
     overlay.hidden = false;
     document.body.classList.add('radio69-share-open');
     overlay.querySelector('.radio69-share-close').focus();
+
+    const resolvedUrl = await resolveSocialPreviewUrl(requestedArticle);
+    if (activeArticle !== requestedArticle || overlay.hidden) return;
+    activeArticle = { ...requestedArticle, url: resolvedUrl };
+    updateLinks();
+    showStatus(resolvedUrl.includes('/social-previews/')
+      ? 'A cikk megosztása a saját cím- és képelőnézetével történik.'
+      : 'A közvetlen cikkhivatkozás használható megosztásra.');
   };
 
   document.addEventListener('click', event => {
