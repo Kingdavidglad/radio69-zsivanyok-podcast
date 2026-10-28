@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Médiaajánlat a Rádió69 és a Zsiványok Podcast számára. Online hirdetési lehetőségek, szponzoráció és együttműködés.">
+  <meta name="description" content="Barter együttműködés a Rádió69 és a Zsiványok Podcast felületein. Termék, szolgáltatás vagy más kölcsönös értékcsere előzetes egyeztetés alapján.">
   <meta name="theme-color" content="#100c1f">
-  <title>Médiaajánlat | Rádió69 × Zsiványok Podcast</title>
+  <title>Barter együttműködés | Rádió69 × Zsiványok Podcast</title>
   <link rel="canonical" href="https://radio69zsivanyok.hu/mediaajanlat.html">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Médiaajánlat | Rádió69 × Zsiványok Podcast">
-  <meta property="og:description" content="Mutasd be vállalkozásodat a Rádió69 és a Zsiványok Podcast közönségének!">
+  <meta property="og:title" content="Barter együttműködés | Rádió69 × Zsiványok Podcast">
+  <meta property="og:description" content="Barter együttműködés a Rádió69 és a Zsiványok Podcast felületein – pénzbeli hirdetési csomagok helyett kölcsönös értékcsere.">
   <meta property="og:url" content="https://radio69zsivanyok.hu/mediaajanlat.html">
   <style>
     :root {
@@ -52,7 +52,7 @@
     h1 .gradient { background: linear-gradient(100deg, var(--purple), var(--pink) 47%, var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .lead { max-width: 710px; color: var(--muted); font-size: clamp(1.04rem, 2vw, 1.22rem); }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
-    .button { display: inline-flex; justify-content: center; align-items: center; gap: 9px; padding: 13px 19px; border-radius: 999px; border: 1px solid transparent; text-decoration: none; font-weight: 800; transition: transform .18s ease, border-color .18s ease; }
+    .button { display: inline-flex; justify-content: center; align-items: center; gap: 9px; padding: 13px 19px; border-radius: 999px; border: 1px solid transparent; text-decoration: none; font-family: inherit; font-weight: 800; cursor: pointer; transition: transform .18s ease, border-color .18s ease; }
     .button:hover { transform: translateY(-2px); }
     .button-primary { background: linear-gradient(110deg, var(--purple-strong), #6d28d9); color: white; box-shadow: 0 10px 35px rgba(124,58,237,.25); }
     .button-secondary { border-color: var(--border); background: rgba(255,255,255,.025); color: var(--text); }
@@ -82,6 +82,75 @@
     .footer { border-top: 1px solid var(--border); padding: 24px 0 34px; color: #a79bbf; font-size: .9rem; }
     .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
     .footer a { text-decoration: none; }
+
+    .button:focus-visible, .form-field input:focus-visible, .form-field select:focus-visible,
+    .form-field textarea:focus-visible, .faq-item summary:focus-visible {
+      outline: 3px solid var(--cyan); outline-offset: 3px;
+    }
+    .workflow-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .workflow-step { border: 1px solid var(--border); border-radius: 18px; padding: 22px; background: rgba(21,16,36,.78); }
+    .workflow-number { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; margin-bottom: 14px; color: var(--cyan); background: rgba(103,232,249,.09); border: 1px solid rgba(103,232,249,.2); font-weight: 900; }
+    .workflow-step p { margin: 0; color: var(--muted); font-size: .94rem; }
+    .faq-list { display: grid; gap: 10px; }
+    .faq-item { border: 1px solid var(--border); border-radius: 16px; background: rgba(21,16,36,.72); overflow: hidden; }
+    .faq-item summary { cursor: pointer; list-style: none; padding: 17px 20px; font-weight: 800; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after { content: '+'; color: var(--cyan); font-size: 1.35rem; line-height: 1; }
+    .faq-item[open] summary::after { content: '−'; }
+    .faq-answer { padding: 0 20px 18px; color: var(--muted); max-width: 900px; }
+    .faq-answer p { margin: 0; }
+    .inquiry-layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(250px, .65fr); gap: 18px; align-items: start; }
+    .inquiry-form, .inquiry-aside { border: 1px solid var(--border); border-radius: var(--radius); background: linear-gradient(145deg, rgba(28,21,48,.92), rgba(17,13,30,.92)); padding: clamp(20px, 3vw, 30px); }
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .form-field { display: grid; gap: 7px; min-width: 0; }
+    .form-field.full { grid-column: 1 / -1; }
+    .form-field label, .field-label { color: #eee9ff; font-weight: 750; font-size: .9rem; }
+    .form-field input, .form-field select, .form-field textarea {
+      display: block; width: 100%; min-height: 46px; padding: 11px 13px; border: 1px solid rgba(196,181,253,.27);
+      border-radius: 12px; background: rgba(8,6,17,.58); color: var(--text); font: inherit; font-size: .94rem;
+    }
+    .form-field select option { background: #151024; color: #f8f6ff; }
+    .form-field textarea { min-height: 112px; resize: vertical; }
+    .form-field input::placeholder, .form-field textarea::placeholder { color: #8d83a5; }
+    .check-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-top: 4px; }
+    .check-option { display: flex; gap: 9px; align-items: flex-start; border: 1px solid var(--border); border-radius: 12px; padding: 11px; color: var(--muted); font-size: .9rem; }
+    .check-option input { width: 17px; min-height: 17px; margin: 3px 0 0; accent-color: var(--purple-strong); flex: 0 0 auto; }
+    .form-footer { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 20px; }
+    .form-footer .button { cursor: pointer; font: inherit; }
+    .form-note { color: #a79bbf; font-size: .82rem; line-height: 1.6; margin: 16px 0 0; }
+    .form-status { min-height: 1.5em; color: var(--cyan); font-size: .9rem; }
+    .inquiry-aside h3 { font-size: 1.35rem; }
+    .inquiry-aside p, .inquiry-aside li { color: var(--muted); font-size: .94rem; }
+    .inquiry-aside ul { padding-left: 20px; }
+    .inquiry-aside li { margin: 8px 0; }
+    .contact-email { display: inline-flex; margin-top: 8px; color: var(--cyan); font-weight: 800; text-decoration: none; overflow-wrap: anywhere; }
+    .hero-actions .button { min-height: 48px; }
+    .print-hint { color: #a79bbf; font-size: .84rem; margin-top: 13px; }
+    @media (max-width: 900px) { .workflow-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } .inquiry-layout { grid-template-columns: 1fr; } }
+    @media (max-width: 560px) { .workflow-grid, .field-grid, .check-grid { grid-template-columns: 1fr; } .form-field.full { grid-column: auto; } .form-footer .button { width: 100%; } }
+    @media print {
+      @page { size: A4; margin: 14mm; }
+      body { color: #171323 !important; background: #fff !important; -webkit-print-color-adjust: economy; print-color-adjust: economy; }
+      .site-header, .footer, .hero-actions, #ajanlatkeres, .print-hint, .no-print { display: none !important; }
+      .shell { width: 100% !important; max-width: none !important; }
+      .hero { padding: 0 0 8mm !important; }
+      h1 { color: #171323 !important; font-size: 31pt !important; max-width: none !important; }
+      h1 .gradient { color: #5b21b6 !important; background: none !important; -webkit-text-fill-color: #5b21b6 !important; }
+      h2, h3 { color: #171323 !important; }
+      p, li, .card p, .section-heading p, .workflow-step p, .faq-answer { color: #373044 !important; }
+      .eyebrow { color: #5b21b6 !important; background: #f6f1ff !important; border-color: #d9c9ff !important; }
+      section { padding: 7mm 0 !important; break-inside: auto; }
+      .card, .audience-panel, .workflow-step, .faq-item { color: #171323 !important; background: #fff !important; border: 1px solid #ddd7e9 !important; box-shadow: none !important; break-inside: avoid; }
+      .card-icon, .workflow-number { background: #f3edff !important; color: #5b21b6 !important; }
+      .package-label { color: #5b21b6 !important; }
+      .tag { color: #30263f !important; background: #fff !important; border-color: #ddd7e9 !important; }
+      .note-banner { color: #373044 !important; background: #f7f5fa !important; }
+      .contact-box { color: #171323 !important; background: #fff !important; border-color: #d9c9ff !important; }
+      .contact-box p { color: #373044 !important; }
+      .cards, .packages, .audience-wrap, .workflow-grid { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+      a { color: #171323 !important; text-decoration: none !important; }
+    }
+
     @media (max-width: 800px) { .cards, .packages { grid-template-columns: repeat(2, minmax(0,1fr)); } .nav { align-items: flex-start; flex-direction: column; padding: 18px 0; } .nav-links { gap: 10px 15px; } }
     @media (max-width: 560px) { .shell { width: min(100% - 28px, 1120px); } .cards, .packages, .audience-wrap { grid-template-columns: 1fr; } .hero { padding-top: 58px; } .button { width: 100%; } .nav-links a { font-size: .86rem; } }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; } }
@@ -103,58 +172,59 @@
         <a href="index.html#zsivanyok">Zsiványok Podcast</a>
         <a href="index.html#friss">Olvasnivalók</a>
         <a href="mediaajanlat.html" aria-current="page">Médiaajánlat</a>
-        <a class="nav-cta" href="index.html#kapcsolat">Kapcsolat</a>
+        <a class="nav-cta" href="#ajanlatkeres">Bartermegkeresés</a>
       </nav>
     </div>
   </header>
 
   <main>
     <div class="shell hero">
-      <span class="eyebrow">Együttműködés · Hirdetés · Szponzoráció</span>
-      <h1>Legyél jelen ott, ahol a <span class="gradient">történetek</span> és a zene találkoznak.</h1>
-      <p class="lead">A Rádió69 és a Zsiványok Podcast együttműködési lehetőségeket kínál olyan vállalkozásoknak és szervezeteknek, amelyek szeretnék bemutatni márkájukat a magyar nyelvű online közönségnek.</p>
+      <span class="eyebrow">Kizárólag barter együttműködés</span>
+      <h1>Dolgozzunk együtt <span class="gradient">barterben</span> – kölcsönös értékteremtéssel.</h1>
+      <p class="lead">A Rádió69 és a Zsiványok Podcast kizárólag barter program keretében vállal együttműködéseket. Termék, szolgáltatás, kedvezmény, belépő, helyszín vagy más egyeztetett érték felajánlásáért cserébe közösen kialakított megjelenést biztosíthatunk. Pénzbeli díjazású hirdetési csomagokat nem kínálunk.</p>
       <div class="hero-actions">
-        <a class="button button-primary" href="#lehetosegek">Reklámlehetőségek <span aria-hidden="true">↘</span></a>
-        <a class="button button-secondary" href="#kapcsolat">Egyedi ajánlatot kérek</a>
+        <a class="button button-primary" href="#lehetosegek">Barter lehetőségek <span aria-hidden="true">↘</span></a>
+        <a class="button button-secondary" href="#ajanlatkeres">Barter ajánlatot teszek</a>
+        <button class="button button-secondary" id="printMediaKit" type="button">Médiaajánlat mentése PDF-ként ⤓</button>
       </div>
     </div>
 
     <section id="lehetosegek">
       <div class="shell">
         <div class="section-heading">
-          <h2>Reklámlehetőségek</h2>
-          <p>Az együttműködés formáját a kampány céljához, időtartamához és a rendelkezésre álló felületekhez igazítjuk.</p>
+          <h2>Barter együttműködési formák</h2>
+          <p>A lehetséges megjelenést mindig a felajánlott termékhez vagy szolgáltatáshoz, a közönséghez és a vállalható feladatokhoz igazítjuk. Minden csere külön egyeztetés tárgya.</p>
         </div>
         <div class="cards">
         <article class="card">
             <div class="card-icon" aria-hidden="true">▧</div>
-            <h3>Weboldali banner</h3>
-            <p>Grafikus hirdetés a weboldalon, a kampányhoz egyeztetett elhelyezéssel és időtartammal.</p>
+            <h3>Weboldali megjelenés barterért</h3>
+            <p>Egyeztetett banner vagy partnerlink a weboldalon, a barter felajánlás és a rendelkezésre álló felületek alapján.</p>
           </article>
         <article class="card">
             <div class="card-icon" aria-hidden="true">✎</div>
-            <h3>Szponzorált cikk vagy bemutató</h3>
-            <p>Termék, szolgáltatás, helyi vállalkozás vagy esemény bemutatása külön jelölt partneri tartalomban.</p>
+            <h3>Barter alapú termék- vagy szolgáltatásbemutató</h3>
+            <p>Felajánlott termék vagy szolgáltatás bemutatása külön jelölt partneri tartalomban, előzetesen egyeztetett formában.</p>
           </article>
         <article class="card">
             <div class="card-icon" aria-hidden="true">◉</div>
-            <h3>Rádiós reklámspot</h3>
-            <p>Reklámspot vagy támogatói megjelenés a Rádió69 műsorkínálatához igazítva, előzetes egyeztetéssel.</p>
+            <h3>Rádiós megjelenés barterben</h3>
+            <p>Egyeztetett rádiós spot vagy támogatói említés, ha a felajánlás és a műsorkörnyezet alapján megvalósítható.</p>
           </article>
         <article class="card">
             <div class="card-icon" aria-hidden="true">🎙</div>
-            <h3>Podcast-szponzoráció</h3>
-            <p>Támogatói említés vagy egyeztetett szponzori megjelenés a Zsiványok Podcast tartalmai mellett.</p>
+            <h3>Podcast-partnerség barterben</h3>
+            <p>Partneri említés vagy egyeztetett megjelenés a Zsiványok Podcast valamely tartalma mellett.</p>
           </article>
         <article class="card">
             <div class="card-icon" aria-hidden="true">↗</div>
-            <h3>Közösségi médiás promóció</h3>
-            <p>Egyeztetett promóciós poszt vagy kampánykreatív a kapcsolódó közösségi felületeken.</p>
+            <h3>Közösségi médiás partneri megjelenés</h3>
+            <p>Egyeztetett poszt vagy tartalom a releváns közösségi felületeken, a barter feltételeinek megfelelően.</p>
           </article>
         <article class="card">
             <div class="card-icon" aria-hidden="true">✦</div>
-            <h3>Komplex partnercsomag</h3>
-            <p>Több megjelenés kombinációja: webes felület, rádiós spot, podcast-említés és közösségi promóció.</p>
+            <h3>Többfelületes barter együttműködés</h3>
+            <p>Több felület összehangolt használata egyetlen, kölcsönösen egyeztetett bartermegállapodás részeként.</p>
           </article>
         </div>
       </div>
@@ -196,45 +266,121 @@
     <section id="csomagok">
       <div class="shell">
         <div class="section-heading">
-          <h2>Rugalmas együttműködések</h2>
-          <p>Nincs két egyforma kampány. A megjelenéseket az igények és a vállalt feladatok alapján egyeztetjük.</p>
+          <h2>Példák barter együttműködésekre</h2>
+          <p>Az alábbi példák ötletet adnak; nem megvásárolható csomagok. Minden bartermegállapodás a felajánlás és az ellenszolgáltatás egyedi egyeztetésével jön létre.</p>
         </div>
         <div class="packages">
         <article class="card package">
-            <span class="package-label">01 · Alap</span>
-            <h3>Online jelenlét</h3>
-            <p>Egyszerű, jól áttekinthető megjelenés a weboldalon.</p>
+            <span class="package-label">01 · Online barter</span>
+            <h3>Online megjelenés cserébe</h3>
+            <p>Például termék, szolgáltatás vagy kedvezmény felajánlása egyeztetett weboldali megjelenésért cserébe.</p>
             <ul>
               <li>Weboldali banner vagy partnerlink</li>
-              <li>Egyeztetett kampányidőszak</li>
-              <li>Megjelenés részleteinek előzetes jóváhagyása</li>
+              <li>A barter tárgyának és értékének előzetes egyeztetése</li>
+              <li>Időtartam és megjelenés írásos jóváhagyása</li>
             </ul>
-        <a class="button button-secondary" href="#kapcsolat">Ajánlatot kérek</a>
+        <a class="button button-secondary" href="#kapcsolat">Barter egyeztetése</a>
           </article>
         <article class="card package">
-            <span class="package-label">02 · Kiemelt</span>
-            <h3>Tartalmi együttműködés</h3>
-            <p>Bemutatkozási lehetőség releváns szerkesztőségi környezetben.</p>
+            <span class="package-label">02 · Tartalmi barter</span>
+            <h3>Termék- vagy szolgáltatásbemutató</h3>
+            <p>Felajánlott termék vagy szolgáltatás alapján kialakított, egyértelműen jelölt partneri bemutató.</p>
             <ul>
-              <li>Szponzorált cikk vagy termékbemutató</li>
-              <li>Egyeztetett partneri megjelölés</li>
-              <li>Kampányhoz igazított tartalom</li>
+              <li>Előre egyeztetett partneri tartalom</li>
+              <li>Átlátható barter- és partnerjelölés</li>
+              <li>A megjelenés feltételeinek előzetes rögzítése</li>
             </ul>
-        <a class="button button-secondary" href="#kapcsolat">Ajánlatot kérek</a>
+        <a class="button button-secondary" href="#ajanlatkeres">Barter egyeztetése</a>
           </article>
         <article class="card package">
-            <span class="package-label">03 · Komplex</span>
-            <h3>Többcsatornás kampány</h3>
-            <p>Több felület összehangolt használata egy kampányban.</p>
+            <span class="package-label">03 · Többfelületes barter</span>
+            <h3>Összehangolt partneri megjelenés</h3>
+            <p>Több rádiós, podcastos, webes vagy közösségi megjelenés egy közösen elfogadott bartermegállapodásban.</p>
             <ul>
-              <li>Weboldali megjelenés</li>
-              <li>Rádiós vagy podcast-szponzoráció</li>
-              <li>Igény szerint közösségi promóció</li>
+              <li>Egyeztetett weboldali megjelenés</li>
+              <li>Rádiós vagy podcastos partneri említés</li>
+              <li>Igény és megállapodás szerint közösségi promóció</li>
             </ul>
-        <a class="button button-primary" href="#kapcsolat">Egyedi ajánlatot kérek</a>
+        <a class="button button-primary" href="#kapcsolat">Barter együttműködést egyeztetek</a>
           </article>
         </div>
-        <p class="note-banner">Az árakat, a megjelenési időt, a kreatív anyagokat és a vállalt eléréseket minden együttműködés előtt külön egyeztetjük. Garantált látogatottságot vagy elérést csak erre vonatkozó, mérhető megállapodás alapján vállalunk.</p>
+        <p class="note-banner">A Rádió69 és a Zsiványok Podcast kizárólag barter alapon működik együtt; pénzbeli fizetésért vásárolható hirdetési szolgáltatást nem kínál. A felajánlás és a megjelenés terjedelmét, időzítését és feltételeit előzetesen, írásban egyeztetjük. Együttműködést csak akkor vállalunk, ha a felajánlás releváns és a megjelenés ténylegesen megvalósítható.</p>
+      </div>
+    </section>
+
+    <section id="egyuttmukodes-menete">
+      <div class="shell">
+        <div class="section-heading">
+          <h2>Így épül fel az együttműködés</h2>
+          <p>Átlátható egyeztetés az első ötlettől a megjelenésig — minden részletet a kampány céljaihoz igazítunk.</p>
+        </div>
+        <div class="workflow-grid">
+          <article class="workflow-step"><span class="workflow-number">01</span><h3>Megismerjük a célt</h3><p>Átbeszéljük, kit szeretnél elérni, mit szeretnél bemutatni, és mikorra tervezed a kampányt.</p></article>
+          <article class="workflow-step"><span class="workflow-number">02</span><h3>Összeáll az ajánlat</h3><p>A felajánlott termék vagy szolgáltatás, valamint a lehetséges megjelenés részleteit egyeztetjük; pénzbeli díjat nem számítunk fel.</p></article>
+          <article class="workflow-step"><span class="workflow-number">03</span><h3>Jóváhagyjuk a részleteket</h3><p>Rögzítjük a tartalmat, az időzítést, a kreatív anyagokat és a partneri megjelölést.</p></article>
+          <article class="workflow-step"><span class="workflow-number">04</span><h3>Megjelenik a kampány</h3><p>Az egyeztetett módon megvalósítjuk a megjelenést; a rendelkezésre álló mérési adatokat külön egyeztetjük.</p></article>
+        </div>
+      </div>
+    </section>
+    <section id="gyik">
+      <div class="shell">
+        <div class="section-heading">
+          <h2>Gyakori kérdések</h2>
+          <p>A legfontosabb tudnivalók az együttműködés megtervezése előtt.</p>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item"><summary>Fizetős hirdetési csomagokat is kínáltok?</summary><div class="faq-answer"><p>Nem. A Rádió69 és a Zsiványok Podcast kizárólag barterprogram keretében vállal együttműködéseket. Pénzbeli díjazás ellenében megvásárolható hirdetési csomagokat nem kínálunk. A partner által felajánlott termék, szolgáltatás vagy más érték és az ellenszolgáltatás részleteit előzetesen egyeztetjük.</p></div></details>
+          <details class="faq-item"><summary>Mit ajánlhatok fel barter keretében?</summary><div class="faq-answer"><p>Terméket, szolgáltatást, kedvezményt, belépőjegyet, helyszínhasználatot vagy más olyan felajánlást, amely a Rádió69 vagy a Zsiványok Podcast számára releváns. Az elfogadás minden esetben egyedi egyeztetés tárgya.</p></div></details>
+          <details class="faq-item"><summary>Hogyan egyeztetjük a barter értékét?</summary><div class="faq-answer"><p>A felajánlás leírását, becsült értékét, mennyiségét, a megjelenések formáját és határidejét még a kezdés előtt egyeztetjük, majd írásban rögzítjük.</p></div></details>
+          <details class="faq-item"><summary>Garantált elérést vagy hallgatottságot vállaltok?</summary><div class="faq-answer"><p>Nem vállalunk automatikus vagy előre nem igazolt elérést. Konkrét számot csak aktuális, ellenőrizhető adatok alapján közlünk; a megjelenés eredményét külső tényezők is befolyásolhatják.</p></div></details>
+          <details class="faq-item"><summary>Minden felajánlást elfogadtok?</summary><div class="faq-answer"><p>Nem feltétlenül. Olyan felajánlásokat tudunk elfogadni, amelyek illeszkednek a tartalmainkhoz, a közönségünkhöz és a rendelkezésre álló kapacitásunkhoz. A megjelenés nem automatikus, mindenről előzetesen megállapodunk.</p></div></details>
+        </div>
+      </div>
+    </section>
+    <section id="ajanlatkeres">
+      <div class="shell">
+        <div class="section-heading">
+          <h2>Küldj barter együttműködési megkeresést</h2>
+          <p>Írd le, mit tudsz felajánlani barterben, és milyen megjelenést szeretnél cserébe. Az űrlap előre kitöltött e-mailt készít, amelyet elküldés előtt még ellenőrizhetsz és módosíthatsz.</p>
+        </div>
+        <div class="inquiry-layout">
+          <form class="inquiry-form" id="mediaInquiryForm">
+            <div class="field-grid">
+              <div class="form-field"><label for="businessName">Vállalkozás / szervezet neve *</label><input id="businessName" name="businessName" maxlength="120" autocomplete="organization" required placeholder="A vállalkozás neve"></div>
+              <div class="form-field"><label for="contactName">Kapcsolattartó neve *</label><input id="contactName" name="contactName" maxlength="100" autocomplete="name" required placeholder="Kapcsolattartó"></div>
+              <div class="form-field"><label for="contactEmail">Kapcsolati e-mail-cím *</label><input id="contactEmail" name="contactEmail" type="email" maxlength="160" autocomplete="email" required placeholder="nev@ceg.hu"></div>
+              <div class="form-field"><label for="campaignGoal">Az együttműködés célja *</label><select id="campaignGoal" name="campaignGoal" required><option value="">Válassz célt…</option><option>Ismertség növelése</option><option>Termék vagy szolgáltatás bemutatása</option><option>Forgalomterelés weboldalra</option><option>Helyi rendezvény népszerűsítése</option><option>Hosszú távú barter partnerség</option><option>Egyéb cél</option></select></div>
+              <div class="form-field full"><span class="field-label">Milyen megjelenés érdekel? (Többet is választhatsz)</span><div class="check-grid">
+                <label class="check-option"><input type="checkbox" name="format" value="Weboldali banner vagy partnerlink">Weboldali banner vagy partnerlink</label>
+                <label class="check-option"><input type="checkbox" name="format" value="Barter alapú termékbemutató / partneri cikk">Barter alapú termékbemutató / partneri cikk</label>
+                <label class="check-option"><input type="checkbox" name="format" value="Rádiós megjelenés barterben">Rádiós megjelenés barterben</label>
+                <label class="check-option"><input type="checkbox" name="format" value="Podcast-partneri említés barterben">Podcast-partneri említés barterben</label>
+                <label class="check-option"><input type="checkbox" name="format" value="Közösségi médiás promóció">Közösségi médiás promóció</label>
+                <label class="check-option"><input type="checkbox" name="format" value="Többfelületes barter együttműködés">Többfelületes barter együttműködés</label>
+              </div></div>
+              <div class="form-field full"><label for="barterOffer">Mit ajánlasz fel barter keretében? *</label><textarea id="barterOffer" name="barterOffer" maxlength="1200" required placeholder="Pl. termék, szolgáltatás, kedvezmény, belépőjegy, helyszín vagy más felajánlás"></textarea></div>
+              <div class="form-field"><label for="campaignPeriod">Tervezett időszak</label><input id="campaignPeriod" name="campaignPeriod" maxlength="100" placeholder="Pl. november, karácsonyi időszak"></div>
+              <div class="form-field"><label for="barterValue">A felajánlás becsült értéke (opcionális)</label><input id="barterValue" name="barterValue" maxlength="100" placeholder="Pl. a termék/szolgáltatás hozzávetőleges értéke"></div>
+              <div class="form-field full"><label for="campaignAudience">Célközönség / földrajzi fókusz</label><input id="campaignAudience" name="campaignAudience" maxlength="180" placeholder="Pl. Békés vármegye, zenei érdeklődésű közönség"></div>
+              <div class="form-field full"><label for="campaignDetails">A barter felajánlás és a megjelenés részletei</label><textarea id="campaignDetails" name="campaignDetails" maxlength="1500" placeholder="Mit ajánlasz fel barterben, és milyen megjelenést szeretnél cserébe? Mik a legfontosabb feltételek vagy határidők?"></textarea></div>
+            </div>
+            <div class="form-footer"><button class="button button-primary" type="submit">Bartermegkereső e-mail összeállítása <span aria-hidden="true">↗</span></button><a class="button button-secondary" href="mailto:zsivanyokpodcast@gmail.com?subject=Barter%20egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9s%20-%20R%C3%A1di%C3%B369%20%C3%97%20Zsiv%C3%A1nyok%20Podcast">Barter e-mail megnyitása</a></div>
+            <p class="form-note">Adatkezelési tájékoztató: az űrlap adatait ez az oldal nem küldi szerverre és nem menti el. A gomb a levelezőprogramodat nyitja meg előre kitöltött levéllel; a levelet csak te küldöd el. A megkeresés elküldése előtt ellenőrizd a tartalmát.</p>
+            <p class="form-status" id="mediaInquiryStatus" role="status" aria-live="polite"></p>
+          </form>
+          <aside class="inquiry-aside">
+            <div class="card-icon" aria-hidden="true">✉</div>
+            <h3>Mi segít a barter egyeztetésében?</h3>
+            <ul>
+              <li>A vállalkozás vagy szervezet neve.</li>
+              <li>A felajánlott termék vagy szolgáltatás pontos leírása.</li>
+              <li>A kívánt megjelenés és a tervezett időszak.</li>
+              <li>Ha van, a weboldal vagy a felajánlás leírását bemutató link.</li>
+            </ul>
+            <p>A felajánlás leírása szükséges, a becsült érték és a részletes kampányterv opcionális. Az űrlap elküldése nem jelent automatikus elfogadást.</p>
+            <a class="contact-email" href="mailto:zsivanyokpodcast@gmail.com">zsivanyokpodcast@gmail.com</a>
+          </aside>
+        </div>
       </div>
     </section>
 
@@ -242,13 +388,13 @@
       <div class="shell">
         <div class="contact-box">
           <span class="eyebrow">Dolgozzunk együtt</span>
-          <h2 style="margin-top:18px">Van egy ötleted vagy kampányod?</h2>
-          <p>Írd meg, melyik vállalkozást vagy szolgáltatást szeretnéd bemutatni, kit szeretnél elérni, és milyen időszakra tervezel. A részletek alapján egyeztethetünk a megfelelő megjelenésről és az ajánlatról.</p>
+          <h2 style="margin-top:18px">Van egy barterötleted?</h2>
+          <p>Írd meg, mit tudsz felajánlani barterben, és melyik vállalkozást, terméket vagy szolgáltatást szeretnéd bemutatni. Megnézzük, illeszkedik-e a tartalmainkhoz, és milyen kölcsönös megjelenés valósítható meg.</p>
           <div class="hero-actions">
-        <a class="button button-primary" href="index.html#kapcsolat">Kapcsolatfelvétel a weboldalon <span aria-hidden="true">↗</span></a>
-        <a class="button button-secondary" href="index.html#home">Vissza a főoldalra</a>
+        <a class="button button-primary" href="#ajanlatkeres">Bartermegkeresés összeállítása <span aria-hidden="true">↗</span></a>
+        <a class="button button-secondary" href="mailto:zsivanyokpodcast@gmail.com?subject=Barter%20egy%C3%BCttm%C5%B1k%C3%B6d%C3%A9s">E-mail küldése</a>
           </div>
-          <p class="audience-note">Kérjük, a megkeresésben tüntesd fel a „Médiaajánlat” tárgyat, és add meg a vállalkozás nevét, a kampány célját és a kívánt időszakot.</p>
+          <p class="audience-note">Kérjük, írd le a felajánlásod tárgyát, becsült értékét, a kívánt megjelenést és az időzítést. Együttműködés kizárólag barter alapon, előzetes megállapodással jöhet létre.</p>
         </div>
       </div>
     </section>
@@ -265,6 +411,42 @@
   <script>
     const year = document.getElementById('year');
     if (year) year.textContent = new Date().getFullYear();
+
+    const mediaForm = document.getElementById('mediaInquiryForm');
+    if (mediaForm) {
+      mediaForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (!mediaForm.reportValidity()) return;
+        const value = (id) => (document.getElementById(id)?.value || '').trim();
+        const formats = Array.from(mediaForm.querySelectorAll('input[name="format"]:checked')).map((item) => item.value);
+        const lines = [
+          'Barter együttműködési megkeresés – Rádió69 × Zsiványok Podcast',
+          '',
+          'Vállalkozás / szervezet: ' + value('businessName'),
+          'Kapcsolattartó: ' + value('contactName'),
+          'Kapcsolati e-mail-cím: ' + value('contactEmail'),
+          'Együttműködés célja: ' + value('campaignGoal'),
+          'Érdeklődő megjelenések: ' + (formats.length ? formats.join(', ') : 'Még nincs kiválasztva'),
+          'Barterben felajánlott termék / szolgáltatás: ' + value('barterOffer'),
+          'Tervezett időszak: ' + (value('campaignPeriod') || 'Nincs megadva'),
+          'A felajánlás becsült értéke: ' + (value('barterValue') || 'Nincs megadva'),
+          'Célközönség / földrajzi fókusz: ' + (value('campaignAudience') || 'Nincs megadva'),
+          '',
+          'A barter felajánlás és a megjelenés részletei:',
+          value('campaignDetails') || 'Nincs megadva',
+          '',
+          'A bartermegkeresést a radio69zsivanyok.hu oldalán állítottam össze. Tudomásul veszem, hogy az együttműködés csak előzetes, kölcsönös egyeztetés után jöhet létre.'
+        ];
+        const subject = 'Barter együttműködési megkeresés – ' + value('businessName');
+        const url = 'mailto:zsivanyokpodcast@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
+        const status = document.getElementById('mediaInquiryStatus');
+        if (status) status.textContent = 'Előkészítettük a bartermegkereső e-mailt. A levelezőprogramban ellenőrizd az adatokat, majd küldd el.';
+        window.location.href = url;
+      });
+    }
+
+    const printButton = document.getElementById('printMediaKit');
+    if (printButton) printButton.addEventListener('click', function () { window.print(); });
   </script>
   <script src="/pwa.js" defer></script>
 
