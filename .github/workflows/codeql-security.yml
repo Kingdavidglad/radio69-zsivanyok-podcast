@@ -1,40 +1,52 @@
-name: "CodeQL security scan"
+
+name: Update article social previews
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  schedule:
-    - cron: '31 2 * * 1'
   workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/generate-social-previews.mjs'
+      - 'supabase-config.js'
+      - '.github/workflows/update-social-previews.yml'
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: article-social-previews
+  cancel-in-progress: true
 
 jobs:
-  analyze:
-    name: Analyze JavaScript
+  generate:
+    name: Generate static Open Graph pages
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      actions: read
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'javascript-typescript' ]
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
         with:
-          languages: ${{ matrix.language }}
-          queries: security-extended
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          category: "/language:${{ matrix.language }}"
+          node-version: 22
+
+      - name: Generate previews from published articles
+        run: node scripts/generate-social-previews.mjs
+
+      - name: Commit generated preview pages when changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A social-previews
+          if git diff --cached --quiet; then
+            echo "No social preview changes."
+            exit 0
+          fi
+          git commit -m "chore: refresh article social previews [skip-social-previews]"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
