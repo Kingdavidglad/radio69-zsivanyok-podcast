@@ -29,7 +29,23 @@
     main.innerHTML = '<section class="not-found"><span class="section-kicker">404 · CIKK NEM TALÁLHATÓ</span><h1>Ezt a történetet<br><span class="gradient-text">nem találtuk.</span></h1><p>Lehet, hogy a hivatkozás hibás, vagy a cikket áthelyezték.</p><a class="button button-primary" href="index.html#friss">Vissza a főoldalra <span>↗</span></a></section>';
     return;
   }
-  const otherArticles = articles.filter(item => item.id !== article.id).slice(0, 3);
+  const normalizeText = value => String(value || '').toLocaleLowerCase('hu-HU').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s-]/g, ' ');
+  const stopWords = new Set(['a','az','és','vagy','hogy','egy','is','ez','ezt','ami','milyen','hogyan','van','volt','lesz','mint','meg','már','nem','csak','the','and']);
+  const words = value => normalizeText(value).split(/\s+/).filter(word => word.length >= 4 && !stopWords.has(word));
+  const relevance = candidate => {
+    let score = 0;
+    if (article.category && candidate.category && normalizeText(article.category) === normalizeText(candidate.category)) score += 10;
+    if (article.tag && candidate.tag && normalizeText(article.tag) === normalizeText(candidate.tag)) score += 7;
+    const currentWords = new Set(words(`${article.title} ${article.excerpt} ${article.intro || ''}`));
+    const candidateWords = new Set(words(`${candidate.title} ${candidate.excerpt} ${candidate.intro || ''}`));
+    for (const word of currentWords) if (candidateWords.has(word)) score += 1;
+    return score;
+  };
+  const otherArticles = articles
+    .filter(item => item.id !== article.id && !item.draft)
+    .map(item => ({ ...item, _relatedScore: relevance(item) }))
+    .sort((a, b) => b._relatedScore - a._relatedScore || String(b.publishedAt || '').localeCompare(String(a.publishedAt || '')))
+    .slice(0, 3);
   main.innerHTML = `
     <nav class="breadcrumbs" aria-label="Morzsanavigáció"><a href="index.html">Főoldal</a><span>／</span><a href="index.html#friss">Olvasnivalók</a><span>／</span><span>${escapeHtml(article.category)}</span></nav>
     <article class="longform-article">

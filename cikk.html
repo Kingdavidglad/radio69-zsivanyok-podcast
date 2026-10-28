@@ -6,11 +6,130 @@
 <footer class="site-footer page-width"><a class="footer-brand" href="index.html"><img src="assets/radio69-icon.png" alt=""><span>RÁDIÓ<span>69</span><small>× ZSIVÁNYOK PODCAST</small></span></a><span class="footer-middle">Zene. Történetek. Közösség.</span><a class="footer-policy-link" href="adatvedelem.html">Adatvédelem</a><span class="copyright">© <span id="year"></span> Rádió69 × Zsiványok</span></footer>
 <script src="articles.js"></script><script src="supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-(async()=>{'use strict';const $=id=>document.getElementById(id);const root=$('articleRoot');const id=new URLSearchParams(location.search).get('id')||'';const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const validUrl=s=>{try{const u=new URL(s,location.href);return ['http:','https:'].includes(u.protocol)?u.href:'';}catch{return '';}};const safeImage=s=>{s=String(s||'').trim();if(/^https:\/\//i.test(s))return s;if(/^assets\/[a-z0-9_./-]+$/i.test(s)&&!s.includes('..'))return s;return '';};const cfg=window.RADIO69_SUPABASE_CONFIG||{};let article=null;
-try{if(window.supabase?.createClient&&/^https:\/\/.+\.supabase\.co$/.test(cfg.url||'')&&cfg.publishableKey&& !String(cfg.publishableKey).startsWith('IDE_')){const db=window.supabase.createClient(cfg.url,cfg.publishableKey);const r=await db.from('articles').select('*').eq('id',id).eq('status','published').maybeSingle();if(!r.error&&r.data){const x=r.data;article={id:x.id,title:x.title,category:x.category,tag:x.tag,excerpt:x.excerpt,image:x.image_url,imageAlt:x.image_alt,imageCaption:x.image_caption,readTime:x.read_time,publishedAt:x.published_at,updatedAt:x.content_updated_at||x.published_at,intro:x.intro,body:x.body,sources:x.sources,sourceNote:x.source_note,seoTitle:x.seo_title};}}}catch(e){console.warn('A központi cikk nem töltődött be, megpróbálom a helyi cikkadatbázist.',e);}
-if(!article&&Array.isArray(window.RADIO69_ARTICLES))article=window.RADIO69_ARTICLES.find(a=>a.id===id&&!a.draft);
-if(!article){root.innerHTML='<div class="cloud-article-error"><span class="section-kicker">NEM TALÁLHATÓ</span><h1>A cikk nem érhető el.</h1><p>Lehet, hogy még vázlat, vagy a hivatkozás hibás.</p><a class="button button-primary" href="index.html#friss">Vissza az olvasnivalókhoz ↗</a></div>';return;}
-const title=article.seoTitle||article.seo_title||article.title||'Cikk';document.title=title+' | Rádió69 × Zsiványok Podcast';const meta=document.querySelector('meta[name="description"]');if(meta)meta.content=article.excerpt||article.intro||title;const body=Array.isArray(article.body)?article.body:(typeof article.body==='string'?article.body.split(/\r?\n/):[]);const sources=Array.isArray(article.sources)?article.sources:[];const image=safeImage(article.image||article.image_url);const date=article.publishedAt||article.published_at||'';let dateText='';if(date){const d=new Date(date+'T00:00:00Z');if(!Number.isNaN(d.getTime()))dateText=d.toLocaleDateString('hu-HU',{year:'numeric',month:'2-digit',day:'2-digit',timeZone:'UTC'});}
-root.innerHTML=`<nav class="breadcrumbs" aria-label="Morzsamenü"><a href="index.html#home">Főoldal</a><span>›</span><a href="index.html#friss">Olvasnivalók</a><span>›</span><span>${esc(article.title)}</span></nav><article class="longform-article"><header class="article-header"><span class="article-category-pill">${esc(article.tag||article.category||'CIKK')}</span><h1 class="cloud-article-title">${esc(article.title)}</h1><p class="article-deck">${esc(article.excerpt||'')}</p><div class="cloud-meta">${esc(article.category||'')} ${dateText?' · '+esc(dateText):''} · ${esc(article.readTime||article.read_time||'3 perc')} olvasás</div><div class="article-actions cloud-share-actions"><button type="button" id="shareArticle" class="small-action">↗ <span>Megosztás</span></button></div></header>${image?`<figure class="cloud-article-hero"><img src="${esc(image)}" alt="${esc(article.imageAlt||article.image_alt||article.title)}" loading="eager">${(article.imageCaption||article.image_caption)?`<figcaption class="cloud-caption">${esc(article.imageCaption||article.image_caption)}</figcaption>`:''}</figure>`:''}<div class="cloud-article-body">${article.intro?`<p class="intro">${esc(article.intro)}</p>`:''}${body.map(p=>`<p>${esc(p)}</p>`).join('')}${article.sourceNote||article.source_note?`<p class="editorial-note"><span>ⓘ</span>${esc(article.sourceNote||article.source_note)}</p>`:''}${sources.length?`<section class="cloud-source-list"><h2>Források</h2><ul>${sources.map(s=>{const u=validUrl(s.url);return u?`<li><a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(s.label||u)}</a>${s.note?' – '+esc(s.note):''}</li>`:'';}).join('')}</ul></section>`:''}<a class="cloud-back" href="index.html#friss">← Vissza az olvasnivalókhoz</a></div></article>`;
+(async () => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const root = $('articleRoot');
+  const id = new URLSearchParams(location.search).get('id') || '';
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const validUrl = value => {
+    try { const url = new URL(value, location.href); return ['http:', 'https:'].includes(url.protocol) ? url.href : ''; }
+    catch { return ''; }
+  };
+  const safeImage = value => {
+    const image = String(value || '').trim();
+    if (/^https:\/\//i.test(image)) return image;
+    if (/^assets\/[a-z0-9_./-]+$/i.test(image) && !image.includes('..')) return image;
+    return '';
+  };
+  const normalizeArticle = (item, source = 'local') => ({
+    id: item.id,
+    title: item.title || '',
+    category: item.category || '',
+    tag: item.tag || '',
+    excerpt: item.excerpt || '',
+    image: item.image || item.image_url || '',
+    imageAlt: item.imageAlt || item.image_alt || '',
+    imageCaption: item.imageCaption || item.image_caption || '',
+    readTime: item.readTime || item.read_time || '3 perc',
+    publishedAt: item.publishedAt || item.published_at || '',
+    updatedAt: item.updatedAt || item.content_updated_at || '',
+    intro: item.intro || '',
+    body: Array.isArray(item.body) ? item.body : (typeof item.body === 'string' ? item.body.split(/\r?\n/) : []),
+    sources: Array.isArray(item.sources) ? item.sources : [],
+    sourceNote: item.sourceNote || item.source_note || '',
+    seoTitle: item.seoTitle || item.seo_title || '',
+    _source: source
+  });
+  const normalizedText = value => String(value || '').toLocaleLowerCase('hu-HU')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s-]/g, ' ');
+  const stopWords = new Set(['a','az','és','vagy','hogy','egy','is','ez','ezt','ennek','ami','amely','milyen','hogyan','mi','mikor','hol','van','volt','lesz','mint','meg','már','nem','csak','itt','ott','utan','elott','kozott','rola','at','be','ki','fel','le','the','and']);
+  const keywords = value => normalizedText(value).split(/\s+/).filter(word => word.length >= 4 && !stopWords.has(word));
+  const relevanceScore = (current, candidate) => {
+    let score = 0;
+    const currentCategory = normalizedText(current.category);
+    const candidateCategory = normalizedText(candidate.category);
+    const currentTag = normalizedText(current.tag);
+    const candidateTag = normalizedText(candidate.tag);
+    if (currentCategory && candidateCategory && currentCategory === candidateCategory) score += 10;
+    if (currentTag && candidateTag && currentTag === candidateTag) score += 7;
+    const currentWords = new Set(keywords(`${current.title} ${current.excerpt} ${current.intro || ''}`));
+    const candidateWords = new Set(keywords(`${candidate.title} ${candidate.excerpt} ${candidate.intro || ''}`));
+    for (const word of currentWords) if (candidateWords.has(word)) score += 1;
+    return score;
+  };
+  const dateValue = value => { const time = Date.parse(value || ''); return Number.isFinite(time) ? time : 0; };
+  const renderRelatedCard = item => {
+    const image = safeImage(item.image);
+    const href = item._source === 'cloud'
+      ? `cikk.html?id=${encodeURIComponent(item.id)}`
+      : `cikkek/${encodeURIComponent(item.id)}.html`;
+    return `<a class="article-card" href="${esc(href)}"><div class="card-image">${image ? `<img src="${esc(image)}" alt="${esc(item.imageAlt || item.title)}" loading="lazy" decoding="async" onerror="this.style.display='none';this.parentElement.classList.add('image-fallback')">` : ''}<span class="image-category">${esc(item.tag || item.category || 'CIKK')}</span></div><div class="article-card-body"><div class="article-meta">${esc(item.category || 'RÁDIÓ69').toLocaleUpperCase('hu-HU')}</div><h3>${esc(item.title)}</h3><p>${esc(item.excerpt)}</p><span class="card-link">Tovább olvasom <span aria-hidden="true">↗</span></span></div></a>`;
+  };
+
+  const cfg = window.RADIO69_SUPABASE_CONFIG || {};
+  let article = null;
+  let db = null;
+  let articleIsCloud = false;
+  try {
+    if (window.supabase?.createClient && /^https:\/\/.+\.supabase\.co$/.test(cfg.url || '') && cfg.publishableKey && !String(cfg.publishableKey).startsWith('IDE_')) {
+      db = window.supabase.createClient(cfg.url, cfg.publishableKey);
+      const result = await db.from('articles').select('*').eq('id', id).eq('status', 'published').maybeSingle();
+      if (!result.error && result.data) {
+        article = normalizeArticle(result.data, 'cloud');
+        articleIsCloud = true;
+      }
+    }
+  } catch (error) {
+    console.warn('A központi cikk nem töltődött be, megpróbálom a helyi cikkadatbázist.', error);
+  }
+  if (!article && Array.isArray(window.RADIO69_ARTICLES)) {
+    const localArticle = window.RADIO69_ARTICLES.find(item => item.id === id && !item.draft);
+    if (localArticle) article = normalizeArticle(localArticle, 'local');
+  }
+  if (!article) {
+    root.innerHTML = '<div class="cloud-article-error"><span class="section-kicker">NEM TALÁLHATÓ</span><h1>A cikk nem érhető el.</h1><p>Lehet, hogy még vázlat, vagy a hivatkozás hibás.</p><a class="button button-primary" href="index.html#friss">Vissza az olvasnivalókhoz ↗</a></div>';
+    return;
+  }
+
+  let relatedCandidates = [];
+  if (db && articleIsCloud) {
+    try {
+      const result = await db.from('articles').select('*').eq('status', 'published').neq('id', article.id).order('published_at', { ascending: false }).limit(60);
+      if (!result.error && Array.isArray(result.data)) relatedCandidates = result.data.map(item => normalizeArticle(item, 'cloud'));
+    } catch (error) {
+      console.warn('A kapcsolódó cikkek központi listája nem tölthető be.', error);
+    }
+  }
+  if (Array.isArray(window.RADIO69_ARTICLES)) {
+    const knownIds = new Set(relatedCandidates.map(item => item.id));
+    for (const localItem of window.RADIO69_ARTICLES) {
+      if (!localItem.draft && localItem.id !== article.id && !knownIds.has(localItem.id)) {
+        relatedCandidates.push(normalizeArticle(localItem, 'local'));
+      }
+    }
+  }
+  const relatedArticles = relatedCandidates
+    .filter(item => item.id && item.id !== article.id && item.title)
+    .map(item => ({ ...item, _score: relevanceScore(article, item) }))
+    .sort((a, b) => b._score - a._score || dateValue(b.publishedAt) - dateValue(a.publishedAt))
+    .slice(0, 3);
+
+  const title = article.seoTitle || article.title || 'Cikk';
+  document.title = title + ' | Rádió69 × Zsiványok Podcast';
+  const meta = document.querySelector('meta[name="description"]');
+  if (meta) meta.content = article.excerpt || article.intro || title;
+  const body = Array.isArray(article.body) ? article.body : [];
+  const sources = Array.isArray(article.sources) ? article.sources : [];
+  const image = safeImage(article.image);
+  const date = article.publishedAt || '';
+  let dateText = '';
+  if (date) {
+    const parsedDate = new Date(date + 'T00:00:00Z');
+    if (!Number.isNaN(parsedDate.getTime())) dateText = parsedDate.toLocaleDateString('hu-HU', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC' });
+  }
+  const relatedSection = relatedArticles.length ? `<section class="related-section"><div class="section-heading"><div><span class="section-kicker">MÉG TÖBB TÉMA</span><h2>Olvass tovább <span class="gradient-text">.</span></h2></div><a class="text-link" href="index.html#friss">Összes cikk <span aria-hidden="true">↗</span></a></div><div class="article-grid related-grid">${relatedArticles.map(renderRelatedCard).join('')}</div></section>` : '';
+
+  root.innerHTML = `<nav class="breadcrumbs" aria-label="Morzsamenü"><a href="index.html#home">Főoldal</a><span>›</span><a href="index.html#friss">Olvasnivalók</a><span>›</span><span>${esc(article.title)}</span></nav><article class="longform-article"><header class="article-header"><span class="article-category-pill">${esc(article.tag || article.category || 'CIKK')}</span><h1 class="cloud-article-title">${esc(article.title)}</h1><p class="article-deck">${esc(article.excerpt)}</p><div class="cloud-meta">${esc(article.category)} ${dateText ? ' · ' + esc(dateText) : ''} · ${esc(article.readTime)} olvasás</div><div class="article-actions cloud-share-actions"><button type="button" id="shareArticle" class="small-action">↗ <span>Megosztás</span></button></div></header>${image ? `<figure class="cloud-article-hero"><img src="${esc(image)}" alt="${esc(article.imageAlt || article.title)}" loading="eager">${article.imageCaption ? `<figcaption class="cloud-caption">${esc(article.imageCaption)}</figcaption>` : ''}</figure>` : ''}<div class="cloud-article-body">${article.intro ? `<p class="intro">${esc(article.intro)}</p>` : ''}${body.map(paragraph => `<p>${esc(paragraph)}</p>`).join('')}${article.sourceNote ? `<p class="editorial-note"><span>ⓘ</span>${esc(article.sourceNote)}</p>` : ''}${sources.length ? `<section class="cloud-source-list"><h2>Források</h2><ul>${sources.map(source => { const url = validUrl(source.url); return url ? `<li><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(source.label || url)}</a>${source.note ? ' – ' + esc(source.note) : ''}</li>` : ''; }).join('')}</ul></section>` : ''}<a class="cloud-back" href="index.html#friss">← Vissza az olvasnivalókhoz</a></div></article>${relatedSection}`;
 })();
 </script><script src="share.js"></script></body></html>
