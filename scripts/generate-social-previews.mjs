@@ -201,6 +201,7 @@ function readSupabaseConfig() {
     key
   };
 }
+}
 
 
 async function fetchPublishedArticles({ url, key }) {
