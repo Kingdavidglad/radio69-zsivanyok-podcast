@@ -34,6 +34,9 @@
   let messages = [];
   let selectedId = null;
   let loading = false;
+  let replyLoadingFor = null;
+
+  const REPLY_FUNCTION_NAME = 'reply-audience-message';
 
   function showMessage(element, text, isError = false) {
     element.textContent = text;
@@ -187,6 +190,142 @@
     parent.appendChild(block);
   }
 
+  function createReplyState(status) {
+    const badge = document.createElement('span');
+    const safe = ['sending', 'sent', 'failed'].includes(status) ? status : 'failed';
+    badge.className = `reply-state ${safe}`;
+    badge.textContent = safe === 'sent' ? 'ELKÜLDVE' : safe === 'sending' ? 'KÜLDÉS FOLYAMATBAN' : 'SIKERTELEN';
+    return badge;
+  }
+
+  async function loadReplyHistory(messageId) {
+    const container = $('replyHistory');
+    if (!container || !db || !currentProfile) return;
+    replyLoadingFor = messageId;
+    clearElement(container);
+    const loadingText = document.createElement('p');
+    loadingText.className = 'reply-empty';
+    loadingText.textContent = 'Válaszelőzmények betöltése…';
+    container.appendChild(loadingText);
+
+    try {
+      const { data, error } = await db
+        .from('audience_message_replies')
+        .select('id,created_at,sent_at,recipient_email,subject,body,status,error_message')
+        .eq('audience_message_id', messageId)
+        .order('created_at', { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      if (selectedId !== messageId || replyLoadingFor !== messageId) return;
+      clearElement(container);
+      if (!Array.isArray(data) || data.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'reply-empty';
+        empty.textContent = 'Ehhez az üzenethez még nem küldtél választ.';
+        container.appendChild(empty);
+        return;
+      }
+      data.forEach((reply) => {
+        const card = document.createElement('article');
+        card.className = 'reply-card';
+        const head = document.createElement('div');
+        head.className = 'reply-card-head';
+        const time = document.createElement('time');
+        time.textContent = formatDate(reply.sent_at || reply.created_at);
+        head.append(time, createReplyState(reply.status));
+        const subject = document.createElement('p');
+        subject.className = 'reply-subject';
+        subject.textContent = reply.subject || 'Válasz';
+        const recipient = document.createElement('p');
+        recipient.className = 'reply-help';
+        recipient.textContent = `Címzett: ${reply.recipient_email || 'Nincs megadva'}`;
+        const body = document.createElement('p');
+        body.textContent = reply.body || '';
+        card.append(head, subject, recipient, body);
+        if (reply.status === 'failed' && reply.error_message) {
+          const error = document.createElement('p');
+          error.className = 'reply-help';
+          error.style.color = 'var(--red)';
+          error.textContent = `Hiba: ${reply.error_message}`;
+          card.appendChild(error);
+        }
+        container.appendChild(card);
+      });
+    } catch (error) {
+      if (selectedId !== messageId) return;
+      clearElement(container);
+      const problem = document.createElement('p');
+      problem.className = 'reply-empty';
+      problem.style.color = 'var(--red)';
+      problem.textContent = `Nem sikerült betölteni a válaszelőzményeket. Futtasd le a válaszfunkció SQL-beállítását. ${error.message || ''}`;
+      container.appendChild(problem);
+    }
+  }
+
+  async function sendReply(messageId, subjectInput, bodyInput, button) {
+    const item = messages.find(entry => entry.id === messageId);
+    if (!item || !item.email) {
+      showMessage(appMessage, 'Ehhez az üzenethez nem adtak meg válaszcímet.', true);
+      return;
+    }
+    const subject = subjectInput.value.trim();
+    const body = bodyInput.value.trim();
+    if (subject.length < 3 || subject.length > 180) {
+      showMessage(appMessage, 'A tárgy legalább 3, legfeljebb 180 karakter legyen.', true);
+      subjectInput.focus();
+      return;
+    }
+    if (body.length < 5 || body.length > 5000) {
+      showMessage(appMessage, 'A válasz legalább 5, legfeljebb 5000 karakter legyen.', true);
+      bodyInput.focus();
+      return;
+    }
+    if (!window.confirm(`Biztosan elküldöd a választ erre a címre?\n${item.email}`)) return;
+
+    const previousText = button.textContent;
+    button.disabled = true;
+    button.textContent = 'Küldés…';
+    hideMessage(appMessage);
+    try {
+      const { data, error } = await db.functions.invoke(REPLY_FUNCTION_NAME, {
+        body: {
+          audienceMessageId: messageId,
+          subject,
+          message: body
+        }
+      });
+      if (error) {
+        let detail = error.message || 'A válaszfunkció hibát jelzett.';
+        try {
+          const response = error.context;
+          if (response && typeof response.json === 'function') {
+            const payload = await response.json();
+            if (payload?.error) detail = payload.error;
+          }
+        } catch { /* Keep the SDK error message. */ }
+        throw new Error(detail);
+      }
+      if (!data?.ok) throw new Error(data?.error || 'A válasz elküldése nem sikerült.');
+      subjectInput.value = '';
+      bodyInput.value = '';
+      button.disabled = false;
+      button.textContent = 'Válasz elküldése →';
+      if (data.status === 'in_progress') item.status = 'in_progress';
+      updateCounts();
+      renderList();
+      await loadReplyHistory(messageId);
+      showMessage(appMessage, data.historySaved === false
+        ? 'A válasz e-mail elküldése sikerült, de az előzmény mentése nem fejeződött be. Frissítsd az oldalt, majd ellenőrizd a Supabase naplóit.'
+        : 'A válasz e-mail sikeresen elküldve. A küldés bekerült az előzmények közé.');
+      const newStatusSelect = $('statusEditor');
+      if (newStatusSelect) newStatusSelect.value = item.status;
+    } catch (error) {
+      showMessage(appMessage, `Nem sikerült elküldeni a választ. ${error.message || ''}`, true);
+      button.disabled = false;
+      button.textContent = previousText;
+    }
+  }
+
   function renderDetail(item) {
     clearElement(detailPanel);
     if (!item) {
@@ -235,6 +374,70 @@
       emailBlock.appendChild(noEmail);
     }
     detailPanel.appendChild(emailBlock);
+
+    const replySection = document.createElement('section');
+    replySection.className = 'reply-section';
+    const replyHeading = document.createElement('h3');
+    replyHeading.textContent = 'Válaszelőzmények';
+    const replyHistory = document.createElement('div');
+    replyHistory.className = 'reply-history';
+    replyHistory.id = 'replyHistory';
+    replySection.append(replyHeading, replyHistory);
+
+    if (item.email) {
+      const form = document.createElement('form');
+      form.className = 'reply-form';
+      const formTitle = document.createElement('h3');
+      formTitle.textContent = 'Válasz küldése';
+      const recipient = document.createElement('p');
+      recipient.className = 'reply-help';
+      recipient.textContent = `Címzett: ${item.email}. A válasz a Rádió69 ellenőrzött feladói címéről érkezik.`;
+
+      const subjectField = document.createElement('div');
+      subjectField.className = 'field';
+      const subjectLabel = document.createElement('label');
+      subjectLabel.textContent = 'E-mail tárgya';
+      const subjectInput = document.createElement('input');
+      subjectInput.type = 'text';
+      subjectInput.maxLength = 180;
+      subjectInput.required = true;
+      subjectInput.value = `Válasz – Rádió69 × Zsiványok Podcast`;
+      subjectField.append(subjectLabel, subjectInput);
+
+      const bodyField = document.createElement('div');
+      bodyField.className = 'field';
+      const bodyLabel = document.createElement('label');
+      bodyLabel.textContent = 'Válasz szövege';
+      const bodyInput = document.createElement('textarea');
+      bodyInput.minLength = 5;
+      bodyInput.maxLength = 5000;
+      bodyInput.required = true;
+      bodyInput.rows = 7;
+      bodyInput.placeholder = 'Írd ide a látogatónak szánt válaszodat…';
+      bodyField.append(bodyLabel, bodyInput);
+
+      const send = document.createElement('button');
+      send.type = 'submit';
+      send.className = 'btn btn-primary';
+      send.textContent = 'Válasz elküldése →';
+      const help = document.createElement('p');
+      help.className = 'reply-help';
+      help.textContent = 'Az elküldés előtt megerősítést kérünk. A sikeres küldéseket és a sikertelen próbálkozásokat is rögzítjük az előzmények között.';
+      form.append(formTitle, recipient, subjectField, bodyField, send, help);
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        sendReply(item.id, subjectInput, bodyInput, send);
+      });
+      replySection.appendChild(form);
+    } else {
+      const noEmail = document.createElement('p');
+      noEmail.className = 'reply-empty';
+      noEmail.textContent = 'A beküldő nem adott meg e-mail-címet, ezért innen nem küldhető válasz.';
+      replySection.appendChild(noEmail);
+    }
+    detailPanel.appendChild(replySection);
+    loadReplyHistory(item.id);
 
     const statusRow = document.createElement('div');
     statusRow.className = 'status-row';
