@@ -338,12 +338,14 @@ async function main() {
   await fs.mkdir(nextDir, { recursive: true });
   let generated = 0;
   for (const article of validArticles) {
-    const id = textValue(article.id);
-    const articleDir = path.join(nextDir, id);
-    await fs.mkdir(articleDir, { recursive: true });
-    const canonicalUrl = staticArticleIds.has(id)
-      ? `${SITE_ORIGIN}/cikkek/${encodeURIComponent(id)}.html`
-      : `${SITE_ORIGIN}/cikk.html?id=${encodeURIComponent(id)}`;
+    
+const id = textValue(article.id);
+const articleDir = path.join(nextDir, id);
+await fs.mkdir(articleDir, { recursive: true });
+
+// codeql[js/http-to-file-access] Intentional static HTML generation. Article IDs are validated, HTML content is escaped, and output is restricted to social-previews.
+await fs.writeFile(path.join(articleDir, 'index.html'), renderSocialPreview(article), 'utf8');
+
 // codeql[js/http-to-file-access] Safe intentional static-page generation: article IDs are validated, HTML values are escaped, and output is restricted to the social-previews directory.
 await fs.writeFile(path.join(articleDir, 'index.html'), renderSocialPreview(article), 'utf8');    generated += 1;
   }
