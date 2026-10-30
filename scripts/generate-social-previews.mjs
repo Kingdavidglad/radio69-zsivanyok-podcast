@@ -177,11 +177,12 @@ export function renderSocialPreview(article, options = {}) {
 }
 
 
+
 const SUPABASE_URL = 'https://zmejdydtgxotkscluqlo.supabase.co';
 
-// Ide a supabase-config.js fájlban szereplő,
-// sb_publishable_ kezdetű publikus kulcsot másold.
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_a993c9LoJScmBMKgnmYnJA_7uy7fGSE'
+// Ide másold be a supabase-config.js fájl
+// publishableKey értékét.
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_a993c9LoJScmBMKgnmYnJA_7uy7fGSE';
 
 async function readSupabaseConfig() {
   const key = SUPABASE_PUBLISHABLE_KEY.trim();
@@ -192,9 +193,10 @@ async function readSupabaseConfig() {
 
   return {
     url: SUPABASE_URL,
-    key,
+    key
   };
 }
+
 
 
 async function fetchPublishedArticles({ url, key }) {
