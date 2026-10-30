@@ -184,20 +184,29 @@ const SUPABASE_URL = 'https://zmejdydtgxotkscluqlo.supabase.co';
 // publishableKey értékét.
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_a993c9LoJScmBMKgnmYnJA_7uy7fGSE';
 
-async function readSupabaseConfig() {
-  const key = SUPABASE_PUBLISHABLE_KEY.trim();
+
+const SUPABASE_URL = 'https://zmejdydtgxotkscluqlo.supabase.co';
+
+function readSupabaseConfig() {
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY?.trim() || '';
 
   if (!/^sb_publishable_[A-Za-z0-9_-]+$/.test(key)) {
-    throw new Error('A Supabase publishable kulcs hiányzik vagy hibás.');
+    throw new Error(
+      'A GitHub Actions SUPABASE_PUBLISHABLE_KEY beállítása hiányzik vagy hibás.'
+    );
+  }
+
+  const url = new URL(SUPABASE_URL);
+
+  if (url.hostname !== 'zmejdydtgxotkscluqlo.supabase.co') {
+    throw new Error('Érvénytelen Supabase URL.');
   }
 
   return {
-    url: SUPABASE_URL,
+    url: url.origin,
     key
   };
 }
-
-
 
 async function fetchPublishedArticles({ url, key }) {
   const query = new URLSearchParams({
