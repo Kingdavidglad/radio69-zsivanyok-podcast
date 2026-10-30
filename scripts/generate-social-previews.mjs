@@ -177,16 +177,26 @@ export function renderSocialPreview(article, options = {}) {
 `;
 }
 
+
+const SUPABASE_URL = 'https://zmejdydtgxotkscluqlo.supabase.co';
+
+// Ide a supabase-config.js fájlban szereplő,
+// sb_publishable_ kezdetű publikus kulcsot másold.
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_a993c9LoJScmBMKgnmYnJA_7uy7fGSE'
+
 async function readSupabaseConfig() {
-  const configPath = path.join(ROOT, 'supabase-config.js');
-  const source = await fs.readFile(configPath, 'utf8');
-  const urlMatch = source.match(/\burl\s*:\s*['"](https:\/\/[^'"]+)['"]/);
-  const keyMatch = source.match(/\bpublishableKey\s*:\s*['"](sb_publishable_[^'"]+)['"]/);
-  if (!urlMatch || !keyMatch) throw new Error('A supabase-config.js fájlban nem találok érvényes Supabase URL-t és publishable kulcsot.');
-  const url = new URL(urlMatch[1]);
-  if (!url.hostname.endsWith('.supabase.co')) throw new Error('A Supabase URL nem a várt *.supabase.co cím.');
-  return { url: url.origin, key: keyMatch[1] };
+  const key = SUPABASE_PUBLISHABLE_KEY.trim();
+
+  if (!/^sb_publishable_[A-Za-z0-9_-]+$/.test(key)) {
+    throw new Error('A Supabase publishable kulcs hiányzik vagy hibás.');
+  }
+
+  return {
+    url: SUPABASE_URL,
+    key,
+  };
 }
+
 
 async function fetchPublishedArticles({ url, key }) {
   const query = new URLSearchParams({
@@ -335,7 +345,7 @@ async function main() {
     const canonicalUrl = staticArticleIds.has(id)
       ? `${SITE_ORIGIN}/cikkek/${encodeURIComponent(id)}.html`
       : `${SITE_ORIGIN}/cikk.html?id=${encodeURIComponent(id)}`;
-    await fs.writeFile(path.join(articleDir, 'index.html'), renderSocialPreview(article, { canonicalUrl }), 'utf8');
+    await fs.writeFile(path.join(articleDir, 'index.html'), renderSocialPreview(article), 'utf8'); // codeql[js/http-to-file-access] Intentional static-page generation from published articles. Article IDs are restricted to safe slugs, HTML fields are escaped, and output is confined to social-previews.
     generated += 1;
   }
 
