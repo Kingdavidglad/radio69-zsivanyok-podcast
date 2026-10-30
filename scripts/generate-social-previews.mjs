@@ -102,8 +102,7 @@ export function renderSocialPreview(article, options = {}) {
       if (parsed.protocol === 'http:' || parsed.protocol === 'https:') validHref = parsed.href;
     } catch { /* invalid source URL is displayed as text only */ }
     if (!validHref) return `<li>${escapeHtml(label)}</li>`;
-    return `<li><a href="${escapeHtml(validHref)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>${source.note ? ` – ${escapeHtml(source.note)}` : ''}</li>`;
-  }).join('\n');
+    return `<li><a href="${escapeHtml(validHref)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>${source.note ? ` – ${escapeHtml(textValue(source.note))}` : ''}</li>`;  }).join('\n');
 
   return `<!doctype html>
 <html lang="hu">
@@ -345,8 +344,8 @@ async function main() {
     const canonicalUrl = staticArticleIds.has(id)
       ? `${SITE_ORIGIN}/cikkek/${encodeURIComponent(id)}.html`
       : `${SITE_ORIGIN}/cikk.html?id=${encodeURIComponent(id)}`;
-    await fs.writeFile(path.join(articleDir, 'index.html'), renderSocialPreview(article), 'utf8'); // codeql[js/http-to-file-access] Intentional static-page generation from published articles. Article IDs are restricted to safe slugs, HTML fields are escaped, and output is confined to social-previews.
-    generated += 1;
+// codeql[js/http-to-file-access] Safe intentional static-page generation: article IDs are validated, HTML values are escaped, and output is restricted to the social-previews directory.
+await fs.writeFile(path.join(articleDir, 'index.html'), renderSocialPreview(article), 'utf8');    generated += 1;
   }
 
   await fs.rm(OUTPUT_DIR, { recursive: true, force: true });
