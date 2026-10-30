@@ -36,10 +36,11 @@ jobs:
         with:
           node-version: 22
 
+
       - name: Generate previews from published articles
         env:
-         SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
-  run: node scripts/generate-social-previews.mjs
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: node scripts/generate-social-previews.mjs
 
       - name: Commit generated preview pages when changed
         run: |
