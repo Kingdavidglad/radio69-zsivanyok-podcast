@@ -3,6 +3,7 @@
  * Generate static, Open Graph-readable article pages for GitHub Pages.
  * Meta tags are emitted into the initial HTML so social scrapers do not need to run JavaScript.
  */
+
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -14,10 +15,15 @@ const SITEMAP_FILE = path.join(ROOT, 'sitemap.xml');
 const ARTICLES_DIR = path.join(ROOT, 'cikkek');
 const SITE_ORIGIN = 'https://radio69zsivanyok.hu';
 const FALLBACK_IMAGE = `${SITE_ORIGIN}/assets/R%C3%A1di%C3%B369.jpg`;
+const SUPABASE_URL = 'https://zmejdydtgxotkscluqlo.supabase.co';
 
 export function escapeHtml(value = '') {
   return String(value ?? '').replace(/[&<>"']/g, ch => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
   })[ch]);
 }
 
@@ -28,8 +34,10 @@ function textValue(value) {
 function articleDate(value) {
   const raw = textValue(value);
   if (!raw) return '';
+
   const match = raw.match(/^\d{4}-\d{2}-\d{2}/);
   if (match) return match[0];
+
   const parsed = new Date(raw);
   return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().slice(0, 10);
 }
@@ -37,6 +45,7 @@ function articleDate(value) {
 function safeImageUrl(value) {
   const raw = textValue(value);
   if (!raw) return FALLBACK_IMAGE;
+
   if (/^https:\/\//i.test(raw)) {
     try {
       const parsed = new URL(raw);
@@ -45,40 +54,70 @@ function safeImageUrl(value) {
       return FALLBACK_IMAGE;
     }
   }
+
   if (/^assets\/[a-z0-9_./% -]+$/i.test(raw) && !raw.includes('..')) {
-    return new URL(raw.split('/').map((part, index) => index === 0 ? part : encodeURIComponent(decodeURIComponentSafe(part))).join('/'), `${SITE_ORIGIN}/`).href;
+    const encodedPath = raw
+      .split('/')
+      .map((part, index) => index === 0
+        ? part
+        : encodeURIComponent(decodeURIComponentSafe(part)))
+      .join('/');
+
+    return new URL(encodedPath, `${SITE_ORIGIN}/`).href;
   }
+
   return FALLBACK_IMAGE;
 }
 
 function decodeURIComponentSafe(value) {
-  try { return decodeURIComponent(value); } catch { return value; }
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
 }
 
 function normalizeBody(value) {
   if (Array.isArray(value)) return value.map(textValue).filter(Boolean);
-  if (typeof value === 'string') return value.split(/\r?\n(?:\s*\r?\n)?/).map(textValue).filter(Boolean);
+  if (typeof value === 'string') {
+    return value.split(/\r?\n(?:\s*\r?\n)?/).map(textValue).filter(Boolean);
+  }
   return [];
 }
 
 function normalizeSources(value) {
-  if (Array.isArray(value)) return value.filter(item => item && typeof item === 'object');
+  if (Array.isArray(value)) {
+    return value.filter(item => item && typeof item === 'object');
+  }
+
   if (typeof value === 'string') {
     try {
       const parsed = JSON.parse(value);
-      return Array.isArray(parsed) ? parsed.filter(item => item && typeof item === 'object') : [];
-    } catch { return []; }
+      return Array.isArray(parsed)
+        ? parsed.filter(item => item && typeof item === 'object')
+        : [];
+    } catch {
+      return [];
+    }
   }
+
   return [];
 }
 
 export function renderSocialPreview(article, options = {}) {
   const id = textValue(article?.id);
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) throw new Error(`Invalid article id: ${id || '(empty)'}`);
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) {
+    throw new Error(`Invalid article id: ${id || '(empty)'}`);
+  }
 
-  const title = textValue(article.seo_title) || textValue(article.title) || 'Rádió69 × Zsiványok Podcast';
-  const description = textValue(article.excerpt) || textValue(article.intro) || 'Olvasd a Rádió69 × Zsiványok Podcast cikkét.';
-  const canonicalUrl = textValue(options.canonicalUrl) || `${SITE_ORIGIN}/cikk.html?id=${encodeURIComponent(id)}`;
+  const title = textValue(article.seo_title)
+    || textValue(article.title)
+    || 'Rádió69 × Zsiványok Podcast';
+  const description = textValue(article.excerpt)
+    || textValue(article.intro)
+    || 'Olvasd a Rádió69 × Zsiványok Podcast cikkét.';
+  const canonicalUrl = textValue(options.canonicalUrl)
+    || `${SITE_ORIGIN}/cikk.html?id=${encodeURIComponent(id)}`;
   const shareUrl = `${SITE_ORIGIN}/social-previews/${encodeURIComponent(id)}/`;
   const imageUrl = safeImageUrl(article.image_url || article.image);
   const imageAlt = textValue(article.image_alt || article.imageAlt) || title;
@@ -92,17 +131,32 @@ export function renderSocialPreview(article, options = {}) {
   const sourceNote = textValue(article.source_note || article.sourceNote);
   const imageCaption = textValue(article.image_caption || article.imageCaption);
 
-  const bodyHtml = body.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('\n');
+  const bodyHtml = body
+    .map(paragraph => `<p>${escapeHtml(paragraph)}</p>`)
+    .join('\n');
+
   const sourceHtml = sources.map(source => {
     const label = textValue(source.label) || textValue(source.url);
     const href = textValue(source.url);
     let validHref = '';
+
     try {
       const parsed = new URL(href);
-      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') validHref = parsed.href;
-    } catch { /* invalid source URL is displayed as text only */ }
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+        validHref = parsed.href;
+      }
+    } catch {
+      // An invalid source URL is displayed as text only.
+    }
+
     if (!validHref) return `<li>${escapeHtml(label)}</li>`;
-    return `<li><a href="${escapeHtml(validHref)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>${source.note ? ` – ${escapeHtml(textValue(source.note))}` : ''}</li>`;  }).join('\n');
+
+    const note = source.note
+      ? ` – ${escapeHtml(textValue(source.note))}`
+      : '';
+
+    return `<li><a href="${escapeHtml(validHref)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>${note}</li>`;
+  }).join('\n');
 
   return `<!doctype html>
 <html lang="hu">
@@ -176,11 +230,6 @@ export function renderSocialPreview(article, options = {}) {
 `;
 }
 
-
-
-
-const SUPABASE_URL = 'https://zmejdydtgxotkscluqlo.supabase.co';
-
 function readSupabaseConfig() {
   const key = process.env.SUPABASE_PUBLISHABLE_KEY?.trim() || '';
 
@@ -191,17 +240,15 @@ function readSupabaseConfig() {
   }
 
   const url = new URL(SUPABASE_URL);
-
   if (url.hostname !== 'zmejdydtgxotkscluqlo.supabase.co') {
     throw new Error('Érvénytelen Supabase URL.');
   }
 
-    return {
+  return {
     url: url.origin,
     key
   };
 }
-
 
 async function fetchPublishedArticles({ url, key }) {
   const query = new URLSearchParams({
@@ -210,18 +257,33 @@ async function fetchPublishedArticles({ url, key }) {
     order: 'published_at.desc',
     limit: '5000'
   });
+
   const response = await fetch(`${url}/rest/v1/articles?${query.toString()}`, {
-    headers: { apikey: key, accept: 'application/json' },
+    headers: {
+      apikey: key,
+      accept: 'application/json'
+    },
     signal: AbortSignal.timeout(25000)
   });
+
   const payload = await response.text();
-  if (!response.ok) throw new Error(`Supabase olvasási hiba (${response.status}): ${payload.slice(0, 400)}`);
+  if (!response.ok) {
+    throw new Error(`Supabase olvasási hiba (${response.status}): ${payload.slice(0, 400)}`);
+  }
+
   let articles;
-  try { articles = JSON.parse(payload); } catch { throw new Error('A Supabase válasza nem érvényes JSON.'); }
-  if (!Array.isArray(articles)) throw new Error('A Supabase válasz nem cikklista.');
+  try {
+    articles = JSON.parse(payload);
+  } catch {
+    throw new Error('A Supabase válasza nem érvényes JSON.');
+  }
+
+  if (!Array.isArray(articles)) {
+    throw new Error('A Supabase válasz nem cikklista.');
+  }
+
   return articles;
 }
-
 
 function getTagAttribute(tag, attributeName) {
   const regex = new RegExp(`(?:^|\\s)${attributeName}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, 'i');
@@ -231,6 +293,7 @@ function getTagAttribute(tag, attributeName) {
 
 function hasNoindexDirective(html) {
   const tags = html.match(/<meta\b[^>]*>/gi) || [];
+
   return tags.some(tag => {
     const name = getTagAttribute(tag, 'name').toLowerCase();
     if (name !== 'robots' && name !== 'googlebot') return false;
@@ -240,10 +303,12 @@ function hasNoindexDirective(html) {
 
 function canonicalFromHtml(html) {
   const tags = html.match(/<link\b[^>]*>/gi) || [];
+
   for (const tag of tags) {
     const rel = getTagAttribute(tag, 'rel').toLowerCase().split(/\s+/);
     if (rel.includes('canonical')) return getTagAttribute(tag, 'href');
   }
+
   return '';
 }
 
@@ -259,9 +324,11 @@ function isCanonicalSiteUrl(value) {
 async function getStaticArticleIds() {
   try {
     const entries = await fs.readdir(ARTICLES_DIR, { withFileTypes: true });
-    return new Set(entries
-      .filter(entry => entry.isFile() && /^[a-z0-9]+(?:-[a-z0-9]+)*\.html$/i.test(entry.name))
-      .map(entry => entry.name.replace(/\.html$/i, '')));
+    return new Set(
+      entries
+        .filter(entry => entry.isFile() && /^[a-z0-9]+(?:-[a-z0-9]+)*\.html$/i.test(entry.name))
+        .map(entry => entry.name.replace(/\.html$/i, ''))
+    );
   } catch (error) {
     if (error.code === 'ENOENT') return new Set();
     throw error;
@@ -287,6 +354,7 @@ export async function buildSitemapXml(publishedArticles = [], staticArticleIds =
     try {
       const html = await fs.readFile(path.join(ROOT, page.file), 'utf8');
       if (hasNoindexDirective(html)) continue;
+
       const canonical = canonicalFromHtml(html) || page.fallback;
       if (isCanonicalSiteUrl(canonical)) urls.add(canonical);
     } catch (error) {
@@ -295,12 +363,18 @@ export async function buildSitemapXml(publishedArticles = [], staticArticleIds =
   }
 
   const actualStaticArticleIds = staticArticleIds || await getStaticArticleIds();
+
   try {
     const entries = await fs.readdir(ARTICLES_DIR, { withFileTypes: true });
+
     for (const entry of entries) {
-      if (!entry.isFile() || !/^[a-z0-9]+(?:-[a-z0-9]+)*\.html$/i.test(entry.name)) continue;
+      if (!entry.isFile() || !/^[a-z0-9]+(?:-[a-z0-9]+)*\.html$/i.test(entry.name)) {
+        continue;
+      }
+
       const html = await fs.readFile(path.join(ARTICLES_DIR, entry.name), 'utf8');
       if (hasNoindexDirective(html)) continue;
+
       const fallback = `${SITE_ORIGIN}/cikkek/${entry.name}`;
       const canonical = canonicalFromHtml(html) || fallback;
       if (isCanonicalSiteUrl(canonical)) urls.add(canonical);
@@ -316,23 +390,37 @@ export async function buildSitemapXml(publishedArticles = [], staticArticleIds =
     urls.add(`${SITE_ORIGIN}/cikk.html?id=${encodeURIComponent(id)}`);
   }
 
-  const xmlEscape = value => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
-  return '<?xml version="1.0" encoding="UTF-8"?>\n' +
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-    [...urls].sort().map(url => `  <url><loc>${xmlEscape(url)}</loc></url>`).join('\n') +
-    '\n</urlset>\n';
+  const xmlEscape = value => String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+
+  return '<?xml version="1.0" encoding="UTF-8"?>\n'
+    + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    + [...urls].sort().map(url => `  <url><loc>${xmlEscape(url)}</loc></url>`).join('\n')
+    + '\n</urlset>\n';
 }
 
 async function main() {
-  const { url, key } = await readSupabaseConfig();
+  const { url, key } = readSupabaseConfig();
   const articles = await fetchPublishedArticles({ url, key });
-  const validArticles = articles.filter(item => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(textValue(item?.id)) && textValue(item?.title));
+  const validArticles = articles.filter(item =>
+    /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(textValue(item?.id))
+    && textValue(item?.title)
+  );
 
   // Fail safely if RLS/config returns no rows while old generated pages exist.
   if (validArticles.length === 0) {
     try {
       const current = await fs.readdir(OUTPUT_DIR);
-      if (current.some(name => name !== '.gitkeep')) throw new Error('A cikklista üres, de korábban generált oldalak vannak. A fájlokat nem törlöm automatikusan; ellenőrizd a Supabase-hozzáférést.');
+      if (current.some(name => name !== '.gitkeep')) {
+        throw new Error(
+          'A cikklista üres, de korábban generált oldalak vannak. '
+          + 'A fájlokat nem törlöm automatikusan; ellenőrizd a Supabase-hozzáférést.'
+        );
+      }
     } catch (error) {
       if (error.code !== 'ENOENT') throw error;
     }
@@ -342,24 +430,30 @@ async function main() {
   const nextDir = `${OUTPUT_DIR}.next`;
   await fs.rm(nextDir, { recursive: true, force: true });
   await fs.mkdir(nextDir, { recursive: true });
+
   let generated = 0;
+
   for (const article of validArticles) {
-    
-const id = textValue(article.id);
-const articleDir = path.join(nextDir, id);
-await fs.mkdir(articleDir, { recursive: true });
+    const id = textValue(article.id);
+    // The article ID is validated above and again by renderSocialPreview().
+    const articleDir = path.join(nextDir, id);
+    await fs.mkdir(articleDir, { recursive: true });
 
-// codeql[js/http-to-file-access] Intentional static HTML generation. Article IDs are validated, HTML content is escaped, and output is restricted to social-previews.
-await fs.writeFile(path.join(articleDir, 'index.html'), renderSocialPreview(article), 'utf8');
+    await fs.writeFile(
+      path.join(articleDir, 'index.html'),
+      renderSocialPreview(article),
+      'utf8'
+    );
 
-// codeql[js/http-to-file-access] Safe intentional static-page generation: article IDs are validated, HTML values are escaped, and output is restricted to the social-previews directory.
-await fs.writeFile(path.join(articleDir, 'index.html'), renderSocialPreview(article), 'utf8');    generated += 1;
+    generated += 1;
   }
 
   await fs.rm(OUTPUT_DIR, { recursive: true, force: true });
   await fs.rename(nextDir, OUTPUT_DIR);
+
   const sitemapXml = await buildSitemapXml(validArticles, staticArticleIds);
   await fs.writeFile(SITEMAP_FILE, sitemapXml, 'utf8');
+
   console.log(`Kész: ${generated} publikált cikk megosztási előnézete frissült.`);
   console.log(`Kész: ${sitemapXml.match(/<url>/g)?.length || 0} indexelhető URL került a sitemap.xml fájlba.`);
 }
