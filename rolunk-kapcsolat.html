@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090912">
   <meta name="author" content="Rádió69 × Zsiványok Podcast">
-  <meta name="description" content="Ismerd meg a Rádió69 × Zsiványok Podcast online magazin célját, témáit és a kapcsolódó hivatalos felületeket.">
+  <meta name="description" content="Ismerd meg a Rádió69 × Zsiványok Podcast online magazin célját, témáit és a kapcsolódó hivatalos felületeket. Küldd el témádat, kérdésedet vagy vendégötletedet a szerkesztőségnek.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Rádió69 × Zsiványok Podcast">
   <meta property="og:locale" content="hu_HU">
   <meta property="og:title" content="Rólunk és Kapcsolat – Rádió69 × Zsiványok Podcast">
-  <meta property="og:description" content="A magazin célja, témái és a Rádió69, valamint a Zsiványok Podcast kapcsolódó felületei.">
+  <meta property="og:description" content="A magazin célja, témái és a Rádió69, valamint a Zsiványok Podcast kapcsolódó felületei. Küldd el ötletedet a szerkesztőségnek!">
   <meta property="og:url" content="https://radio69zsivanyok.hu/rolunk-kapcsolat.html">
   <meta property="og:image" content="https://radio69zsivanyok.hu/assets/radio69-logo.png">
   <meta property="og:image:alt" content="Rádió69 × Zsiványok Podcast logó és arculat">
@@ -35,7 +35,6 @@
     "inLanguage":"hu-HU",
     "isPartOf":{"@type":"WebSite","name":"Rádió69 × Zsiványok Podcast","url":"https://radio69zsivanyok.hu/"}
   }</script>
-
   <style id="rolunk-navigation-fix">
     /* A Médiaajánlat link legyen jól felismerhető, de illeszkedjen a közös fejlécbe. */
     .main-nav a.nav-media-link {
@@ -80,10 +79,137 @@
       .main-nav a.active { background: rgba(181,138,255,.08); border-radius: 8px; }
     }
   </style>
-
+  <style id="audience-form-styles">
+    .audience-panel {
+      margin-top: 30px;
+      padding: clamp(22px, 4vw, 36px);
+      border: 1px solid rgba(181,138,255,.25);
+      border-radius: 22px;
+      background: linear-gradient(145deg,#171426,#10101b);
+      box-shadow: 0 18px 48px rgba(0,0,0,.2);
+    }
+    .audience-panel-head { max-width: 760px; margin-bottom: 25px; }
+    .audience-panel-head h2 {
+      margin: 10px 0;
+      font: 800 clamp(26px,4vw,38px)/1.12 'Outfit',sans-serif;
+      letter-spacing: -.8px;
+      color: #fff;
+    }
+    .audience-panel-head p {
+      color: #aaa5bd;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    .audience-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 18px;
+    }
+    .audience-field { display: grid; gap: 8px; min-width: 0; }
+    .audience-field-full { grid-column: 1 / -1; }
+    .audience-field label {
+      color: #eee8ff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .audience-field input,
+    .audience-field select,
+    .audience-field textarea {
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      padding: 13px 14px;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 11px;
+      background: #0d0b17;
+      color: #f7f4ff;
+      font: inherit;
+      font-size: 13px;
+      outline: none;
+    }
+    .audience-field input::placeholder,
+    .audience-field textarea::placeholder { color: #777188; }
+    .audience-field select { color-scheme: dark; }
+    .audience-field textarea { min-height: 155px; resize: vertical; }
+    .audience-field input:focus,
+    .audience-field select:focus,
+    .audience-field textarea:focus {
+      border-color: #a78bfa;
+      box-shadow: 0 0 0 3px rgba(181,138,255,.12);
+    }
+    .audience-field small {
+      color: #918ba5;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+    .audience-consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 20px 0;
+      color: #aaa5bd;
+      font-size: 11px;
+      line-height: 1.7;
+    }
+    .audience-consent input {
+      width: 17px;
+      height: 17px;
+      flex: 0 0 17px;
+      margin-top: 2px;
+      accent-color: #a78bfa;
+    }
+    .audience-consent a {
+      color: #d8c6ff;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .audience-form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 15px;
+    }
+    .audience-form-note {
+      max-width: 420px;
+      color: #918ba5;
+      font-size: 10px;
+      line-height: 1.6;
+    }
+    .audience-form-status {
+      min-height: 22px;
+      margin: 17px 0 0;
+      color: #67e8f9;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+    .audience-form-status.is-error { color: #fda4af; }
+    .audience-form-fallback {
+      color: #aaa5bd;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .audience-form-fallback a { color: #d8c6ff; text-decoration: underline; }
+    .audience-honeypot {
+      position: absolute !important;
+      left: -10000px !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+    }
+    #audienceSubmitButton:disabled { opacity: .6; cursor: wait; }
+    @media(max-width:760px) {
+      .audience-panel { padding: 21px 16px; border-radius: 17px; }
+      .audience-form-grid { grid-template-columns: 1fr; gap: 15px; }
+      .audience-field-full { grid-column: auto; }
+      .audience-form-actions { align-items: stretch; }
+      .audience-form-actions .button { width: 100%; justify-content: center; }
+    }
+  </style>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <meta name="application-name" content="Rádió69">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Rádió69">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -91,7 +217,6 @@
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div>
   <div class="ambient ambient-two" aria-hidden="true"></div>
-
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Rádió69 és Zsiványok – főoldal">
       <img src="assets/radio69-icon.png" class="brand-logo" alt="Rádió69 logó" decoding="async">
@@ -113,7 +238,6 @@
     </nav>
     <a class="header-link" href="#kapcsolat">KAPCSOLAT <span>↗</span></a>
   </header>
-
   <main class="page-width contact-main">
     <section class="contact-hero" id="rolunk">
       <div class="contact-hero-copy">
@@ -130,13 +254,11 @@
         <span class="contact-hero-stamp">ZENE · TÖRTÉNETEK · KÖZÖSSÉG</span>
       </div>
     </section>
-
     <section class="contact-highlights" aria-label="A magazin témái">
       <article class="contact-highlight"><span class="contact-highlight-icon" aria-hidden="true">♫</span><div><strong>Zene és műsorinfók</strong><p>Rádiós programokhoz és zenéhez kapcsolódó cikkek, ajánlók és érdekességek.</p></div></article>
       <article class="contact-highlight"><span class="contact-highlight-icon" aria-hidden="true">🎙</span><div><strong>Podcastos történetek</strong><p>A Zsiványok Podcast világa, epizódok és kulisszák mögötti témák.</p></div></article>
       <article class="contact-highlight"><span class="contact-highlight-icon" aria-hidden="true">↗</span><div><strong>Hivatkozások és források</strong><p>A cikkekben igyekszünk feltüntetni az ellenőrizhető információk forrásait.</p></div></article>
     </section>
-
     <section class="contact-section" id="kapcsolat">
       <div class="contact-section-intro">
         <span class="section-kicker">KAPCSOLAT ÉS HIVATALOS FELÜLETEK</span>
@@ -167,14 +289,69 @@
           <a class="button button-ghost" href="index.html#kozosseg">Közösségi felületek <span>↗</span></a>
         </article>
       </div>
-      <div class="contact-message-panel">
-        <div><strong>Helyesbítés, tartalmi kérdés vagy együttműködési ötlet?</strong><p>Ha egy műsorinformáció változott, hibát találtál valamelyik cikkben, vagy együttműködésről érdeklődnél, keresd fel a témához tartozó hivatalos felületet a fenti hivatkozások egyikén. Ez a statikus bemutatkozó oldal nem gyűjt be közvetlen üzeneteket.</p></div>
-        <a class="button button-primary" href="index.html#kozosseg">Elérhetőségek <span>↗</span></a>
-      </div>
+
+      <section class="audience-panel" id="uzenetkuldes" aria-labelledby="audiencePanelTitle">
+        <div class="audience-panel-head">
+          <span class="section-kicker">KÖZÖNSÉGKAPCSOLAT</span>
+          <h2 id="audiencePanelTitle">Halljuk, amit mondasz!</h2>
+          <p>Van egy jó témád, kérdésed vagy egy érdekes vendégötleted? Küldd el nekünk! Minden üzenetet a szerkesztőség dolgoz fel.</p>
+        </div>
+
+        <form id="audienceMessageForm">
+          <div class="audience-honeypot" aria-hidden="true">
+            <label for="audienceWebsite">Weboldal</label>
+            <input id="audienceWebsite" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="audience-form-grid">
+            <div class="audience-field">
+              <label for="audienceMessageType">Miben szeretnél üzenni?</label>
+              <select id="audienceMessageType" name="message_type" required>
+                <option value="">Válassz egy lehetőséget!</option>
+                <option value="topic_suggestion">Témát javasolok</option>
+                <option value="question">Kérdést küldök a műsorvezetőknek</option>
+                <option value="guest_recommendation">Vendéget ajánlok a podcastbe</option>
+                <option value="editorial_message">Helyesbítés vagy egyéb üzenet</option>
+              </select>
+            </div>
+            <div class="audience-field">
+              <label for="audienceName">Neved (nem kötelező)</label>
+              <input id="audienceName" name="name" type="text" maxlength="100" autocomplete="name" placeholder="Hogyan szólíthatunk?">
+            </div>
+            <div class="audience-field">
+              <label for="audienceEmail">E-mail-címed (nem kötelező)</label>
+              <input id="audienceEmail" name="email" type="email" maxlength="160" autocomplete="email" placeholder="nev@email.hu">
+              <small>Ha választ szeretnél kapni, add meg az e-mail-címedet.</small>
+            </div>
+            <div class="audience-field">
+              <label for="audienceSubject">Téma vagy vendég neve (nem kötelező)</label>
+              <input id="audienceSubject" name="subject" type="text" maxlength="160" placeholder="Miről vagy kiről van szó?">
+            </div>
+            <div class="audience-field audience-field-full">
+              <label for="audienceMessage">Üzeneted</label>
+              <textarea id="audienceMessage" name="message" rows="6" minlength="10" maxlength="1500" required placeholder="Írd le nekünk részletesen az ötletedet vagy kérdésedet..."></textarea>
+              <small>Minimum 10, maximum 1500 karakter.</small>
+            </div>
+          </div>
+
+          <label class="audience-consent" for="audiencePrivacy">
+            <input id="audiencePrivacy" name="privacy_acknowledged" type="checkbox" required>
+            <span>Elolvastam és tudomásul vettem az <a href="adatvedelem.html" target="_blank" rel="noopener noreferrer">adatvédelmi tájékoztatót</a>.</span>
+          </label>
+
+          <div class="audience-form-actions">
+            <button class="button button-primary" type="submit" id="audienceSubmitButton">Üzenet beküldése <span aria-hidden="true">↗</span></button>
+            <p class="audience-form-note">Kérjük, ne küldj jelszót, bankkártyaadatot vagy különleges személyes adatot.</p>
+          </div>
+
+          <p class="audience-form-status" id="audienceMessageStatus" role="status" aria-live="polite"></p>
+          <p class="audience-form-fallback" id="audienceMessageFallback" hidden>E-mailben is elküldheted az üzenetedet: <a href="mailto:zsivanyokpodcast@gmail.com">zsivanyokpodcast@gmail.com</a></p>
+        </form>
+      </section>
+
       <p class="contact-page-note"><span aria-hidden="true">ⓘ</span><span>A műsorrend és a podcastinformációk változhatnak. A legfrissebb részletekért mindig a Rádió69 és a Zsiványok Podcast saját felületeit ellenőrizd. Az egyes cikkek végén feltüntetett források segítenek az információk további ellenőrzésében.</span></p>
     </section>
   </main>
-
   <footer class="site-footer page-width">
     <a class="footer-brand" href="index.html"><img src="assets/radio69-icon.png" alt="" aria-hidden="true" decoding="async" loading="lazy"><span>RÁDIÓ<span>69</span><small>× ZSIVÁNYOK PODCAST</small></span></a>
     <span class="footer-middle">Zene. Történetek. Közösség.</span>
@@ -183,7 +360,6 @@
     <a class="footer-policy-link" href="dj-k.html">DJ-k</a>
     <span class="copyright">© <span id="year"></span> Rádió69 × Zsiványok</span>
   </footer>
-
   <div class="ai-chat-widget" id="aiChatWidget">
     <section class="ai-chat-panel" id="aiChatPanel" aria-label="Rádió69 AI chat" hidden>
       <header class="ai-chat-header">
@@ -199,12 +375,12 @@
     </section>
     <button class="ai-chat-launcher" id="aiChatToggle" type="button" aria-label="AI chat megnyitása" aria-controls="aiChatPanel" aria-expanded="false"><span class="ai-chat-launcher-icon" aria-hidden="true">✦</span><span class="ai-chat-launcher-label">Kérdezz az asszisztenstől</span><span class="ai-chat-launcher-pulse" aria-hidden="true"></span></button>
   </div>
-
   <script src="chat.js"></script>
   <script src="articles.js"></script>
   <script src="script.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="audience-messages.js"></script>
   <script src="/pwa.js" defer></script>
-
   <script src="/analytics.js?v=radio69-analytics-20261028" defer></script>
 </body>
 </html>
