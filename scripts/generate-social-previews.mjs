@@ -196,11 +196,10 @@ function readSupabaseConfig() {
     throw new Error('Érvénytelen Supabase URL.');
   }
 
-  return {
+    return {
     url: url.origin,
     key
   };
-}
 }
 
 
