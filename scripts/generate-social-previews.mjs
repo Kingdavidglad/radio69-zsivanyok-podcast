@@ -1,5 +1,5 @@
 
-#!/usr/bin/env node
+
 /**
  * Generate static, Open Graph-readable article pages for GitHub Pages.
  * Meta tags are emitted into the initial HTML so social scrapers do not need to run JavaScript.
