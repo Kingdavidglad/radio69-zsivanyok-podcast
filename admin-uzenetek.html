@@ -38,6 +38,29 @@
     .reply-help{font-size:10px;color:var(--muted);line-height:1.6;margin:0}
     .reply-empty{font-size:11px;color:var(--muted);padding:8px 0}
     @media(max-width:520px){.reply-form{padding:12px}.reply-form .btn{width:100%}}
+  
+    /* Google Analytics – a meglévő sötét/lila adminfelülethez illesztve */
+    .analytics-panel{margin:0 0 50px}
+    .analytics-period{font-size:11px;color:var(--muted);margin:0 0 14px}
+    .analytics-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .analytics-stat{min-width:0;padding:16px;border:1px solid var(--line);border-radius:14px;background:#ffffff06}
+    .analytics-stat strong{display:block;font:800 25px/1.2 var(--head);overflow-wrap:anywhere}
+    .analytics-stat span{display:block;color:var(--muted);font-size:10px;letter-spacing:.6px;font-weight:800;text-transform:uppercase;margin-top:6px}
+    .analytics-stat:nth-child(1) strong,.analytics-stat:nth-child(4) strong{color:var(--cyan)}
+    .analytics-stat:nth-child(2) strong,.analytics-stat:nth-child(5) strong{color:var(--purple)}
+    .analytics-stat:nth-child(3) strong,.analytics-stat:nth-child(6) strong{color:var(--green)}
+    .analytics-trend{margin-top:16px;padding:16px;border:1px solid var(--line);border-radius:14px;background:#ffffff04}
+    .analytics-trend h3{font:700 14px var(--head);margin:0 0 5px}
+    .analytics-trend p{color:var(--muted);font-size:10px;margin:0 0 15px}
+    .analytics-bars{height:145px;display:grid;grid-template-columns:repeat(28,minmax(0,1fr));align-items:end;gap:4px;padding:4px 0 0}
+    .analytics-bar-slot{height:100%;display:flex;align-items:flex-end;min-width:0}
+    .analytics-bar{display:block;width:100%;min-height:2px;border-radius:5px 5px 1px 1px;background:linear-gradient(180deg,var(--cyan),var(--purple));opacity:.9;transition:opacity .15s ease}
+    .analytics-bar-slot:hover .analytics-bar{opacity:1}
+    .analytics-axis{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:9px;margin-top:8px}
+    .analytics-status{margin:12px 0 0}
+    .analytics-updated{color:var(--muted);font-size:10px;margin:12px 0 0}
+    @media(max-width:700px){.analytics-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.analytics-stat{padding:12px}.analytics-stat strong{font-size:22px}.analytics-bars{gap:2px;height:120px}}
+
   </style>
 </head>
 <body>
@@ -101,12 +124,52 @@
             <div class="panel-body" id="detailPanel"><p class="empty">Válassz ki egy üzenetet a listából a részletek megtekintéséhez.</p></div>
           </section>
         </div>
+
+        <section class="panel analytics-panel" id="analyticsPanel" aria-labelledby="analyticsHeading">
+          <div class="panel-head">
+            <div>
+              <h2 id="analyticsHeading">Google Analytics – weboldal-statisztikák</h2>
+              <p class="analytics-period">A Rádió69 GA4-tulajdonának összesített adatai az elmúlt 28 napból.</p>
+            </div>
+            <button class="btn" id="refreshAnalyticsBtn" type="button">↻ Statisztikák frissítése</button>
+          </div>
+          <div class="panel-body">
+            <div class="analytics-stats" aria-live="polite">
+              <div class="analytics-stat"><strong id="gaActiveUsers">–</strong><span>Aktív felhasználók</span></div>
+              <div class="analytics-stat"><strong id="gaNewUsers">–</strong><span>Új felhasználók</span></div>
+              <div class="analytics-stat"><strong id="gaPageViews">–</strong><span>Oldalmegtekintések</span></div>
+              <div class="analytics-stat"><strong id="gaSessions">–</strong><span>Munkamenetek</span></div>
+              <div class="analytics-stat"><strong id="gaEngagement">–</strong><span>Elköteleződési arány</span></div>
+              <div class="analytics-stat"><strong id="gaAvgDuration">–</strong><span>Átlagos munkamenet</span></div>
+            </div>
+            <div class="analytics-trend">
+              <h3>Napi oldalmegtekintések</h3>
+              <p>Az elmúlt 28 nap napi bontásban. Vidd az egeret az oszlopok fölé a pontos értékért.</p>
+              <div class="analytics-bars" id="gaPageViewsTrend" role="img" aria-label="Napi oldalmegtekintések diagram"></div>
+              <div class="analytics-axis"><span>28 nappal ezelőtt</span><span>Ma</span></div>
+            </div>
+            <div class="message analytics-status" id="analyticsMessage" role="status" aria-live="polite">A Google Analytics-statisztikák betöltése a főszerkesztői belépés után indul.</div>
+            <p class="analytics-updated" id="analyticsUpdated"></p>
+          </div>
+        </section>
       </section>
     </main>
     <footer class="footer"><span>Rádió69 × Zsiványok Podcast · Belső szerkesztőségi felület</span><span>Belépéshez kötött · Nem indexelhető</span></footer>
   </div>
   <script src="supabase-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    (() => {
+      if (!window.supabase?.createClient) return;
+      const originalCreateClient = window.supabase.createClient.bind(window.supabase);
+      window.supabase.createClient = (...args) => {
+        const client = originalCreateClient(...args);
+        window.radio69AdminSupabase = client;
+        return client;
+      };
+    })();
+  </script>
   <script src="admin-uzenetek.js"></script>
+  <script src="admin-analytics.js"></script>
 </body>
 </html>
