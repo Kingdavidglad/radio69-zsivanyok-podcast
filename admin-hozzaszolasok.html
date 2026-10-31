@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#090912">
+  <meta name="description" content="Rádió69 belső hozzászólás-moderálási felület.">
+  <link rel="canonical" href="https://radio69zsivanyok.hu/admin-hozzaszolasok.html">
+  <title>Hozzászólások moderálása – Rádió69</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--bg:#090912;--panel:#141322;--line:#ffffff1b;--text:#f5f1ff;--muted:#aaa4bd;--purple:#b58aff;--cyan:#62e9f1;--green:#78e6b2;--red:#ff8caa;--amber:#ffd18b;font-family:'DM Sans',sans-serif}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#32104b66,transparent 35%),var(--bg);color:var(--text);line-height:1.55}a{color:var(--purple)}button,input,select{font:inherit}button{cursor:pointer}.shell{width:min(1100px,calc(100% - 30px));margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;padding:20px 0;border-bottom:1px solid var(--line)}.brand{font:800 18px Outfit,sans-serif;color:var(--text);text-decoration:none}.brand span{color:var(--purple)}.top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.btn{border:1px solid var(--line);border-radius:10px;padding:9px 13px;background:#ffffff08;color:var(--text);font-size:11px;font-weight:800;text-decoration:none}.btn:hover{border-color:#b58aff88}.btn-primary{background:linear-gradient(110deg,#a879f6,#60d7e6);color:#170f26;border:0}.btn-success{border-color:#78e6b266;color:#b9f5d6}.btn-danger{border-color:#ff8caa66;color:#ffd0dc}.hidden{display:none!important}.intro{padding:25px 0 18px}.kicker{font-size:10px;letter-spacing:2px;font-weight:900;color:var(--cyan)}h1{font:800 clamp(28px,4vw,40px)/1.1 Outfit,sans-serif;margin:7px 0}.muted{color:var(--muted);font-size:12px;max-width:750px}.panel{border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#171525f2,#100f18f2);overflow:hidden;margin:15px 0 35px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 17px;border-bottom:1px solid var(--line);flex-wrap:wrap}.panel-head h2{font:700 16px Outfit,sans-serif;margin:0}.panel-body{padding:16px}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.toolbar select{border:1px solid var(--line);border-radius:9px;background:#090912;color:var(--text);padding:9px 11px}.message{display:none;padding:10px 12px;border-radius:10px;margin:12px 0;font-size:12px;background:#10292e;color:#c8f8fb;border:1px solid #62e9f144}.message.show{display:block}.message.error{background:#321421;color:#ffd7e3;border-color:#ff8caa55}.cards{display:grid;gap:10px}.comment-card{border:1px solid var(--line);border-radius:12px;padding:14px;background:#ffffff04}.comment-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}.comment-title{font-weight:900;color:#e8dcff;font-size:13px}.comment-meta{font-size:10px;color:var(--muted);margin-top:3px}.comment-body{white-space:pre-wrap;overflow-wrap:anywhere;color:#e2deeb;font-size:13px;line-height:1.7;margin:11px 0}.comment-actions{display:flex;gap:7px;flex-wrap:wrap}.status{display:inline-flex;border-radius:999px;padding:3px 8px;font-size:9px;font-weight:900;letter-spacing:.5px}.status.pending{background:#ffd18b1c;color:#ffe2b5}.status.approved{background:#78e6b21c;color:#bdf3d6}.status.rejected{background:#ff8caa1c;color:#ffc5d2}.comment-link{font-size:10px;font-weight:800}.empty{color:var(--muted);font-size:12px;padding:20px 3px}.login{max-width:450px;margin:45px auto;padding:24px;border:1px solid var(--line);border-radius:17px;background:var(--panel)}.login h2{font:700 22px Outfit;margin:0 0 8px}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:11px;font-weight:800;color:#e5def5}.field input{width:100%;padding:11px;border-radius:9px;border:1px solid var(--line);background:#090912;color:var(--text)}.footer{border-top:1px solid var(--line);padding:18px 0 28px;color:var(--muted);font-size:10px}
+    @media(max-width:560px){.shell{width:calc(100% - 22px)}.top{align-items:flex-start;flex-direction:column}.top-actions{width:100%}.top-actions .btn{flex:1;text-align:center}.panel-body{padding:11px}.comment-actions .btn{flex:1;text-align:center}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top">
+      <a class="brand" href="index.html">RÁDIÓ<span>69</span> · MODERÁLÁS</a>
+      <nav class="top-actions" aria-label="Adminisztráció">
+        <a class="btn" href="cikk-szerkeszto.html">← Cikkműhely</a>
+        <a class="btn" href="index.html">Weboldal</a>
+        <span id="userPill" class="btn hidden"></span>
+        <button id="logoutBtn" class="btn hidden" type="button">Kilépés</button>
+      </nav>
+    </header>
+    <section id="loginView" class="login">
+      <span class="kicker">FŐSZERKESZTŐI BELÉPÉS</span>
+      <h2>Hozzászólások moderálása</h2>
+      <p class="muted">A hozzászólások csak főszerkesztői jóváhagyás után jelennek meg a cikkek alatt.</p>
+      <div id="loginMessage" class="message" role="alert"></div>
+      <form id="loginForm">
+        <div class="field"><label for="email">E-mail-cím</label><input id="email" type="email" autocomplete="username" required></div>
+        <div class="field"><label for="password">Jelszó</label><input id="password" type="password" autocomplete="current-password" required></div>
+        <button class="btn btn-primary" type="submit">Belépés a moderáláshoz</button>
+      </form>
+    </section>
+    <section id="appView" class="hidden">
+      <div class="intro"><span class="kicker">RÁDIÓ69 · KÖZÖSSÉG</span><h1>Olvasói hozzászólások</h1><p class="muted">Itt hagyhatod jóvá a megjelenésre váró hozzászólásokat, elutasíthatod vagy törölheted a nem megfelelő tartalmakat.</p></div>
+      <div id="appMessage" class="message" role="status" aria-live="polite"></div>
+      <section class="panel">
+        <div class="panel-head"><h2>Moderációs lista</h2><div class="toolbar"><select id="statusFilter" aria-label="Szűrés állapot szerint"><option value="pending">Jóváhagyásra vár</option><option value="approved">Jóváhagyott</option><option value="rejected">Elutasított</option><option value="all">Mindegyik</option></select><button class="btn" id="refreshBtn" type="button">↻ Frissítés</button></div></div>
+        <div class="panel-body"><div id="commentList" class="cards"><p class="empty">A lista betöltése…</p></div></div>
+      </section>
+    </section>
+    <footer class="footer">Rádió69 × Zsiványok Podcast · Belső szerkesztőségi felület · Belépéshez kötött</footer>
+  </div>
+  <script src="articles.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="admin-hozzaszolasok.js"></script>
+</body>
+</html>

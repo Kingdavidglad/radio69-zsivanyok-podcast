@@ -1,7 +1,7 @@
 /* Rádió69 × Zsiványok Podcast — lightweight PWA cache. */
 'use strict';
 
-const CACHE_NAME = 'radio69-pwa-v4-web-push-20261031';
+const CACHE_NAME = 'radio69-pwa-v5-article-community-20261031';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -13,6 +13,8 @@ const APP_SHELL = [
   '/script.js',
   '/articles.js',
   '/article.js',
+  '/article-community.js?v=radio69-community-20261031',
+  '/article-community.css?v=radio69-community-20261031',
   '/share.js',
   '/pwa.js',
   '/push-config.js',
@@ -75,7 +77,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Never cache editor pages; this avoids showing a stale private/admin interface offline.
-  if (url.pathname.includes('cikk-szerkeszto')) return;
+  if (url.pathname.includes('cikk-szerkeszto') || url.pathname.includes('admin-hozzaszolasok')) return;
 
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
