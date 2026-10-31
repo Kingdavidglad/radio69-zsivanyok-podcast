@@ -28,17 +28,11 @@
   async function checkHealth() {
     // GitHub Pages only serves static files; it cannot host server.js or the /api endpoints.
     // Keep the chat in safe demo mode there, without issuing needless 404 requests.
-    const host = location.hostname.toLowerCase();
-
-if (
-  host.endsWith('.github.io') ||
-  host === 'radio69zsivanyok.hu' ||
-  host === 'www.radio69zsivanyok.hu'
-) {
-  aiAvailable = false;
-  setStatus('demo', 'Próba mód – AI nincs összekötve');
-  return;
-}
+    if (location.hostname.endsWith('.github.io')) {
+      aiAvailable = false;
+      setStatus('demo', 'GitHub Pages – próba mód');
+      return;
+    }
     try {
       const response = await fetch('/api/health', { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
       if (!response.ok || !(response.headers.get('content-type') || '').includes('application/json')) throw new Error('No chat API');

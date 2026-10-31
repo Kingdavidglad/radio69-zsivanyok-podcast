@@ -476,10 +476,9 @@
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <meta name="application-name" content="Rádió69">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Rádió69">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Rádió69">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div><div class="ambient ambient-two" aria-hidden="true"></div>
@@ -502,7 +501,7 @@
         <div class="eyebrow"><span class="eyebrow-dot"></span> RÁDIÓ69 × ZSIVÁNYOK PODCAST</div>
         <h1>Történetek,<br>amik <span class="gradient-text">összehoznak.</span></h1>
         <p class="hero-lede">Ellenőrzött műsorinfók, zenei ajánlók és a Zsiványok Podcast kulisszái – forrásokkal, egy közös online magazinban.</p>
-        <div class="hero-actions"><a class="button button-primary" href="#friss">Fedezd fel a sztorikat <span>↓</span></a><a class="button button-ghost" href="#podcast">A Zsiványok világa <span>↗</span></a></div>
+        <div class="hero-actions"><a class="button button-primary" href="#friss">Fedezd fel a sztorikat <span>↓</span></a><a class="button button-ghost" href="#podcast">A Zsiványok világa <span>↗</span></a><button class="button button-ghost" id="radio69PushButton" data-radio69-push-button type="button">🔔 Értesítések bekapcsolása</button></div><p class="radio69-push-status" data-radio69-push-status role="status" aria-live="polite" hidden></p>
         <div class="hero-proof"><span class="proof-icon">✦</span><div><b>Két világ, egy közösség.</b><small>Rádiós hangulat · podcastos őszinteség · érdekes történetek</small></div></div>
       </div>
         <a class="hero-feature" href="cikkek/zsivanyok-radio69-musorrend.html" aria-label="Kiemelt cikk: Zsiványok Podcast a Rádió69-en: pénteki adás, vasárnapi ismétlés">
@@ -720,9 +719,11 @@
 
   <!-- Rádió69 hangos üdvözlés -->
   <script src="radio69-sztorikerek.js"></script>
-  
+  <script src="welcome-voice.js"></script>
 
   <script src="/pwa.js" defer></script>
+  <script src="/push-config.js" defer></script>
+  <script src="/push-notifications.js" defer></script>
 
   <script src="/analytics.js?v=radio69-analytics-20261028" defer></script>
 </body>

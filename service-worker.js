@@ -1,7 +1,7 @@
 /* Rádió69 × Zsiványok Podcast — lightweight PWA cache. */
 'use strict';
 
-const CACHE_NAME = 'radio69-pwa-v3-performance-events-20261028';
+const CACHE_NAME = 'radio69-pwa-v4-web-push-20261031';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -15,6 +15,8 @@ const APP_SHELL = [
   '/article.js',
   '/share.js',
   '/pwa.js',
+  '/push-config.js',
+  '/push-notifications.js',
   '/analytics.js?v=radio69-analytics-20261028',
   '/analytics-config.json',
   '/assets/favicon.png',
@@ -105,4 +107,40 @@ self.addEventListener('fetch', (event) => {
       return cached || (await update) || Response.error();
     })());
   }
+});
+
+
+// Display only user-authorized Web Push notifications.
+self.addEventListener('push', (event) => {
+  let payload = {};
+  try { payload = event.data ? event.data.json() : {}; } catch (_) { payload = {}; }
+  const title = typeof payload.title === 'string' ? payload.title.slice(0, 90) : 'Rádió69 – új tartalom';
+  const body = typeof payload.body === 'string' ? payload.body.slice(0, 160) : 'Új olvasnivaló érkezett a Rádió69-re.';
+  const rawUrl = typeof payload.url === 'string' ? payload.url : '/';
+  const safeUrl = (() => { try { const parsed = new URL(rawUrl, self.location.origin); return parsed.origin === self.location.origin ? parsed.href : self.location.origin + '/'; } catch (_) { return self.location.origin + '/'; } })();
+  event.waitUntil(self.registration.showNotification(title, {
+    body,
+    icon: typeof payload.icon === 'string' ? payload.icon : '/assets/pwa-192.png',
+    badge: typeof payload.badge === 'string' ? payload.badge : '/assets/favicon.png',
+    tag: typeof payload.tag === 'string' ? payload.tag.slice(0, 100) : 'radio69-update',
+    data: { url: safeUrl },
+    renotify: false
+  }));
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil((async () => {
+    const rawUrl = event.notification.data && event.notification.data.url ? event.notification.data.url : '/';
+    let target = self.location.origin + '/';
+    try { const parsed = new URL(rawUrl, self.location.origin); if (parsed.origin === self.location.origin) target = parsed.href; } catch (_) {}
+    const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const client of windows) {
+      if (client.url === target && 'focus' in client) return client.focus();
+    }
+    for (const client of windows) {
+      if ('navigate' in client && 'focus' in client) { await client.navigate(target); return client.focus(); }
+    }
+    return self.clients.openWindow(target);
+  })());
 });
