@@ -541,6 +541,16 @@
     .app-platform-card small { color: #a9a7bd; font-size: 10px; line-height: 1.4; }
     .app-platform-card > b { margin-left: auto; color: #9f8bc8; font-size: 15px; }
     .app-platform-note { margin: 13px 0 0; color: #a9a7bd; font-size: 11px; line-height: 1.6; }
+    .app-download-link {
+      color: inherit; text-decoration: none; cursor: pointer;
+      transition: border-color .2s ease, background .2s ease, transform .2s ease;
+    }
+    .app-download-link:hover {
+      border-color: rgba(167,139,250,.78); background: rgba(139,92,246,.13);
+      transform: translateY(-2px);
+    }
+    .app-download-link:focus-visible { outline: 2px solid #9cecf4; outline-offset: 3px; }
+    .app-download-link > b { color: #c4b5fd; }
     .app-showcase-visual {
       position: relative; min-height: 390px; display: flex; align-items: center;
       justify-content: center; isolation: isolate;
@@ -728,17 +738,17 @@
         <section class="page-width app-showcase-section" id="alkalmazas" aria-labelledby="radio69AppTitle">
       <div class="app-showcase-card">
         <div class="app-showcase-copy">
-          <span class="app-showcase-eyebrow"><i aria-hidden="true"></i> KÉSZÜL A RÁDIÓ69 ALKALMAZÁS</span>
+          <span class="app-showcase-eyebrow"><i aria-hidden="true"></i> MÁR LETÖLTHETŐ ANDROIDRA</span>
           <h2 id="radio69AppTitle">A Rádió69 már<br><span>mindig veled.</span></h2>
-          <p>Hamarosan a telefonodon is veled lehet a Rádió69! Hallgasd kedvenc csatornáidat, böngészd a műsorokat, és érd el a kedvenceidet egyetlen alkalmazásból.</p>
+          <p>A Rádió69 Android-alkalmazása már letölthető közvetlenül erről az oldalról. Töltsd le a telepítőt, és vidd magaddal a rádiót a telefonodon is!</p>
           <div class="app-showcase-features">
             <span>♫ Rádió69 Hits</span><span>♫ Rádió69 Remix</span><span>♡ Kedvencek</span><span>🎙 Műsorok</span>
           </div>
-          <div class="app-platform-grid" aria-label="Tervezett platformok">
-            <div class="app-platform-card"><span class="app-platform-icon">◆</span><span><strong>Android</strong><small>Hamarosan érkezik</small></span><b>↗</b></div>
-            <div class="app-platform-card ios"><span class="app-platform-icon">●</span><span><strong>iOS</strong><small>Hamarosan érkezik</small></span><b>↗</b></div>
+          <div class="app-platform-grid" aria-label="Elérhető alkalmazásverziók">
+            <a class="app-platform-card app-download-link" href="https://github.com/Kingdavidglad/radio69-zsivanyok-podcast/releases/download/v1.0.0/application-5db34c28-70a3-4263-bbea-ba4345c02287.apk" target="_blank" rel="noopener noreferrer" aria-label="Rádió69 Android alkalmazás APK letöltése, 107 MB"><span class="app-platform-icon">◆</span><span><strong>Android</strong><small>APK letöltése · 107 MB</small></span><b>↓</b></a>
+            <div class="app-platform-card ios"><span class="app-platform-icon">●</span><span><strong>iOS</strong><small>Hamarosan érkezik</small></span><b>…</b></div>
           </div>
-          <p class="app-platform-note">Androidon és iOS-en egyaránt elérhető lesz.</p>
+          <p class="app-platform-note">Az Android-alkalmazás közvetlen APK-letöltéssel érhető el, nem a Google Play Áruházból. A telepítés során a telefonod megerősítést kérhet. Az iOS-verzió később érkezik.</p>
         </div>
         <div class="app-showcase-visual" aria-hidden="true">
           <span class="app-orbit orbit-one"></span><span class="app-orbit orbit-two"></span>
