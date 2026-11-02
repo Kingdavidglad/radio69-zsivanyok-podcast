@@ -1,0 +1,5 @@
+[functions.radio69-show-subscriptions]
+verify_jwt = false
+
+[functions.radio69-show-reminders]
+verify_jwt = false
