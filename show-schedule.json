@@ -1,0 +1,305 @@
+{
+  "timezone": "Europe/Budapest",
+  "reminderLeadMinutes": 15,
+  "sourceUrl": "https://radio69.hu/",
+  "shows": {
+    "vekker": {
+      "title": "Vekker",
+      "host": "Frenkl András"
+    },
+    "delelo": {
+      "title": "Delelő – A délelőtt hangja"
+    },
+    "delutani-lazito": {
+      "title": "Délutáni Lazító",
+      "description": "Kapcsolj ki, mi bekapcsolunk."
+    },
+    "zene-doboz": {
+      "title": "Zene Doboz",
+      "host": "Szabolcsi Dávid"
+    },
+    "back-in-time": {
+      "title": "Back in Time – Vissza az időben",
+      "host": "Balu",
+      "description": "1970–2022"
+    },
+    "nightmix": {
+      "title": "NightMix",
+      "host": "Frenkl András"
+    },
+    "retro-korut": {
+      "title": "Retró körút",
+      "host": "Dombi Ákos"
+    },
+    "magyarok": {
+      "title": "MagyarOK"
+    },
+    "clubchart": {
+      "title": "ClubChart",
+      "host": "Frenkl András"
+    },
+    "kangoo-jam": {
+      "title": "Kangoo Jam"
+    },
+    "begurulva": {
+      "title": "Begurulva – Autó és kütyümustra",
+      "host": "Berta István"
+    },
+    "magyar-top-40": {
+      "title": "Magyar Top 40",
+      "host": "Szabolcsi Dávid (Dave)"
+    },
+    "zsivanyok-podcast": {
+      "title": "Zsiványok Podcast",
+      "host": "Szabolcsi Dávid (Dave)",
+      "season": {
+        "start": "10-01",
+        "end": "05-31",
+        "label": "Október 1. – május 31."
+      }
+    },
+    "dj-sav": {
+      "title": "DJ Sáv",
+      "description": "A Rádió69 DJ-i veszik át az irányítást pörgős mixekkel."
+    },
+    "hangposta": {
+      "title": "Hangposta – Kívánságműsor",
+      "description": "A Délutáni Lazító műsorblokkjában."
+    }
+  },
+  "days": [
+    {
+      "day": 1,
+      "name": "Hétfő",
+      "entries": [
+        {
+          "time": "07:00",
+          "showId": "vekker"
+        },
+        {
+          "time": "10:00",
+          "showId": "delelo"
+        },
+        {
+          "time": "12:00",
+          "showId": "delutani-lazito"
+        },
+        {
+          "time": "15:00",
+          "showId": "zene-doboz"
+        },
+        {
+          "time": "18:00",
+          "showId": "back-in-time"
+        },
+        {
+          "time": "20:00",
+          "showId": "nightmix",
+          "repeat": true
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "name": "Kedd",
+      "entries": [
+        {
+          "time": "07:00",
+          "showId": "vekker"
+        },
+        {
+          "time": "10:00",
+          "showId": "delelo"
+        },
+        {
+          "time": "12:00",
+          "showId": "delutani-lazito"
+        },
+        {
+          "time": "15:00",
+          "showId": "retro-korut",
+          "repeat": true
+        },
+        {
+          "time": "18:00",
+          "showId": "magyarok"
+        },
+        {
+          "time": "20:00",
+          "showId": "clubchart",
+          "repeat": true
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "name": "Szerda",
+      "entries": [
+        {
+          "time": "07:00",
+          "showId": "vekker"
+        },
+        {
+          "time": "10:00",
+          "showId": "delelo"
+        },
+        {
+          "time": "12:00",
+          "showId": "delutani-lazito"
+        },
+        {
+          "time": "15:00",
+          "showId": "kangoo-jam",
+          "repeat": true
+        },
+        {
+          "time": "18:00",
+          "showId": "begurulva"
+        },
+        {
+          "time": "20:00",
+          "showId": "zene-doboz",
+          "repeat": true
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "name": "Csütörtök",
+      "entries": [
+        {
+          "time": "07:00",
+          "showId": "vekker"
+        },
+        {
+          "time": "10:00",
+          "showId": "delelo"
+        },
+        {
+          "time": "12:00",
+          "showId": "delutani-lazito"
+        },
+        {
+          "time": "15:00",
+          "showId": "magyarok",
+          "repeat": true
+        },
+        {
+          "time": "18:00",
+          "showId": "retro-korut"
+        },
+        {
+          "time": "20:00",
+          "showId": "back-in-time",
+          "repeat": true
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "name": "Péntek",
+      "entries": [
+        {
+          "time": "07:00",
+          "showId": "vekker"
+        },
+        {
+          "time": "10:00",
+          "showId": "delelo"
+        },
+        {
+          "time": "12:00",
+          "showId": "delutani-lazito"
+        },
+        {
+          "time": "15:00",
+          "showId": "magyar-top-40",
+          "repeat": true
+        },
+        {
+          "time": "18:00",
+          "showId": "zsivanyok-podcast"
+        },
+        {
+          "time": "21:00",
+          "showId": "nightmix"
+        }
+      ]
+    },
+    {
+      "day": 6,
+      "name": "Szombat",
+      "entries": [
+        {
+          "time": "07:00",
+          "showId": "vekker"
+        },
+        {
+          "time": "10:00",
+          "showId": "delelo"
+        },
+        {
+          "time": "12:00",
+          "showId": "delutani-lazito"
+        },
+        {
+          "time": "12:00",
+          "showId": "hangposta"
+        },
+        {
+          "time": "16:00",
+          "showId": "dj-sav"
+        }
+      ]
+    },
+    {
+      "day": 7,
+      "name": "Vasárnap",
+      "entries": [
+        {
+          "time": "07:00",
+          "showId": "vekker"
+        },
+        {
+          "time": "10:00",
+          "showId": "delelo"
+        },
+        {
+          "time": "12:00",
+          "showId": "delutani-lazito"
+        },
+        {
+          "time": "12:00",
+          "showId": "magyar-top-40"
+        },
+        {
+          "time": "16:00",
+          "showId": "dj-sav"
+        },
+        {
+          "time": "18:00",
+          "showId": "clubchart"
+        },
+        {
+          "time": "19:00",
+          "showId": "zsivanyok-podcast",
+          "repeat": true
+        },
+        {
+          "time": "20:00",
+          "showId": "kangoo-jam"
+        }
+      ]
+    }
+  ],
+  "continuousStreams": [
+    {
+      "title": "Rádió 69 Hits",
+      "description": "Folyamatos zenei kínálat, fix műsorkezdési időpont nélkül."
+    },
+    {
+      "title": "Rádió 69 Remix",
+      "description": "Folyamatosan frissülő remix- és zenei kínálat, fix műsorkezdési időpont nélkül."
+    }
+  ]
+}

@@ -1,19 +1,27 @@
-# Rádió69 × Zsiványok Podcast — barter médiaajánlat oldal
+# Rádió69 × Zsiványok Podcast – weboldalprojekt
 
-## Telepítés
+A projekt a [radio69zsivanyok.hu](https://radio69zsivanyok.hu/) statikus GitHub Pages weboldalának teljes forrását tartalmazza.
 
-1. Nyisd meg a GitHub-repozitórium gyökérmappájában lévő `mediaajanlat.html` fájlt.
-2. Kattints az Edit (ceruza) gombra, vagy használd az Add file → Upload files lehetőséget.
-3. Cseréld le a meglévő `mediaajanlat.html` fájlt az ebben a csomagban lévő változatra.
-4. Mentsd a módosítást a `main` ágra a **Commit changes** gombbal.
-5. A GitHub Pages frissülése után ellenőrizd: https://radio69zsivanyok.hu/mediaajanlat.html
+## Új fejlesztés: heti műsorrend és 15 perces push értesítések
 
-## Mit tartalmaz?
+- `musoraink.html` – heti műsorrend hétfőtől vasárnapig.
+- `show-schedule.json` – a műsorok és időpontok központi listája.
+- `musoraink.js` és `musoraink.css` – műsorválasztás, értesítési felület és megjelenés.
+- `show-push-config.js` – kizárólag a VAPID nyilvános kulcsának helye.
+- `service-worker.js` – háttérben fogadja a push üzeneteket és megjeleníti az értesítést.
+- `supabase/functions/radio69-show-subscriptions/` – előfizetések mentése és törlése.
+- `supabase/functions/radio69-show-reminders/` – a kezdések előtti értesítések kiküldése.
+- `radio69-show-push.sql` – adatbázistáblák és biztonsági beállítások.
+- `radio69-show-push-scheduler.sql` – percenkénti Supabase Cron ütemezés.
 
-- Egyértelműen kommunikálja, hogy kizárólag barter együttműködéseket vállaltok; pénzbeli díjazású hirdetési csomagot nem kínáltok.
-- A korábbi hirdetési csomagokat példaként bemutatott barter együttműködési formákra alakítja át.
-- A megkereső űrlap bekéri a barter felajánlás leírását, a kívánt megjelenést és a hozzávetőleges értéket (utóbbi opcionális).
-- Az űrlap egy előre kitöltött emailt készít a `zsivanyokpodcast@gmail.com` címre. Nem küldi el automatikusan.
-- Megőrzi az oldal meglévő lila-neonos megjelenését, a PDF-nyomtatást, az adatvédelmi és impresszum hivatkozásokat.
+**Telepítési útmutató:** [README-PUSH-ERTESITESEK.md](README-PUSH-ERTESITESEK.md). A bezárt weboldal melletti értesítés a Supabase SQL-, Secret- és Edge Function-beállítások, valamint a GitHub Pages frissítése után működik.
 
-A csomag csak a `mediaajanlat.html` fájlt módosítja. Más oldalakat ne írj felül vele.
+## Egyéb projekt- és karbantartási útmutatók
+
+- `README-FEJLESZTESEK-HU.md` – korábbi weboldal-fejlesztések, telepítési és ellenőrzési útmutató.
+- `README-BIZTONSAGI-CSOMAG.md` és `BIZTONSAGI-UTMUTATO-HU.md` – biztonsági tudnivalók.
+- `ANALITIKA-BEALLITASI-UTMUTATO.md` – analitikai konfiguráció.
+
+## Biztonság
+
+A `supabase-config.js` fájlban kizárólag a nyilvános `sb_publishable_...` klienskulcs szerepelhet. Supabase Secret API-kulcsot, `service_role` kulcsot, VAPID privát kulcsot vagy CRON titkot soha ne tegyél a nyilvános repozitóriumba vagy weboldali JavaScript-fájlba. A helyi `.env` fájlokat a `.gitignore` kizárja a Gitből.
