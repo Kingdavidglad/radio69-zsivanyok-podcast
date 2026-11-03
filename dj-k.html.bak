@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090912">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="description" content="Ismerd meg a Rádió69 DJ-it: DJ Effect, DJ Veronic, DJ Hlásznyik, DJ Daniel, Carver, MATT.T., TERENCE, ADAMO és FRIGYES profiljai egy helyen.">
+  <title>DJ-k – Rádió69</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="canonical" href="https://radio69zsivanyok.hu/dj-k.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://radio69zsivanyok.hu/dj-k.html">
+  <meta property="og:title" content="DJ-k – Rádió69">
+  <meta property="og:description" content="Ismerd meg a Rádió69 DJ-it: DJ Effect, DJ Veronic, DJ Hlásznyik, DJ Daniel, Carver, MATT.T., TERENCE, ADAMO és FRIGYES.">
+  <meta property="og:image" content="https://radio69zsivanyok.hu/assets/djs/dj-effect.jpg">
+  <link rel="stylesheet" href="style.css?v=nav-menu-responsive-20261025-v2">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="application-name" content="Rádió69">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Rádió69">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div><div class="ambient ambient-two" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Rádió69 és Zsiványok – főoldal">
+      <img src="assets/radio69-icon.png" class="brand-logo" alt="Rádió69 logó" decoding="async">
+      <span class="brand-divider" aria-hidden="true"></span>
+      <span class="brand-name">RÁDIÓ<span>69</span><small>× ZSIVÁNYOK</small></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Navigáció megnyitása" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="main-nav" id="mainNav" aria-label="Fő navigáció">
+      <a href="index.html#home">Főoldal</a><a href="musoraink.html">Műsoraink</a><a href="index.html#friss">Olvasnivalók</a><a href="index.html#temak">Témák</a><a href="index.html#radio69">Rádió69</a><a href="index.html#podcast">Zsiványok Podcast</a><a class="active" href="dj-k.html" aria-current="page">DJ-k</a><a href="rendezvenyek.html">Rendezvények</a><a href="index.html#kozosseg">Közösség</a><a href="mediaajanlat.html" class="nav-media-link">Médiaajánlat</a><a href="rolunk-kapcsolat.html#rolunk">Rólunk</a>
+    </nav>
+    <a class="header-link" href="rolunk-kapcsolat.html#kapcsolat">KAPCSOLAT <span>↗</span></a>
+  </header>
+  <main class="dj-main page-width">
+    <header class="dj-page-heading">
+      <div class="eyebrow"><span class="eyebrow-dot"></span> RÁDIÓ69 · DJ-K</div>
+      <h1>Ismerd meg a <span class="gradient-text">DJ-ket.</span></h1>
+      <p>A Rádió69 DJ-i.</p>
+    </header>
+    <section aria-label="A Rádió69 DJ-i">
+      <div class="dj-grid" id="djGrid" aria-live="polite"></div>
+      <div class="dj-empty-state" id="djEmptyState">
+        <span class="dj-empty-state-mark" aria-hidden="true">✦</span>
+        <strong>Feltöltés alatt</strong>
+        <p>Hamarosan itt találod a DJ-k arcképeit és neveit.</p>
+      </div>
+      <div class="dj-coming-soon" aria-label="További DJ-k feltöltés alatt">
+        <span class="dj-coming-soon-mark" aria-hidden="true">✦</span>
+        <div>
+          <strong>További DJ-k feltöltés alatt</strong>
+          <p>Hamarosan újabb DJ-k arcképeivel bővül a Rádió69 DJ-oldala.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer page-width">
+    <a class="footer-brand" href="index.html"><img src="assets/radio69-icon.png" alt="" aria-hidden="true" decoding="async" loading="lazy"><span>RÁDIÓ<span>69</span><small>× ZSIVÁNYOK PODCAST</small></span></a>
+    <span class="footer-middle">Zene. Történetek. Közösség.</span>
+    <a class="footer-policy-link" href="adatvedelem.html">Adatvédelem</a>
+    <span class="copyright">© <span id="year"></span> Rádió69 × Zsiványok</span>
+  </footer>
+  <script src="djs.js?v=20261023-dj-frigyes"></script>
+  <script src="script.js"></script>
+  <script src="/pwa.js" defer></script>
+
+  <script src="/analytics.js?v=radio69-analytics-20261028" defer></script>
+</body>
+</html>
