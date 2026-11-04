@@ -1,7 +1,7 @@
 /* Rádió69 × Zsiványok Podcast — lightweight PWA cache. */
 'use strict';
 
-const CACHE_NAME = 'radio69-pwa-v6-community-20261104';
+const CACHE_NAME = 'radio69-pwa-v7-ga-consent-fix-20261104';
 const APP_SHELL = [
   '/',
   '/index.html',

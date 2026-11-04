@@ -88,6 +88,8 @@
     safeStorageSet(CONSENT_KEY, choice);
     if (banner) banner.remove();
     banner = null;
+    const settingsButton = document.getElementById('radio69AnalyticsSettings');
+    if (settingsButton) settingsButton.setAttribute('aria-expanded', 'false');
     if (choice === 'granted') {
       loadGoogleAnalytics();
       return;
@@ -121,34 +123,50 @@
       if (choice === 'granted' || choice === 'denied') persistChoice(choice);
     });
     document.body.appendChild(banner);
+    const settingsButton = document.getElementById('radio69AnalyticsSettings');
+    if (settingsButton) settingsButton.setAttribute('aria-expanded', 'true');
   }
 
   function setUpSettingsButton() {
     const settingsButton = document.getElementById('radio69AnalyticsSettings');
     if (!settingsButton) return;
+    addStyles();
+    // Keep this control available even if the GA config request is slow or fails.
     settingsButton.hidden = false;
-    settingsButton.addEventListener('click', showBanner);
+    settingsButton.setAttribute('aria-haspopup', 'dialog');
+    settingsButton.setAttribute('aria-expanded', 'false');
+    if (settingsButton.dataset.r69Bound === 'true') return;
+    settingsButton.dataset.r69Bound = 'true';
+    settingsButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      showBanner();
+    });
   }
 
   async function init() {
-    // Basic-consent behavior: no Google script or request exists before a valid
-    // Measurement ID is configured AND the visitor has accepted analytics.
+    // Initialize consent controls immediately. A stored "denied" choice should
+    // not hide the visitor's ability to reopen and change the preference.
+    setUpSettingsButton();
+    const initialChoice = safeStorageGet(CONSENT_KEY);
+    if (initialChoice !== 'granted' && initialChoice !== 'denied') showBanner();
+
+    // No Google script/request is created until a valid Measurement ID exists
+    // AND the visitor has accepted analytics. The UI remains available if the
+    // config fetch is delayed or temporarily unavailable.
     let config;
     try {
       const response = await fetch(CONFIG_URL, { cache: 'no-store', credentials: 'same-origin' });
       if (!response.ok) return;
       config = await response.json();
     } catch (_) {
-      return; // Analytics is optional; the website continues working normally.
+      return; // Analytics is optional; consent settings still remain accessible.
     }
     const rawId = String(config?.measurementId || '').trim().toUpperCase();
     if (!GA_ID_PATTERN.test(rawId)) return;
     measurementId = rawId;
-    setUpSettingsButton();
 
-    const choice = safeStorageGet(CONSENT_KEY);
-    if (choice === 'granted') loadGoogleAnalytics();
-    else if (choice !== 'denied') showBanner();
+    // The user may have accepted while the config was still loading.
+    if (safeStorageGet(CONSENT_KEY) === 'granted') loadGoogleAnalytics();
   }
 
   if (document.readyState === 'loading') {
