@@ -1,0 +1,67 @@
+RADIO69 × ZSIVANYOK PODCAST
+E-mail-értesítés az új közönségüzenetekről
+
+MIT CSINÁL EZ A CSOMAG?
+Minden új public.audience_messages rekord után automatikus értesítő e-mailt küld a már korábban használt Resend-fiókon keresztül a NOTIFICATION_EMAIL címre. A látogató nem kap automatikus visszaigazoló levelet. Ha megadott érvényes e-mail-címet, az értesítő levél válaszcímeként (Reply-To) beállítjuk.
+
+A CSOMAG FÁJLAI
+- index.ts: Supabase Edge Function forráskódja. Ezt a Supabase Dashboard szerkesztőjébe kell bemásolni.
+- adatvedelem.html: teljes adatvédelmi oldal frissítve a Resend-alapú belső e-mail-értesítéssel.
+
+FONTOS ELŐFELTÉTELEK
+1. A public.audience_messages tábla már létezzen a Supabase-ben.
+2. A rolunk-kapcsolat.html űrlapja és az audience-messages.js legyen feltöltve a GitHubra.
+3. A Supabase Edge Function Secrets között már legyen beállítva a korábban használt RESEND_API_KEY, EMAIL_FROM és NOTIFICATION_EMAIL. A korábbi beállításban a címzett: zsivanyokpodcast@gmail.com, a feladó pedig a már ellenőrzött notify.radio69zsivanyok.hu domainen lévő feladó cím volt. Ezeket ne írd át, ha a barter értesítések már működnek.
+
+1. EDGE FUNCTION LÉTREHOZÁSA
+1. Nyisd meg: https://supabase.com/dashboard/project/zmejdydtgxotkscluqlo
+2. A bal oldali menüben válaszd az Edge Functions részt.
+3. Kattints: Deploy a new function → Via Editor.
+4. A funkció neve pontosan ez legyen: notify-audience-message
+5. A szerkesztőben töröld a mintakódot, és másold be a csomagban található index.ts teljes tartalmát.
+6. A funkció Verify JWT beállítását kapcsold ki (OFF). A funkció saját, egyedi webhooktitkot ellenőriz a HTTP-fejlécben.
+7. Kattints a Deploy function gombra.
+
+2. EGY ÚJ, EGYEDI WEBHOOKTITOK BEÁLLÍTÁSA
+1. Generálj egy legalább 32 véletlen karakteres, egyedi titkot egy jelszókezelővel. Ne használd más weboldalon, és ne küldd el üzenetben senkinek.
+2. Supabase Dashboard → Edge Functions → Secrets (a menüpont neve felületverzió szerint változhat).
+3. Add hozzá:
+   Name: AUDIENCE_WEBHOOK_SECRET
+   Value: a saját, frissen generált titkod
+4. Mentsd el.
+5. A korábban beállított RESEND_API_KEY, EMAIL_FROM és NOTIFICATION_EMAIL titkokat ne töröld és ne módosítsd.
+
+3. DATABASE WEBHOOK LÉTREHOZÁSA
+1. Supabase Dashboard → Database → Webhooks → Create a new webhook.
+2. Név: notify-audience-message-on-insert
+3. Tábla: public.audience_messages
+4. Esemény: kizárólag INSERT.
+5. Típus: HTTP Request (egyedi HTTP-fejlécek megadásával).
+6. Method: POST
+7. URL:
+   https://zmejdydtgxotkscluqlo.supabase.co/functions/v1/notify-audience-message
+8. HTTP Headers:
+   Content-Type: application/json
+   x-audience-webhook-secret: ugyanaz a titok, amelyet az előző lépésben AUDIENCE_WEBHOOK_SECRET néven elmentettél.
+9. Mentsd el a webhookot.
+
+A titok két helyen szerepeljen pontosan ugyanúgy: az Edge Function Secrets AUDIENCE_WEBHOOK_SECRET értékeként és a Database Webhook x-audience-webhook-secret fejlécében. Soha ne tedd HTML-, JavaScript- vagy GitHub-fájlba.
+
+4. TESZT
+1. Ellenőrizd, hogy a weboldal Kapcsolat oldalán már megjelenik az új űrlap.
+2. Küldj be egy tesztüzenetet legalább 10 karakteres üzenettartalommal, a tájékoztató jelölőnégyzet bejelölésével.
+3. Ellenőrizd, hogy az új rekord bekerült a public.audience_messages táblába.
+4. Ellenőrizd a NOTIFICATION_EMAIL postafiókot, valamint a Spam/Promóciók mappát.
+5. Ha nem érkezik e-mail: Supabase → Edge Functions → notify-audience-message → Logs, majd Resend → Emails napló.
+
+MŰKÖDÉS
+- Minden új INSERT rekord után egy értesítést indít.
+- A levél a típus, név, megadott e-mail-cím, téma, üzenet, beküldési idő és rekordazonosító adatait tartalmazza.
+- A HTML e-mailben az üzenet mezői HTML-escapinget kapnak.
+- A Resend Idempotency-Key fejlécet kap a rekordazonosító alapján, hogy az azonos adatbázis-esemény újrapróbálása ne küldjön fölösleges duplikátumot.
+- A látogató adatbázisba történő beküldését az értesítő e-mail hibája önmagában nem vonja vissza. A levélküldés külön ellenőrizhető az Edge Function és Resend naplóiban.
+
+BIZTONSÁG
+- RESEND_API_KEY soha nem kerül a nyilvános weboldal JavaScript-kódjába.
+- A függvény csak a megfelelő x-audience-webhook-secret fejléc birtokában fogadja el a kérést.
+- A nyilvános űrlap RLS-szabályai továbbra is csak új sor beszúrását engedélyezzék; ne adj nyilvános SELECT jogosultságot.
