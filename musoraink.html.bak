@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090912">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="description" content="A Rádió69 teljes heti műsorrendje hétfőtől vasárnapig. Válaszd ki kedvenc műsoraidat, és kérj push értesítést 15 perccel a kezdés előtt!">
+  <title>Műsoraink és műsorértesítések – Rádió69</title>
+  <link rel="canonical" href="https://radio69zsivanyok.hu/musoraink.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://radio69zsivanyok.hu/musoraink.html">
+  <meta property="og:title" content="Rádió69 – Heti műsorrend és értesítések">
+  <meta property="og:description" content="Nézd meg a teljes heti műsorrendet, és kérj értesítést 15 perccel kedvenc műsoraid kezdése előtt!">
+  <meta property="og:image" content="https://radio69zsivanyok.hu/assets/radio69-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="stylesheet" href="style.css?v=nav-menu-responsive-20261025-v2">
+  <link rel="stylesheet" href="musoraink.css?v=20261102-push">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="application-name" content="Rádió69">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Rádió69">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Rádió69 és Zsiványok – főoldal">
+      <img src="assets/radio69-icon.png" class="brand-logo" alt="Rádió69 logó" decoding="async">
+      <span class="brand-divider" aria-hidden="true"></span>
+      <span class="brand-name">RÁDIÓ<span>69</span><small>× ZSIVÁNYOK</small></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Navigáció megnyitása" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="main-nav" id="mainNav" aria-label="Fő navigáció">
+      <a href="index.html#home">Főoldal</a>
+      <a class="active" href="musoraink.html" aria-current="page">Műsoraink</a>
+      <a href="index.html#friss">Olvasnivalók</a>
+      <a href="index.html#temak">Témák</a>
+      <a href="index.html#radio69">Rádió69</a>
+      <a href="index.html#podcast">Zsiványok Podcast</a>
+      <a href="dj-k.html">DJ-k</a>
+      <a href="rendezvenyek.html">Rendezvények</a>
+      <a href="index.html#kozosseg">Közösség</a>
+      <a href="mediaajanlat.html" class="nav-media-link">Médiaajánlat</a>
+      <a href="rolunk-kapcsolat.html#rolunk">Rólunk</a>
+    </nav>
+    <a class="header-link" href="rolunk-kapcsolat.html#kapcsolat">KAPCSOLAT <span>↗</span></a>
+  </header>
+
+  <main class="schedule-main page-width">
+    <section class="schedule-hero" aria-labelledby="scheduleTitle">
+      <div class="schedule-hero-copy">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> RÁDIÓ69 · HETI MŰSORREND</div>
+        <h1 id="scheduleTitle">Ne maradj le a <span class="gradient-text">kedvenceidről.</span></h1>
+        <p>Találd meg a kedvenc műsoraidat, és kérj értesítést! A kiválasztott adások kezdése előtt 15 perccel szólunk – akkor is, ha ezt az oldalt már bezártad.</p>
+        <div class="schedule-hero-points">
+          <span><b aria-hidden="true">◷</b> 15 perccel korábban</span>
+          <span><b aria-hidden="true">♧</b> Eszközönként beállítható</span>
+          <span><b aria-hidden="true">↗</b> Háttérből érkező push</span>
+        </div>
+      </div>
+      <aside class="schedule-reminder-panel" aria-label="Értesítési beállítások">
+        <div class="schedule-reminder-icon" aria-hidden="true">♢</div>
+        <div class="schedule-reminder-copy">
+          <strong>Kapcsold be a műsorértesítéseket!</strong>
+          <p>Válaszd ki lent azokat a műsorokat, amelyekről emlékeztetőt szeretnél kapni.</p>
+        </div>
+        <div class="schedule-status" id="pushStatus" role="status" aria-live="polite">Az értesítési beállítások betöltése…</div>
+        <div class="schedule-reminder-actions">
+          <span id="selectedCount" class="schedule-selected-count">0 kiválasztott műsor</span>
+          <button type="button" id="clearNotifications" class="schedule-clear-button" hidden>Összes értesítés kikapcsolása</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="schedule-key" aria-label="Hogyan működik az értesítés?">
+      <div class="schedule-key-icon" aria-hidden="true">🔔</div>
+      <div><strong>Hogyan működik?</strong><p>Kattints az „Értesítést kérek” gombra a kívánt műsornál, majd engedélyezd az értesítéseket a böngészőben. A kiválasztás az adott eszközöd böngészőjéhez tartozik.</p></div>
+    </section>
+
+    <section class="schedule-section" aria-labelledby="weeklyScheduleTitle">
+      <div class="schedule-section-heading">
+        <div><span class="section-kicker">HÉTFŐTŐL VASÁRNAPIG</span><h2 id="weeklyScheduleTitle">A teljes heti <span class="gradient-text">műsorrend.</span></h2><p>A műsorok a Rádió69 hivatalos oldalán közzétett heti beosztás alapján szerepelnek.</p></div>
+        <a class="schedule-source-link" href="https://radio69.hu/" target="_blank" rel="noopener noreferrer">Hivatalos műsorlista <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="schedule-grid" id="scheduleGrid" aria-live="polite">
+        <div class="schedule-loading">A heti műsorrend betöltése…</div>
+      </div>
+    </section>
+
+    <section class="schedule-streams-section" aria-labelledby="continuousStreamsTitle">
+      <div class="schedule-streams-heading"><span class="section-kicker">EGÉSZ NAP, MINDEN NAP</span><h2 id="continuousStreamsTitle">Folyamatos zenei kínálat.</h2><p>Ezek a zenei csatornák fix műsorkezdési időpont nélkül szólnak, ezért nem tartozik hozzájuk időzített műsorkezdési értesítés.</p></div>
+      <div class="schedule-streams-grid" id="continuousStreams"></div>
+    </section>
+
+    <p class="schedule-disclaimer">A műsorrend változhat. A Zsiványok Podcast szezonális műsor: a hivatalos műsorlista szerint október 1. és május 31. között szerepel az adásrendben. Az aktuális változásokat mindig a Rádió69 hivatalos oldalán ellenőrizd.</p>
+  </main>
+
+  <footer class="site-footer page-width">
+    <a class="footer-brand" href="index.html"><img src="assets/radio69-icon.png" alt="" aria-hidden="true" decoding="async" loading="lazy"><span>RÁDIÓ<span>69</span><small>× ZSIVÁNYOK PODCAST</small></span></a>
+    <span class="footer-middle">Zene. Történetek. Közösség.</span>
+    <a class="footer-policy-link" href="adatvedelem.html">Adatvédelem</a>
+    <span class="copyright">© <span id="year"></span> Rádió69 × Zsiványok</span>
+  </footer>
+
+  <script src="supabase-config.js"></script>
+  <script src="show-push-config.js"></script>
+  <script src="musoraink.js?v=20261102-push"></script>
+  <script src="script.js"></script>
+  <script src="/pwa.js" defer></script>
+  <script src="/analytics.js?v=radio69-analytics-20261028" defer></script>
+</body>
+</html>

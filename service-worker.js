@@ -1,24 +1,29 @@
 /* Rádió69 × Zsiványok Podcast — lightweight PWA cache. */
 'use strict';
 
-const CACHE_NAME = 'radio69-pwa-v5-article-community-20261031';
+const CACHE_NAME = 'radio69-pwa-v6-community-20261104';
 const APP_SHELL = [
   '/',
   '/index.html',
   '/manifest.webmanifest',
   '/style.css?v=nav-menu-responsive-20261025-v2',
   '/mediaajanlat.html',
+  '/musoraink.html',
+  '/musoraink.css?v=20261102-push',
+  '/musoraink.js?v=20261102-push',
+  '/show-push-config.js',
+  '/show-schedule.json',
   '/barter-inquiry.js',
   '/supabase-config.js',
   '/script.js',
+  '/language.js',
+  '/language.css',
   '/articles.js',
   '/article.js',
-  '/article-community.js?v=radio69-community-20261031',
-  '/article-community.css?v=radio69-community-20261031',
+  '/article-community.js',
+  '/article-community.css',
   '/share.js',
   '/pwa.js',
-  '/push-config.js',
-  '/push-notifications.js',
   '/analytics.js?v=radio69-analytics-20261028',
   '/analytics-config.json',
   '/assets/favicon.png',
@@ -55,6 +60,57 @@ self.addEventListener('activate', (event) => {
   })());
 });
 
+
+// Valódi Web Push üzenetek fogadása akkor is, ha az oldal nincs megnyitva.
+self.addEventListener('push', (event) => {
+  event.waitUntil((async () => {
+    let payload = {};
+    try {
+      payload = event.data ? event.data.json() : {};
+    } catch (_) {
+      payload = { body: event.data ? event.data.text() : '' };
+    }
+
+    const title = String(payload.title || 'Rádió69 – műsorértesítő').slice(0, 120);
+    const options = {
+      body: String(payload.body || 'Hamarosan kezdődik a kiválasztott műsor!').slice(0, 240),
+      icon: '/assets/pwa-192.png',
+      badge: '/assets/pwa-192.png',
+      tag: String(payload.tag || 'radio69-show-reminder').slice(0, 64),
+      renotify: true,
+      timestamp: Number(payload.timestamp) || Date.now(),
+      data: {
+        url: typeof payload.url === 'string' ? payload.url : '/musoraink.html',
+        showId: typeof payload.showId === 'string' ? payload.showId : ''
+      }
+    };
+
+    await self.registration.showNotification(title, options);
+  })());
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil((async () => {
+    let target = new URL('/musoraink.html', self.location.origin);
+    try {
+      const candidate = new URL(event.notification.data?.url || '/musoraink.html', self.location.origin);
+      if (candidate.origin === self.location.origin) target = candidate;
+    } catch (_) {
+      // A hibás vagy külső cél helyett a műsorrend nyílik meg.
+    }
+
+    const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const client of windows) {
+      if (new URL(client.url).origin === self.location.origin && 'focus' in client) {
+        await client.navigate(target.href);
+        return client.focus();
+      }
+    }
+    return self.clients.openWindow(target.href);
+  })());
+});
+
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
@@ -77,7 +133,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Never cache editor pages; this avoids showing a stale private/admin interface offline.
-  if (url.pathname.includes('cikk-szerkeszto') || url.pathname.includes('admin-hozzaszolasok')) return;
+  if (url.pathname.includes('cikk-szerkeszto')) return;
 
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
@@ -96,7 +152,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Cache only ordinary static assets; let Supabase and other dynamic requests use the network.
-  if (/\.(?:css|js|png|jpe?g|webp|svg|ico|woff2?|webmanifest)$/i.test(url.pathname)) {
+  if (/\.(?:css|js|json|png|jpe?g|webp|svg|ico|woff2?|webmanifest)$/i.test(url.pathname)) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
       const cached = await cache.match(request);
@@ -109,40 +165,4 @@ self.addEventListener('fetch', (event) => {
       return cached || (await update) || Response.error();
     })());
   }
-});
-
-
-// Display only user-authorized Web Push notifications.
-self.addEventListener('push', (event) => {
-  let payload = {};
-  try { payload = event.data ? event.data.json() : {}; } catch (_) { payload = {}; }
-  const title = typeof payload.title === 'string' ? payload.title.slice(0, 90) : 'Rádió69 – új tartalom';
-  const body = typeof payload.body === 'string' ? payload.body.slice(0, 160) : 'Új olvasnivaló érkezett a Rádió69-re.';
-  const rawUrl = typeof payload.url === 'string' ? payload.url : '/';
-  const safeUrl = (() => { try { const parsed = new URL(rawUrl, self.location.origin); return parsed.origin === self.location.origin ? parsed.href : self.location.origin + '/'; } catch (_) { return self.location.origin + '/'; } })();
-  event.waitUntil(self.registration.showNotification(title, {
-    body,
-    icon: typeof payload.icon === 'string' ? payload.icon : '/assets/pwa-192.png',
-    badge: typeof payload.badge === 'string' ? payload.badge : '/assets/favicon.png',
-    tag: typeof payload.tag === 'string' ? payload.tag.slice(0, 100) : 'radio69-update',
-    data: { url: safeUrl },
-    renotify: false
-  }));
-});
-
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-  event.waitUntil((async () => {
-    const rawUrl = event.notification.data && event.notification.data.url ? event.notification.data.url : '/';
-    let target = self.location.origin + '/';
-    try { const parsed = new URL(rawUrl, self.location.origin); if (parsed.origin === self.location.origin) target = parsed.href; } catch (_) {}
-    const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-    for (const client of windows) {
-      if (client.url === target && 'focus' in client) return client.focus();
-    }
-    for (const client of windows) {
-      if ('navigate' in client && 'focus' in client) { await client.navigate(target); return client.focus(); }
-    }
-    return self.clients.openWindow(target);
-  })());
 });
