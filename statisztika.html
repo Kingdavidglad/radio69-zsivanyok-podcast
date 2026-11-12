@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#090912">
+  <meta name="description" content="A Rádió69 belső, bejelentkezéshez kötött látogatottsági és tartalmi statisztikai irányítópultja.">
   <title>Statisztikai központ – Rádió69 × Zsiványok</title>
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,11 +17,13 @@
     @media(max-width:1050px){.kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-two{grid-template-columns:1fr}.internal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:620px){.shell{width:min(100% - 24px,1480px)}.top{align-items:flex-start;flex-direction:column}.top-actions{width:100%}.top-actions .btn{flex:1}.kpi-grid{gap:8px}.kpi{padding:13px}.kpi strong{font-size:24px}.panel-body{padding:13px}.chart{gap:3px}.chart-col{min-width:10px}.chart-label{font-size:7px}.internal-grid{gap:8px}.internal-card{padding:12px}.internal-card strong{font-size:21px}}
   </style>
+  <link rel="stylesheet" href="/quality-tuning.css?v=20261112-a11y-mobile">
 </head>
 <body>
+  <a class="r69-skip-link" href="#main-content">Ugrás a fő tartalomra</a>
   <div class="shell">
     <header class="top">
-      <a class="brand" href="index.html"><img src="assets/radio69-icon.png" alt="Rádió69 logó"><span><strong>RÁDIÓ<span>69</span></strong><small>× ZSIVÁNYOK · STATISZTIKAI KÖZPONT</small></span></a>
+      <a class="brand" href="index.html"><img src="assets/radio69-icon.png" alt="Rádió69 logó" decoding="async" width="626" height="395"><span><strong>RÁDIÓ<span>69</span></strong><small>× ZSIVÁNYOK · STATISZTIKAI KÖZPONT</small></span></a>
       <div class="top-actions">
         <span class="user-pill hidden" id="userPill"></span>
         <a class="btn" href="index.html">← Vissza a weboldalra</a>
@@ -30,7 +33,7 @@
       </div>
     </header>
 
-    <main>
+    <main id="main-content">
       <section class="login-wrap" id="loginView">
         <div class="card login-card">
           <span class="kicker">FŐSZERKESZTŐI BELÉPÉS</span>
@@ -122,5 +125,6 @@
   <script src="supabase-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="radio69-statisztika.js"></script>
+  <script src="/quality-enhancements.js?v=20261112-a11y-mobile" defer></script>
 </body>
 </html>
