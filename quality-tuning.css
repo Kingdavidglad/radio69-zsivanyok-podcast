@@ -368,3 +368,13 @@ table {
     box-shadow: none;
   }
 }
+
+
+/* Intrinsic width and height attributes on responsive images reserve space and limit layout shifts. */
+@media (max-width: 760px) {
+  /* Slightly lighter shadow rendering on compact devices. */
+  .ambient { opacity: .42; }
+  .article-card, .sidebar-card, .hero-feature, .about-card, .development-card {
+    box-shadow: 0 10px 26px rgba(0, 0, 0, .18);
+  }
+}
