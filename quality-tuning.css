@@ -1,0 +1,370 @@
+/* Rádió69 – akadálymentességi és reszponzív finomhangolás.
+   A meglévő arculatot megtartja; a fókusz, olvashatóság és mobilos vezérlés javítására szolgál. */
+:root {
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html {
+  scroll-padding-top: 6rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-width: 320px;
+  overflow-x: clip;
+}
+
+img,
+video,
+iframe,
+svg,
+canvas {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+button,
+a,
+input,
+select,
+textarea,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Billentyűzettel jól látható fókuszjelzés. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid #67e8f9 !important;
+  outline-offset: 3px !important;
+  scroll-margin-block: 6rem;
+}
+
+/* A billentyűzetes és képernyőolvasós felhasználók egy lépéssel a fő tartalomra ugorhatnak. */
+.r69-skip-link {
+  position: fixed;
+  z-index: 2147483001;
+  top: 10px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 11px 16px;
+  border: 2px solid #67e8f9;
+  border-radius: 12px;
+  background: #100b22;
+  color: #fff;
+  font: 800 14px/1.3 system-ui, sans-serif;
+  text-decoration: none;
+  box-shadow: 0 8px 28px #0009;
+  transform: translateY(calc(-100% - 18px));
+  transition: transform .16s ease;
+}
+
+.r69-skip-link:focus,
+.r69-skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+main,
+[id] {
+  scroll-margin-top: 6rem;
+}
+
+/* Kényelmesebb, legalább 44 px-es célterületek a navigációban és fontos vezérlőkön. */
+.menu-toggle,
+.main-nav a,
+.article-navigation-header .main-nav a,
+.header-link,
+.button,
+.small-action,
+.filter-chip,
+.story-wheel-button,
+.r69-language-switcher select,
+.gallery-card button,
+.gallery-item button,
+.ai-chat-launcher,
+.ai-chat-icon-btn,
+.ai-chat-suggestion {
+  min-height: 44px;
+}
+
+.menu-toggle {
+  min-width: 44px;
+}
+
+.main-nav a,
+.article-navigation-header .main-nav a {
+  align-items: center;
+}
+
+/* Hosszú URL-ek, e-mail-címek és űrlapértékek ne okozzanak vízszintes kilógást. */
+main,
+article,
+section,
+form,
+fieldset,
+.card,
+.panel {
+  min-width: 0;
+}
+
+p,
+li,
+label,
+.form-field,
+.value {
+  overflow-wrap: anywhere;
+}
+
+input,
+select,
+textarea {
+  max-width: 100%;
+}
+
+:where(table, pre, .table-wrap, .code-wrap) {
+  max-width: 100%;
+}
+
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* A tájékoztató jellegű, kis betűs tartalom is kényelmesebben olvasható maradjon. */
+.article-content p,
+.article-content li {
+  line-height: 1.8;
+}
+
+@media (max-width: 760px) {
+  html {
+    scroll-padding-top: 5rem;
+  }
+
+  .site-header {
+    height: auto;
+    min-height: 76px;
+    gap: 8px;
+    padding-block: 8px;
+  }
+
+  .brand {
+    min-width: 0;
+    gap: 7px;
+  }
+
+  .brand-logo {
+    width: 38px;
+    height: 38px;
+  }
+
+  .brand-name {
+    font-size: 14px;
+  }
+
+  .brand-name small {
+    margin-top: 4px;
+    font-size: 6px;
+    letter-spacing: 1.2px;
+  }
+
+  .menu-toggle {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+  }
+
+  .r69-language-switcher {
+    flex: 0 0 auto;
+    max-width: 112px;
+    margin-left: 0;
+    padding: 6px 7px;
+    gap: 4px;
+  }
+
+  .r69-language-switcher select {
+    max-width: 82px;
+    min-height: 38px;
+    font-size: 12px;
+  }
+
+  .r69-translate-credit {
+    display: none !important;
+  }
+
+  .main-nav a,
+  .article-navigation-header .main-nav a {
+    display: flex;
+    min-height: 46px;
+    padding: 12px 13px;
+    font-size: 14px;
+  }
+
+  .article-content p,
+  .article-content li {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .article-content .article-intro {
+    font-size: 17px;
+  }
+
+  .section {
+    padding-top: 58px;
+  }
+
+  .hero-lede {
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .article-card p {
+    font-size: 14px !important;
+    line-height: 1.7;
+  }
+
+  .article-meta {
+    font-size: 11px !important;
+    letter-spacing: .45px;
+    line-height: 1.5;
+  }
+
+  .card-link {
+    font-size: 12px !important;
+  }
+
+  .section-subtitle,
+  .editorial-note {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .filter-chip,
+  .topic-band a {
+    font-size: 12px;
+  }
+
+  .search-box input,
+  input[type="text"],
+  input[type="email"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="number"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  .button,
+  .small-action,
+  .filter-chip,
+  .story-wheel-button {
+    min-height: 44px;
+  }
+
+  .ai-chat-launcher {
+    min-height: 48px;
+  }
+
+  .article-main,
+  .privacy-main,
+  .contact-main,
+  .schedule-main,
+  .events-main,
+  .gallery-main {
+    padding-bottom: max(28px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 390px) {
+  .site-header {
+    width: calc(100% - 24px);
+    gap: 6px;
+  }
+
+  .brand-logo {
+    width: 34px;
+    height: 34px;
+  }
+
+  .brand-name {
+    font-size: 13px;
+    letter-spacing: -.4px;
+  }
+
+  .brand-divider {
+    height: 25px;
+  }
+
+  .r69-language-switcher {
+    padding-inline: 5px;
+  }
+
+  .r69-language-icon {
+    display: none;
+  }
+
+  .r69-language-switcher select {
+    max-width: 76px;
+    padding-inline: 0;
+    font-size: 11px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+
+  .r69-skip-link {
+    transition: none;
+  }
+}
+
+
+/* Erősebb kontrasztú és kényszerített színsémájú megjelenítés támogatása. */
+@media (prefers-contrast: more) {
+  :root {
+    --line: rgba(255, 255, 255, .28);
+    --muted: #d0cde0;
+    --muted2: #b6b2c8;
+  }
+  .main-nav a,
+  .footer-policy-link,
+  .text-link,
+  .card-link {
+    text-decoration: underline;
+    text-underline-offset: .18em;
+  }
+}
+
+@media (forced-colors: active) {
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 3px solid Highlight !important;
+  }
+  .r69-skip-link {
+    border: 2px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: none;
+  }
+}

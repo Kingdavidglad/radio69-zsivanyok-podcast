@@ -27,8 +27,8 @@
     wrap.className = 'r69-language-switcher';
     wrap.innerHTML = `
       <span class="r69-language-icon" aria-hidden="true">🌐</span>
-      <label class="r69-sr-only" for="r69-language-select">Website language</label>
-      <select id="r69-language-select" aria-label="Weboldal nyelve">
+      <label class="r69-sr-only" for="r69-language-select">Weboldal nyelve</label>
+      <select id="r69-language-select">
         <option value="hu">🇭🇺 Magyar</option>
         <option value="en">🇬🇧 English</option>
       </select>
@@ -37,6 +37,12 @@
 
     const select = wrap.querySelector('select');
     select.value = readLanguage();
+    const updateAccessibleName = () => {
+      const label = readLanguage() === 'en' ? 'Website language' : 'Weboldal nyelve';
+      select.setAttribute('aria-label', label);
+      wrap.querySelector('label')?.replaceChildren(document.createTextNode(label));
+    };
+    updateAccessibleName();
     select.addEventListener('change', () => {
       const next = select.value;
       if (!TARGET_LANGS.includes(next)) return;

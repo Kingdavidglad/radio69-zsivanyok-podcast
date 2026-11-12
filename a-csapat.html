@@ -247,16 +247,18 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Rádió69">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="stylesheet" href="/quality-tuning.css?v=20261112-a11y-mobile">
 </head>
 <body>
+  <a class="r69-skip-link" href="#teamTop">Ugrás a fő tartalomra</a>
   <div class="ambient ambient-one" aria-hidden="true"></div><div class="ambient ambient-two" aria-hidden="true"></div>
   <header class="site-header">
         <a class="brand" href="index.html" aria-label="Rádió69 és Zsiványok – főoldal">
-      <img src="assets/radio69-icon.png" class="brand-logo" alt="Rádió69 logó" decoding="async">
+      <img src="assets/radio69-icon.png" class="brand-logo" alt="Rádió69 logó" decoding="async" width="626" height="395">
       <span class="brand-divider" aria-hidden="true"></span>
       <span class="brand-name">RÁDIÓ<span>69</span><small>× ZSIVÁNYOK</small></span>
     </a>
-    <button class="menu-toggle" id="menuToggle" aria-label="Navigáció megnyitása" aria-expanded="false"><span></span><span></span><span></span></button>
+    <button class="menu-toggle" id="menuToggle" aria-label="Navigáció megnyitása" aria-expanded="false" type="button" aria-controls="mainNav"><span></span><span></span><span></span></button>
     <nav class="main-nav" id="mainNav" aria-label="Fő navigáció">
         <a href="index.html#home">Főoldal</a><a href="musoraink.html">Műsoraink</a><a href="index.html#friss">Olvasnivalók</a><a href="index.html#temak">Témák</a><a href="index.html#radio69">Rádió69</a><a href="index.html#podcast">Zsiványok Podcast</a><a href="dj-k.html">DJ-k</a><a href="index.html#kozosseg">Közösség</a><a href="mediaajanlat.html" class="nav-media-link">Médiaajánlat</a><a href="rolunk-kapcsolat.html#rolunk">Rólunk</a>
     </nav>
@@ -337,7 +339,7 @@
   <footer class="site-footer page-width site-footer-polished">
     <div class="footer-brand-block">
         <a class="footer-brand" href="index.html#home" aria-label="Rádió69 és Zsiványok Podcast – főoldal">
-        <img src="assets/radio69-icon.png" alt="" aria-hidden="true" decoding="async" loading="lazy">
+        <img src="assets/radio69-icon.png" alt="" aria-hidden="true" decoding="async" loading="lazy" width="626" height="395">
         <span class="footer-brand-name">RÁDIÓ<span class="footer-brand-number">69</span><small>× ZSIVÁNYOK PODCAST</small></span>
       </a>
       <p class="footer-tagline">Zene. Történetek. Közösség.</p>
@@ -383,6 +385,8 @@
       const menuToggle = document.getElementById('menuToggle');
       const mainNav = document.getElementById('mainNav');
       if (menuToggle && mainNav) {
+        menuToggle.dataset.r69NavBound = 'true';
+        menuToggle.setAttribute('aria-controls', mainNav.id || 'mainNav');
         menuToggle.addEventListener('click', function () {
           const isOpen = mainNav.classList.toggle('open');
           menuToggle.setAttribute('aria-expanded', String(isOpen));
@@ -405,5 +409,6 @@
 
   <link rel="stylesheet" href="language.css">
   <script src="language.js" defer></script>
+  <script src="/quality-enhancements.js?v=20261112-a11y-mobile" defer></script>
 </body>
 </html>
