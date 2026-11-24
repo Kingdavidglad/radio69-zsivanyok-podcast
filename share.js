@@ -204,11 +204,23 @@
     ).href;
 
     try {
-      // Social crawlers read the static Open Graph page without running JavaScript.
-      const response = await fetch(previewUrl, { method: 'HEAD', cache: 'no-store' });
-      if (response.ok) return previewUrl;
+      // Read the generated page so we can share its revision-specific og:url.
+      // Facebook otherwise may reuse a previously cached card for the unversioned URL.
+      const response = await fetch(previewUrl, { cache: 'no-store' });
+      if (!response.ok) return article.url;
+      const html = await response.text();
+      const previewDocument = new DOMParser().parseFromString(html, 'text/html');
+      const ogUrl = previewDocument.querySelector('meta[property="og:url"]')?.getAttribute('content');
+      if (ogUrl) {
+        const resolved = new URL(ogUrl, pageUrl.origin);
+        const expectedPath = new URL(previewUrl).pathname;
+        if (resolved.origin === pageUrl.origin && resolved.pathname === expectedPath) {
+          return resolved.href;
+        }
+      }
+      return previewUrl;
     } catch (error) {
-      // If the preview has not been generated yet, keep the original article URL.
+      // If the generated page is unavailable, keep the original article link.
     }
 
     return article.url;

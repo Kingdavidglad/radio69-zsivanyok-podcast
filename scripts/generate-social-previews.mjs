@@ -5,6 +5,7 @@
  */
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -80,8 +81,17 @@ export function renderSocialPreview(article, options = {}) {
   const documentTitle = textValue(article.seo_title) || articleTitle;
   const description = textValue(article.excerpt) || textValue(article.intro) || 'Olvasd a Rádió69 × Zsiványok Podcast cikkét.';
   const canonicalUrl = textValue(options.canonicalUrl) || `${SITE_ORIGIN}/cikk.html?id=${encodeURIComponent(id)}`;
-  const shareUrl = `${SITE_ORIGIN}/social-previews/${encodeURIComponent(id)}/`;
-  const imageUrl = safeImageUrl(article.image_url || article.image);
+  const imageUrl = safeImageUrl(options.imageUrl || article.image_url || article.image);
+  const imageType = textValue(options.imageType);
+  const imageDimensions = options.imageDimensions && Number.isFinite(options.imageDimensions.width) && Number.isFinite(options.imageDimensions.height)
+    ? options.imageDimensions : null;
+  // A new share URL is generated whenever the title, description, image or article version changes.
+  // Facebook caches Open Graph cards by URL, so this avoids reusing an outdated card.
+  const shareRevision = createHash('sha256')
+    .update([articleTitle, description, imageUrl, textValue(article.updated_at || article.content_updated_at || article.updatedAt || '')].join('\n'))
+    .digest('hex')
+    .slice(0, 12);
+  const shareUrl = `${SITE_ORIGIN}/social-previews/${encodeURIComponent(id)}/?v=${shareRevision}`;
   const imageAlt = textValue(article.image_alt || article.imageAlt) || articleTitle;
   const category = textValue(article.category) || 'Rádió69';
   const tag = textValue(article.tag) || 'CIKK';
@@ -123,6 +133,10 @@ export function renderSocialPreview(article, options = {}) {
   <meta property="og:title" content="${escapeHtml(articleTitle)}">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:image" content="${escapeHtml(imageUrl)}">
+  <meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}">
+  ${imageType ? `<meta property="og:image:type" content="${escapeHtml(imageType)}">` : ''}
+  ${imageDimensions ? `<meta property="og:image:width" content="${imageDimensions.width}">
+  <meta property="og:image:height" content="${imageDimensions.height}">` : ''}
   <meta property="og:image:alt" content="${escapeHtml(imageAlt)}">
   <meta property="og:url" content="${escapeHtml(shareUrl)}">
   <meta name="twitter:card" content="summary_large_image">
@@ -171,7 +185,7 @@ export function renderSocialPreview(article, options = {}) {
   </main>
   <footer class="site-footer page-width"><a class="footer-brand" href="../../index.html"><img src="../../assets/radio69-icon.png" alt=""><span>RÁDIÓ<span>69</span><small>× ZSIVÁNYOK PODCAST</small></span></a><span class="footer-middle">Zene. Történetek. Közösség.</span><a class="footer-policy-link" href="../../adatvedelem.html">Adatvédelem</a><span class="copyright">© <span id="year">2026</span> Rádió69 × Zsiványok</span></footer>
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
-  <script src="../../share.js?v=radio69-share-20261124"></script>
+  <script src="../../share.js?v=radio69-share-20261124-v2"></script>
   <script src="/analytics.js?v=radio69-analytics-20261028" defer></script>
 </body>
 </html>
@@ -191,7 +205,7 @@ async function readSupabaseConfig() {
 
 async function fetchPublishedArticles({ url, key }) {
   const query = new URLSearchParams({
-    select: 'id,title,seo_title,category,tag,excerpt,image_url,image_alt,image_caption,read_time,published_at,intro,body,sources,source_note,status',
+    select: 'id,title,seo_title,category,tag,excerpt,image_url,image_alt,image_caption,read_time,published_at,content_updated_at,intro,body,sources,source_note,status',
     status: 'eq.published',
     order: 'published_at.desc',
     limit: '5000'
@@ -309,6 +323,81 @@ export async function buildSitemapXml(publishedArticles = [], staticArticleIds =
     '\n</urlset>\n';
 }
 
+function imageFileInfo(buffer, declaredType = '') {
+  if (buffer.length >= 24 && buffer.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))) {
+    return { extension: 'png', mimeType: 'image/png', width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) };
+  }
+  if (buffer.length >= 10 && (buffer.toString('ascii', 0, 6) === 'GIF87a' || buffer.toString('ascii', 0, 6) === 'GIF89a')) {
+    return { extension: 'gif', mimeType: 'image/gif', width: buffer.readUInt16LE(6), height: buffer.readUInt16LE(8) };
+  }
+  if (buffer.length >= 12 && buffer.toString('ascii', 0, 4) === 'RIFF' && buffer.toString('ascii', 8, 12) === 'WEBP') {
+    return { extension: 'webp', mimeType: 'image/webp', width: 0, height: 0 };
+  }
+  if (buffer.length >= 4 && buffer[0] === 0xff && buffer[1] === 0xd8) {
+    let offset = 2;
+    while (offset + 9 < buffer.length) {
+      if (buffer[offset] !== 0xff) { offset += 1; continue; }
+      const marker = buffer[offset + 1];
+      const length = buffer.readUInt16BE(offset + 2);
+      if (length < 2 || offset + 2 + length > buffer.length) break;
+      if ([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf].includes(marker)) {
+        return { extension: 'jpg', mimeType: 'image/jpeg', width: buffer.readUInt16BE(offset + 7), height: buffer.readUInt16BE(offset + 5) };
+      }
+      offset += 2 + length;
+    }
+    return { extension: 'jpg', mimeType: 'image/jpeg', width: 0, height: 0 };
+  }
+  const type = String(declaredType || '').split(';')[0].trim().toLowerCase();
+  const allowed = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/jpg': 'jpg', 'image/gif': 'gif', 'image/webp': 'webp' };
+  return allowed[type] ? { extension: allowed[type], mimeType: type === 'image/jpg' ? 'image/jpeg' : type, width: 0, height: 0 } : null;
+}
+
+async function mirrorArticleImage(article, outputDir, imageCache) {
+  const sourceUrl = safeImageUrl(article.image_url || article.image);
+  // Images already hosted on the Rádió69 domain are stable and need no second copy.
+  if (sourceUrl.startsWith(`${SITE_ORIGIN}/`)) return { url: sourceUrl, type: '', dimensions: null };
+  if (imageCache.has(sourceUrl)) return imageCache.get(sourceUrl);
+
+  let result = { url: FALLBACK_IMAGE, type: 'image/jpeg', dimensions: null };
+  try {
+    const parsed = new URL(sourceUrl);
+    if (parsed.protocol !== 'https:' || parsed.username || parsed.password) throw new Error('A képcím nem biztonságos HTTPS URL.');
+    const response = await fetch(sourceUrl, {
+      redirect: 'follow',
+      headers: {
+        'user-agent': 'Mozilla/5.0 (compatible; Radio69SocialPreview/1.0; +https://radio69zsivanyok.hu)',
+        accept: 'image/png,image/jpeg,image/webp,image/gif,image/*;q=0.8,*/*;q=0.5'
+      },
+      signal: AbortSignal.timeout(20000)
+    });
+    if (!response.ok) throw new Error(`Kép letöltési hiba: HTTP ${response.status}`);
+    const declaredLength = Number(response.headers.get('content-length') || 0);
+    if (declaredLength > 10 * 1024 * 1024) throw new Error('A kép nagyobb mint 10 MB.');
+    const declaredType = response.headers.get('content-type') || '';
+    if (!/^image\//i.test(declaredType)) throw new Error(`A hivatkozás nem képfájlt adott vissza (${declaredType || 'ismeretlen típus'}).`);
+    const buffer = Buffer.from(await response.arrayBuffer());
+    if (!buffer.length || buffer.length > 10 * 1024 * 1024) throw new Error('A kép üres vagy nagyobb mint 10 MB.');
+    const info = imageFileInfo(buffer, declaredType);
+    if (!info) throw new Error('A letöltött fájl formátuma nem támogatott közösségi előnézethez.');
+
+    const filename = `${createHash('sha256').update(buffer).digest('hex').slice(0, 20)}.${info.extension}`;
+    const imageDir = path.join(outputDir, 'images');
+    await fs.mkdir(imageDir, { recursive: true });
+    await fs.writeFile(path.join(imageDir, filename), buffer);
+    result = {
+      url: `${SITE_ORIGIN}/social-previews/images/${filename}`,
+      type: info.mimeType,
+      dimensions: info.width > 0 && info.height > 0 ? { width: info.width, height: info.height } : null
+    };
+    console.log(`  Kép saját tárhelyre másolva: ${textValue(article.id)} -> ${filename}`);
+  } catch (error) {
+    console.warn(`  FIGYELEM: ${textValue(article.id)} képét nem sikerült átmásolni (${error.message}); a saját domainen lévő alapértelmezett kép lesz használva.`);
+  }
+
+  imageCache.set(sourceUrl, result);
+  return result;
+}
+
 async function main() {
   const { url, key } = await readSupabaseConfig();
   const articles = await fetchPublishedArticles({ url, key });
@@ -328,7 +417,9 @@ async function main() {
   const nextDir = `${OUTPUT_DIR}.next`;
   await fs.rm(nextDir, { recursive: true, force: true });
   await fs.mkdir(nextDir, { recursive: true });
+  const imageCache = new Map();
   let generated = 0;
+  let mirroredImages = 0;
   for (const article of validArticles) {
     const id = textValue(article.id);
     const articleDir = path.join(nextDir, id);
@@ -336,7 +427,11 @@ async function main() {
     const canonicalUrl = staticArticleIds.has(id)
       ? `${SITE_ORIGIN}/cikkek/${encodeURIComponent(id)}.html`
       : `${SITE_ORIGIN}/cikk.html?id=${encodeURIComponent(id)}`;
-    await fs.writeFile(path.join(articleDir, 'index.html'), renderSocialPreview(article, { canonicalUrl }), 'utf8');
+    const image = await mirrorArticleImage(article, nextDir, imageCache);
+    if (image.url.startsWith(`${SITE_ORIGIN}/social-previews/images/`)) mirroredImages += 1;
+    await fs.writeFile(path.join(articleDir, 'index.html'), renderSocialPreview(article, {
+      canonicalUrl, imageUrl: image.url, imageType: image.type, imageDimensions: image.dimensions
+    }), 'utf8');
     generated += 1;
   }
 
@@ -345,6 +440,7 @@ async function main() {
   const sitemapXml = await buildSitemapXml(validArticles, staticArticleIds);
   await fs.writeFile(SITEMAP_FILE, sitemapXml, 'utf8');
   console.log(`Kész: ${generated} publikált cikk megosztási előnézete frissült.`);
+  console.log(`Kész: ${mirroredImages} cikk képe a Rádió69 saját domainjéről kerül kiszolgálásra.`);
   console.log(`Kész: ${sitemapXml.match(/<url>/g)?.length || 0} indexelhető URL került a sitemap.xml fájlba.`);
 }
 

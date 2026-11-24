@@ -1,7 +1,8 @@
 /* Rádió69 × Zsiványok Podcast — lightweight PWA cache. */
 'use strict';
 
-const CACHE_NAME = 'radio69-pwa-v7-ga-consent-fix-20261104';
+// New cache version: activates the updated script/cache policy without touching index.html.
+const CACHE_NAME = 'radio69-pwa-v8-live-js-refresh-20261124';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -43,7 +44,7 @@ self.addEventListener('install', (event) => {
         const response = await fetch(url, { cache: 'reload' });
         if (response.ok && response.type === 'basic') await cache.put(url, response);
       } catch (_) {
-        // Network may be unavailable during install; installation can still proceed.
+        // The app remains usable even if an optional file cannot be cached.
       }
     }));
     await self.skipWaiting();
@@ -59,7 +60,6 @@ self.addEventListener('activate', (event) => {
     await self.clients.claim();
   })());
 });
-
 
 // Valódi Web Push üzenetek fogadása akkor is, ha az oldal nincs megnyitva.
 self.addEventListener('push', (event) => {
@@ -97,7 +97,7 @@ self.addEventListener('notificationclick', (event) => {
       const candidate = new URL(event.notification.data?.url || '/musoraink.html', self.location.origin);
       if (candidate.origin === self.location.origin) target = candidate;
     } catch (_) {
-      // A hibás vagy külső cél helyett a műsorrend nyílik meg.
+      // A malformed or external target falls back to the show schedule.
     }
 
     const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
@@ -116,6 +116,7 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+
   if (url.pathname === '/analytics-config.json') {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
@@ -139,10 +140,8 @@ self.addEventListener('fetch', (event) => {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
       try {
-        const response = await fetch(request);
-        if (response && response.ok) {
-          await cache.put(request, response.clone());
-        }
+        const response = await fetch(request, { cache: 'no-store' });
+        if (response && response.ok) await cache.put(request, response.clone());
         return response;
       } catch (_) {
         return (await cache.match(request)) || (await cache.match('/index.html')) || Response.error();
@@ -151,8 +150,26 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache only ordinary static assets; let Supabase and other dynamic requests use the network.
-  if (/\.(?:css|js|json|png|jpe?g|webp|svg|ico|woff2?|webmanifest)$/i.test(url.pathname)) {
+  // JavaScript must be network-first: new article images/share fixes should not
+  // be hidden behind an older cache entry with an unchanged query string.
+  if (/\.js$/i.test(url.pathname)) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      try {
+        const response = await fetch(request, { cache: 'no-store' });
+        if (response && response.ok && response.type === 'basic') {
+          await cache.put(request, response.clone());
+        }
+        return response;
+      } catch (_) {
+        return (await cache.match(request)) || (await cache.match(url.pathname)) || Response.error();
+      }
+    })());
+    return;
+  }
+
+  // Cache ordinary static assets, while still refreshing them in the background.
+  if (/\.(?:css|json|png|jpe?g|webp|svg|ico|woff2?|webmanifest)$/i.test(url.pathname)) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
       const cached = await cache.match(request);

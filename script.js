@@ -96,6 +96,19 @@
 
 /* Olvasnivalók – Supabase központi cikkadatbázissal, helyi articles.js tartalékmegoldással. */
 (() => {
+  // A régi HTML-ben maradt, statikus Unsplash-előtöltés ne versenyezzen
+  // a Supabase-ből érkező, kiválasztott cikk képével.
+  document.querySelectorAll('link[rel="preload"][as="image"]').forEach(link => {
+    const href = link.getAttribute('href') || '';
+    if (/images\.unsplash\.com/i.test(href)) link.remove();
+  });
+  const initialHeroImage = document.querySelector('.hero-feature img');
+  if (initialHeroImage) {
+    initialHeroImage.removeAttribute('srcset');
+    initialHeroImage.removeAttribute('sizes');
+    initialHeroImage.hidden = true;
+  }
+
   const fallbackData = Array.isArray(window.RADIO69_ARTICLES) ? window.RADIO69_ARTICLES : [];
   const grid = document.getElementById('articleGrid');
   if (!grid) return;
@@ -151,13 +164,16 @@
           image.srcset = responsive;
           image.sizes = '(max-width: 760px) 100vw, (max-width: 1200px) 48vw, 560px';
         }
-        image.src = imageUrl;
         image.alt = article.imageAlt || titleText;
         image.style.objectPosition = String(article.imagePosition || 'center').trim();
         image.loading = 'eager';
         image.fetchPriority = 'high';
         image.decoding = 'async';
-        image.hidden = false;
+        image.hidden = true;
+        image.onload = () => { image.hidden = false; };
+        image.onerror = () => { image.hidden = true; };
+        image.src = imageUrl;
+        if (image.complete && image.naturalWidth > 0) image.hidden = false;
       } else {
         image.removeAttribute('src');
         image.hidden = true;
