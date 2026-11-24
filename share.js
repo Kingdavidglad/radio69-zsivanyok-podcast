@@ -204,35 +204,58 @@
     ).href;
 
     try {
-      // Read the generated page so we can share its revision-specific og:url.
-      // Facebook otherwise may reuse a previously cached card for the unversioned URL.
+      // Prefer the revision-specific static page: Facebook cannot execute the
+      // JavaScript on cikk.html, whose fallback OG image is only the radio logo.
       const response = await fetch(previewUrl, { cache: 'no-store' });
-      if (!response.ok) return article.url;
-      const html = await response.text();
-      const previewDocument = new DOMParser().parseFromString(html, 'text/html');
-      const ogUrl = previewDocument.querySelector('meta[property="og:url"]')?.getAttribute('content');
-      if (ogUrl) {
-        const resolved = new URL(ogUrl, pageUrl.origin);
-        const expectedPath = new URL(previewUrl).pathname;
-        if (resolved.origin === pageUrl.origin && resolved.pathname === expectedPath) {
-          return resolved.href;
+      if (response.ok) {
+        const html = await response.text();
+        const previewDocument = new DOMParser().parseFromString(html, 'text/html');
+        const ogUrl = previewDocument.querySelector('meta[property="og:url"]')?.getAttribute('content');
+        if (ogUrl) {
+          const resolved = new URL(ogUrl, pageUrl.origin);
+          const expectedPath = new URL(previewUrl).pathname;
+          if (resolved.origin === pageUrl.origin && resolved.pathname === expectedPath) {
+            return resolved.href;
+          }
         }
       }
-      return previewUrl;
     } catch (error) {
-      // If the generated page is unavailable, keep the original article link.
+      // Still use the static article preview below. Never fall back to cikk.html
+      // for a known article ID, because social crawlers see its generic logo.
     }
 
-    return article.url;
+    // This static page contains the article-specific Open Graph image and title.
+    return previewUrl;
   };
+
+  const setShareActionsReady = ready => {
+    if (!overlay) return;
+    overlay.querySelectorAll('.radio69-share-option').forEach(option => {
+      if (option.tagName === 'A') {
+        if (ready) {
+          option.removeAttribute('aria-disabled');
+          option.removeAttribute('tabindex');
+        } else {
+          option.removeAttribute('href');
+          option.setAttribute('aria-disabled', 'true');
+          option.setAttribute('tabindex', '-1');
+        }
+      } else {
+        option.disabled = !ready;
+      }
+    });
+  };
+
   const openDialog = async trigger => {
     activeTrigger = trigger;
     activeArticle = articleDetails();
     const requestedArticle = activeArticle;
     ensureDialog();
     overlay.querySelector('#radio69ShareArticleTitle').textContent = activeArticle.title;
-    showStatus('A cikk megosztási előnézetének ellenőrzése…');
-    updateLinks();
+    showStatus('A cikk saját Facebook-előnézetének előkészítése…');
+    // Do not let the user open Facebook while the original cikk.html URL is
+    // still attached to the share controls; that page has only the generic logo.
+    setShareActionsReady(false);
     overlay.hidden = false;
     document.body.classList.add('radio69-share-open');
     overlay.querySelector('.radio69-share-close').focus();
@@ -241,9 +264,10 @@
     if (activeArticle !== requestedArticle || overlay.hidden) return;
     activeArticle = { ...requestedArticle, url: resolvedUrl };
     updateLinks();
+    setShareActionsReady(true);
     showStatus(resolvedUrl.includes('/social-previews/')
-      ? 'A cikk megosztása a saját cím- és képelőnézetével történik.'
-      : 'A közvetlen cikkhivatkozás használható megosztásra.');
+      ? 'Előkészült: a Facebook a cikk saját képét és címét tartalmazó oldalt kapja.'
+      : 'Nem sikerült külön cikkelőnézetet azonosítani; a közvetlen hivatkozás használható.');
   };
 
   document.addEventListener('click', event => {
