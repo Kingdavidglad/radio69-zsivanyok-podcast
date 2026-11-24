@@ -76,12 +76,13 @@ export function renderSocialPreview(article, options = {}) {
   const id = textValue(article?.id);
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) throw new Error(`Invalid article id: ${id || '(empty)'}`);
 
-  const title = textValue(article.seo_title) || textValue(article.title) || 'Rádió69 × Zsiványok Podcast';
+  const articleTitle = textValue(article.title) || 'Rádió69 × Zsiványok Podcast';
+  const documentTitle = textValue(article.seo_title) || articleTitle;
   const description = textValue(article.excerpt) || textValue(article.intro) || 'Olvasd a Rádió69 × Zsiványok Podcast cikkét.';
   const canonicalUrl = textValue(options.canonicalUrl) || `${SITE_ORIGIN}/cikk.html?id=${encodeURIComponent(id)}`;
   const shareUrl = `${SITE_ORIGIN}/social-previews/${encodeURIComponent(id)}/`;
   const imageUrl = safeImageUrl(article.image_url || article.image);
-  const imageAlt = textValue(article.image_alt || article.imageAlt) || title;
+  const imageAlt = textValue(article.image_alt || article.imageAlt) || articleTitle;
   const category = textValue(article.category) || 'Rádió69';
   const tag = textValue(article.tag) || 'CIKK';
   const publishedAt = articleDate(article.published_at || article.publishedAt);
@@ -114,18 +115,18 @@ export function renderSocialPreview(article, options = {}) {
   <meta name="robots" content="noindex,follow,max-image-preview:large">
   <meta name="author" content="Rádió69 × Zsiványok Podcast">
   <meta name="description" content="${escapeHtml(description)}">
-  <title>${escapeHtml(title)} | Rádió69 × Zsiványok Podcast</title>
+  <title>${escapeHtml(documentTitle)} | Rádió69 × Zsiványok Podcast</title>
   <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="Rádió69 × Zsiványok Podcast">
   <meta property="og:locale" content="hu_HU">
-  <meta property="og:title" content="${escapeHtml(title)}">
+  <meta property="og:title" content="${escapeHtml(articleTitle)}">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:image" content="${escapeHtml(imageUrl)}">
   <meta property="og:image:alt" content="${escapeHtml(imageAlt)}">
   <meta property="og:url" content="${escapeHtml(shareUrl)}">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="${escapeHtml(title)}">
+  <meta name="twitter:title" content="${escapeHtml(articleTitle)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">
   <meta name="twitter:image" content="${escapeHtml(imageUrl)}">
   <meta name="twitter:image:alt" content="${escapeHtml(imageAlt)}">
@@ -155,11 +156,11 @@ export function renderSocialPreview(article, options = {}) {
     <a class="header-link" href="../../rolunk-kapcsolat.html#kapcsolat">KAPCSOLAT <span>↗</span></a>
   </header>
   <main class="page-width article-main">
-    <div class="breadcrumbs"><a href="../../index.html#home">Főoldal</a><span>›</span><a href="../../index.html#friss">Olvasnivalók</a><span>›</span><span>${escapeHtml(title)}</span></div>
+    <div class="breadcrumbs"><a href="../../index.html#home">Főoldal</a><span>›</span><a href="../../index.html#friss">Olvasnivalók</a><span>›</span><span>${escapeHtml(articleTitle)}</span></div>
     <article class="longform-article">
       <header class="article-header">
         <span class="article-category-pill">${escapeHtml(tag)}</span>
-        <h1 class="cloud-article-title">${escapeHtml(textValue(article.title) || title)}</h1>
+        <h1 class="cloud-article-title">${escapeHtml(articleTitle)}</h1>
         <p class="article-deck">${escapeHtml(description)}</p>
         <div class="cloud-meta">${escapeHtml(category)}${publishedAt ? ` · ${escapeHtml(publishedAt)}` : ''} · ${escapeHtml(readTime)} olvasás</div>
         <div class="article-actions cloud-share-actions"><button type="button" id="shareArticle" class="small-action">↗ <span>Megosztás</span></button></div>
@@ -170,7 +171,7 @@ export function renderSocialPreview(article, options = {}) {
   </main>
   <footer class="site-footer page-width"><a class="footer-brand" href="../../index.html"><img src="../../assets/radio69-icon.png" alt=""><span>RÁDIÓ<span>69</span><small>× ZSIVÁNYOK PODCAST</small></span></a><span class="footer-middle">Zene. Történetek. Közösség.</span><a class="footer-policy-link" href="../../adatvedelem.html">Adatvédelem</a><span class="copyright">© <span id="year">2026</span> Rádió69 × Zsiványok</span></footer>
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
-  <script src="../../share.js?v=radio69-social-preview-20261028"></script>
+  <script src="../../share.js?v=radio69-share-20261124"></script>
   <script src="/analytics.js?v=radio69-analytics-20261028" defer></script>
 </body>
 </html>

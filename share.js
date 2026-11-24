@@ -185,22 +185,34 @@
 
   const resolveSocialPreviewUrl = async article => {
     const pageUrl = new URL(window.location.href);
-    if (!/(^|\/)cikk\.html$/.test(pageUrl.pathname)) return article.url;
-    const id = pageUrl.searchParams.get('id') || '';
-    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) return article.url;
+    let articleId = '';
 
-    const previewUrl = `https://radio69zsivanyok.hu/social-previews/${encodeURIComponent(id)}/`;
+    if (/(^|\/)cikk\.html$/i.test(pageUrl.pathname)) {
+      articleId = pageUrl.searchParams.get('id') || '';
+    } else {
+      const staticArticleMatch = pageUrl.pathname.match(
+        /\/cikkek\/([a-z0-9]+(?:-[a-z0-9]+)*)(?:\.html|\/(?:index\.html)?)?$/i
+      );
+      if (staticArticleMatch) articleId = staticArticleMatch[1].toLowerCase();
+    }
+
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(articleId)) return article.url;
+
+    const previewUrl = new URL(
+      '/social-previews/' + encodeURIComponent(articleId) + '/',
+      pageUrl.origin
+    ).href;
+
     try {
-      // GitHub Pages needs a static HTML page for crawlers to read per-article OG tags.
-      // If the scheduled generator has not run yet, safely keep the working article URL.
+      // Social crawlers read the static Open Graph page without running JavaScript.
       const response = await fetch(previewUrl, { method: 'HEAD', cache: 'no-store' });
       if (response.ok) return previewUrl;
     } catch (error) {
-      // Cross-origin/local preview checks may fail; the existing article link remains valid.
+      // If the preview has not been generated yet, keep the original article URL.
     }
+
     return article.url;
   };
-
   const openDialog = async trigger => {
     activeTrigger = trigger;
     activeArticle = articleDetails();

@@ -129,7 +129,49 @@
     if(!window.supabase?.createClient)await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
     return window.supabase.createClient(cfg.url,cfg.publishableKey);
   }
-  function renderHero(){const hero=document.querySelector('.hero-feature');const article=articles.find(item=>item.featured)||articles[0];if(!hero||!article)return;hero.href=articleHref(article);hero.setAttribute('aria-label',`Kiemelt cikk: ${article.title||''}`);const image=hero.querySelector('img');const imageUrl=safeImage(article.image);if(image&&imageUrl){const responsive=thumbnailSrcset(imageUrl,[480,640,960,1200]);if(responsive){image.sizes='(max-width: 760px) 100vw, (max-width: 1200px) 48vw, 560px';image.srcset=responsive;}image.src=imageUrl;image.loading='eager';image.fetchPriority='high';image.decoding='async';image.alt=article.imageAlt||article.title||'';}const kicker=hero.querySelector('.mini-kicker');if(kicker)kicker.textContent=`${article.category||''} · ${article.tag||''}`;const title=hero.querySelector('strong');if(title)title.textContent=article.title||'';const read=hero.querySelector('.hero-read');if(read)read.innerHTML=`${escapeHtml(article.readTime||'3 perc')} olvasás <span>↗</span>`;}
+  function renderHero() {
+    const hero = document.querySelector('.hero-feature');
+    const article = articles.find(item => item.featured) || articles[0];
+    if (!hero || !article) return;
+
+    const titleText = article.title || '';
+    hero.href = articleHref(article);
+    hero.setAttribute('aria-label', 'Kiemelt cikk: ' + titleText);
+
+    const image = hero.querySelector('img');
+    if (image) {
+      // Remove the initial stock-image srcset so it cannot override the uploaded article image.
+      image.removeAttribute('srcset');
+      image.removeAttribute('sizes');
+
+      const imageUrl = safeImage(article.image);
+      if (imageUrl) {
+        const responsive = thumbnailSrcset(imageUrl, [480, 640, 960, 1200]);
+        if (responsive) {
+          image.srcset = responsive;
+          image.sizes = '(max-width: 760px) 100vw, (max-width: 1200px) 48vw, 560px';
+        }
+        image.src = imageUrl;
+        image.alt = article.imageAlt || titleText;
+        image.style.objectPosition = String(article.imagePosition || 'center').trim();
+        image.loading = 'eager';
+        image.fetchPriority = 'high';
+        image.decoding = 'async';
+        image.hidden = false;
+      } else {
+        image.removeAttribute('src');
+        image.hidden = true;
+        image.alt = titleText;
+      }
+    }
+
+    const kicker = hero.querySelector('.mini-kicker');
+    if (kicker) kicker.textContent = [article.category, article.tag].filter(Boolean).join(' · ');
+    const title = hero.querySelector('strong');
+    if (title) title.textContent = titleText;
+    const read = hero.querySelector('.hero-read');
+    if (read) read.innerHTML = escapeHtml(article.readTime || '3 perc') + ' olvasás <span>↗</span>';
+  }
   function renderEditorPicks(){if(!picksGrid)return;const picks=articles.filter(item=>item.editorPick||item.featured).slice(0,3);picksGrid.innerHTML=picks.map((article,index)=>`<a class="editor-pick" href="${escapeHtml(articleHref(article))}"><span class="editor-pick-number">0${index+1}</span><span class="editor-pick-copy"><small>${escapeHtml(article.tag||article.category||'AJÁNLÓ')}</small><strong>${escapeHtml(article.title||'')}</strong><span>${escapeHtml(article.readTime||'3 perc')} olvasás</span></span><span class="editor-pick-arrow" aria-hidden="true">↗</span></a>`).join('');}
   function updateFilterButtons(){filterButtons.forEach(button=>{const selected=button.dataset.filter===currentFilter;button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));});}
   function renderArticles(){const query=(searchInput?.value||'').trim().toLocaleLowerCase('hu-HU');let visible=articles.filter(article=>{const matchesFilter=currentFilter==='Összes'||article.category===currentFilter;const searchable=[article.title,article.excerpt,article.category,article.tag,article.intro,...(Array.isArray(article.body)?article.body:[])].join(' ').toLocaleLowerCase('hu-HU');return matchesFilter&&searchable.includes(query);});const sortMode=sortSelect?.value||'recommended';if(sortMode==='title')visible=[...visible].sort((a,b)=>String(a.title||'').localeCompare(String(b.title||''),'hu'));else if(sortMode==='short')visible=[...visible].sort((a,b)=>minutesFrom(a.readTime)-minutesFrom(b.readTime));grid.innerHTML=visible.map(article=>`<a class="article-card" href="${escapeHtml(articleHref(article))}"><div class="card-image">${thumbnailImage(article.image)?`<img src="${escapeHtml(thumbnailImage(article.image))}" srcset="${escapeHtml(thumbnailSrcset(article.image))}" sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 1000px) 48vw, 360px" alt="${escapeHtml(article.imageAlt||article.title||'')}" width="640" height="427" loading="lazy" decoding="async" onerror="this.style.display='none';this.parentElement.classList.add('image-fallback')">`:''}<span class="image-category">${escapeHtml(article.tag||article.category||'')}</span><span class="image-arrow" aria-hidden="true">↗</span></div><div class="article-card-body"><div class="article-meta">${escapeHtml(article.category||'')}<span>·</span>${escapeHtml(formatDate(article.publishedAt||article.updatedAt))}<span>·</span>${escapeHtml(article.readTime||'3 perc')}</div><h3>${escapeHtml(article.title||'')}</h3><p>${escapeHtml(article.excerpt||'')}</p><span class="card-link">Tovább olvasom <span>↗</span></span></div></a>`).join('');if(countLabel)countLabel.textContent=`${visible.length} olvasnivaló`;if(emptyState)emptyState.hidden=visible.length>0;}
