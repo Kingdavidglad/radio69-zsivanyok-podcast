@@ -40,7 +40,6 @@
     }) || null;
   }
 
-  // A menü célpontjai közül csak az önálló, valóban látható szekciókat figyeljük.
   const watched = currentFile === 'index.html'
     ? links
         .map(link => ({ link, dest: destination(link) }))
@@ -51,26 +50,17 @@
 
   function updateActiveFromScroll() {
     if (currentFile !== 'index.html') return;
-
-    // Ha a látogató visszagörgetett a lap tetejére, a Főoldal legyen aktív,
-    // akkor is, ha a címsorban korábban például #temak maradt.
     if (window.scrollY <= 120) {
       setActive(findLinkForHash('#home'), true);
       return;
     }
-
-    // A legközelebbi, aktiválási vonalat már elért szekció menüpontja legyen aláhúzva.
     const activationLine = Math.min(window.innerHeight * 0.35, 240);
     const passed = watched
       .map(item => ({ ...item, top: item.section.getBoundingClientRect().top }))
       .filter(item => item.top <= activationLine)
       .sort((a, b) => b.top - a.top);
-
-    if (passed.length) {
-      setActive(passed[0].link, true);
-    } else {
-      setActive(findLinkForHash('#home'), true);
-    }
+    if (passed.length) setActive(passed[0].link, true);
+    else setActive(findLinkForHash('#home'), true);
   }
 
   if (currentFile !== 'index.html') {
@@ -80,12 +70,9 @@
     links.forEach(link => {
       link.addEventListener('click', () => {
         const dest = destination(link);
-        if (dest.file === 'index.html' && dest.hash) {
-          setActive(link, true);
-        }
+        if (dest.file === 'index.html' && dest.hash) setActive(link, true);
       });
     });
-
     window.addEventListener('scroll', updateActiveFromScroll, { passive: true });
     window.addEventListener('resize', updateActiveFromScroll);
     window.addEventListener('hashchange', updateActiveFromScroll);
@@ -96,8 +83,6 @@
 
 /* Olvasnivalók – Supabase központi cikkadatbázissal, helyi articles.js tartalékmegoldással. */
 (() => {
-  // A régi HTML-ben maradt, statikus Unsplash-előtöltés ne versenyezzen
-  // a Supabase-ből érkező, kiválasztott cikk képével.
   document.querySelectorAll('link[rel="preload"][as="image"]').forEach(link => {
     const href = link.getAttribute('href') || '';
     if (/images\.unsplash\.com/i.test(href)) link.remove();
@@ -124,6 +109,80 @@
   let articles = fallbackData.filter(a => a && a.draft !== true);
   let cloudEnabled = false;
 
+  // Legfeljebb 6 kártya látszik elsőre. A többi külön gombbal tölthető be.
+  const PAGE_SIZE = 6;
+  let visibleLimit = PAGE_SIZE;
+  const pagination = document.createElement('div');
+  pagination.id = 'articlePagination';
+  pagination.className = 'article-pagination';
+  pagination.setAttribute('aria-live', 'polite');
+  grid.insertAdjacentElement('afterend', pagination);
+
+  if (!document.getElementById('radio69-article-pagination-styles')) {
+    const paginationStyles = document.createElement('style');
+    paginationStyles.id = 'radio69-article-pagination-styles';
+    paginationStyles.textContent = `
+      .magazine-main .article-card h3 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        min-height: 2.4em;
+      }
+      .magazine-main .article-card p {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        min-height: 5.25em;
+      }
+      .article-pagination {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 9px;
+        margin: 28px 0 8px;
+        text-align: center;
+      }
+      .article-load-more {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        min-height: 48px;
+        padding: 0 22px;
+        border: 1px solid rgba(181,138,255,.42);
+        border-radius: 999px;
+        color: #f5f0ff;
+        background: linear-gradient(135deg, rgba(124,58,237,.24), rgba(6,182,212,.12));
+        box-shadow: 0 8px 25px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.06);
+        font: 700 12px var(--font-body, sans-serif);
+        cursor: pointer;
+        transition: transform .2s ease, border-color .2s ease, background .2s ease;
+      }
+      .article-load-more:hover {
+        transform: translateY(-2px);
+        border-color: rgba(34,211,238,.65);
+        background: linear-gradient(135deg, rgba(124,58,237,.34), rgba(6,182,212,.2));
+      }
+      .article-load-more:focus-visible { outline: 2px solid #67e8f9; outline-offset: 3px; }
+      .article-load-more span {
+        padding: 5px 9px;
+        border-radius: 999px;
+        color: #d6c6ff;
+        background: rgba(10,10,20,.4);
+        font-size: 10px;
+        white-space: nowrap;
+      }
+      .article-pagination small { color: #858198; font-size: 10px; line-height: 1.5; }
+      @media (prefers-reduced-motion: reduce) {
+        .article-load-more { transition: none; }
+        .article-load-more:hover { transform: none; }
+      }
+    `;
+    document.head.appendChild(paginationStyles);
+  }
+
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[char]));
@@ -146,17 +205,13 @@
     const hero = document.querySelector('.hero-feature');
     const article = articles.find(item => item.featured) || articles[0];
     if (!hero || !article) return;
-
     const titleText = article.title || '';
     hero.href = articleHref(article);
     hero.setAttribute('aria-label', 'Kiemelt cikk: ' + titleText);
-
     const image = hero.querySelector('img');
     if (image) {
-      // Remove the initial stock-image srcset so it cannot override the uploaded article image.
       image.removeAttribute('srcset');
       image.removeAttribute('sizes');
-
       const imageUrl = safeImage(article.image);
       if (imageUrl) {
         const responsive = thumbnailSrcset(imageUrl, [480, 640, 960, 1200]);
@@ -180,7 +235,6 @@
         image.alt = titleText;
       }
     }
-
     const kicker = hero.querySelector('.mini-kicker');
     if (kicker) kicker.textContent = [article.category, article.tag].filter(Boolean).join(' · ');
     const title = hero.querySelector('strong');
@@ -190,14 +244,58 @@
   }
   function renderEditorPicks(){if(!picksGrid)return;const picks=articles.filter(item=>item.editorPick||item.featured).slice(0,3);picksGrid.innerHTML=picks.map((article,index)=>`<a class="editor-pick" href="${escapeHtml(articleHref(article))}"><span class="editor-pick-number">0${index+1}</span><span class="editor-pick-copy"><small>${escapeHtml(article.tag||article.category||'AJÁNLÓ')}</small><strong>${escapeHtml(article.title||'')}</strong><span>${escapeHtml(article.readTime||'3 perc')} olvasás</span></span><span class="editor-pick-arrow" aria-hidden="true">↗</span></a>`).join('');}
   function updateFilterButtons(){filterButtons.forEach(button=>{const selected=button.dataset.filter===currentFilter;button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));});}
-  function renderArticles(){const query=(searchInput?.value||'').trim().toLocaleLowerCase('hu-HU');let visible=articles.filter(article=>{const matchesFilter=currentFilter==='Összes'||article.category===currentFilter;const searchable=[article.title,article.excerpt,article.category,article.tag,article.intro,...(Array.isArray(article.body)?article.body:[])].join(' ').toLocaleLowerCase('hu-HU');return matchesFilter&&searchable.includes(query);});const sortMode=sortSelect?.value||'recommended';if(sortMode==='title')visible=[...visible].sort((a,b)=>String(a.title||'').localeCompare(String(b.title||''),'hu'));else if(sortMode==='short')visible=[...visible].sort((a,b)=>minutesFrom(a.readTime)-minutesFrom(b.readTime));grid.innerHTML=visible.map(article=>`<a class="article-card" href="${escapeHtml(articleHref(article))}"><div class="card-image">${thumbnailImage(article.image)?`<img src="${escapeHtml(thumbnailImage(article.image))}" srcset="${escapeHtml(thumbnailSrcset(article.image))}" sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 1000px) 48vw, 360px" alt="${escapeHtml(article.imageAlt||article.title||'')}" width="640" height="427" loading="lazy" decoding="async" onerror="this.style.display='none';this.parentElement.classList.add('image-fallback')">`:''}<span class="image-category">${escapeHtml(article.tag||article.category||'')}</span><span class="image-arrow" aria-hidden="true">↗</span></div><div class="article-card-body"><div class="article-meta">${escapeHtml(article.category||'')}<span>·</span>${escapeHtml(formatDate(article.publishedAt||article.updatedAt))}<span>·</span>${escapeHtml(article.readTime||'3 perc')}</div><h3>${escapeHtml(article.title||'')}</h3><p>${escapeHtml(article.excerpt||'')}</p><span class="card-link">Tovább olvasom <span>↗</span></span></div></a>`).join('');if(countLabel)countLabel.textContent=`${visible.length} olvasnivaló`;if(emptyState)emptyState.hidden=visible.length>0;}
-  filterButtons.forEach(button=>button.addEventListener('click',()=>{currentFilter=button.dataset.filter||'Összes';updateFilterButtons();renderArticles();}));
-  quickFilterLinks.forEach(link=>link.addEventListener('click',()=>{currentFilter=link.dataset.quickFilter||'Összes';updateFilterButtons();renderArticles();}));
-  if(searchInput)searchInput.addEventListener('input',renderArticles);if(sortSelect)sortSelect.addEventListener('change',renderArticles);
+
+  function renderArticles(resetLimit = false) {
+    if (resetLimit) visibleLimit = PAGE_SIZE;
+    const query = (searchInput?.value || '').trim().toLocaleLowerCase('hu-HU');
+    let visible = articles.filter(article => {
+      const matchesFilter = currentFilter === 'Összes' || article.category === currentFilter;
+      const searchable = [article.title, article.excerpt, article.category, article.tag, article.intro, ...(Array.isArray(article.body) ? article.body : [])]
+        .join(' ').toLocaleLowerCase('hu-HU');
+      return matchesFilter && searchable.includes(query);
+    });
+    const sortMode = sortSelect?.value || 'recommended';
+    if (sortMode === 'title') visible = [...visible].sort((a,b) => String(a.title||'').localeCompare(String(b.title||''),'hu'));
+    else if (sortMode === 'short') visible = [...visible].sort((a,b) => minutesFrom(a.readTime)-minutesFrom(b.readTime));
+
+    const shown = visible.slice(0, visibleLimit);
+    grid.innerHTML = shown.map(article => `<a class="article-card" href="${escapeHtml(articleHref(article))}"><div class="card-image">${thumbnailImage(article.image)?`<img src="${escapeHtml(thumbnailImage(article.image))}" srcset="${escapeHtml(thumbnailSrcset(article.image))}" sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 1000px) 48vw, 360px" alt="${escapeHtml(article.imageAlt||article.title||'')}" width="640" height="427" loading="lazy" decoding="async" onerror="this.style.display='none';this.parentElement.classList.add('image-fallback')">`:''}<span class="image-category">${escapeHtml(article.tag||article.category||'')}</span><span class="image-arrow" aria-hidden="true">↗</span></div><div class="article-card-body"><div class="article-meta">${escapeHtml(article.category||'')}<span>·</span>${escapeHtml(formatDate(article.publishedAt||article.updatedAt))}<span>·</span>${escapeHtml(article.readTime||'3 perc')}</div><h3>${escapeHtml(article.title||'')}</h3><p>${escapeHtml(article.excerpt||'')}</p><span class="card-link">Tovább olvasom <span>↗</span></span></div></a>`).join('');
+    if(countLabel) countLabel.textContent = `${visible.length} olvasnivaló`;
+    if(emptyState) emptyState.hidden = visible.length > 0;
+
+    const remaining = Math.max(0, visible.length - shown.length);
+    if (remaining > 0) {
+      const nextCount = Math.min(PAGE_SIZE, remaining);
+      pagination.innerHTML = `<button class="article-load-more" type="button">További cikkek betöltése <span>${shown.length} / ${visible.length}</span></button><small>Még ${remaining} olvasnivaló vár rád.</small>`;
+      pagination.querySelector('button')?.addEventListener('click', () => {
+        visibleLimit += nextCount;
+        renderArticles();
+      });
+    } else if (visible.length > PAGE_SIZE) {
+      pagination.innerHTML = `<small>Az összes ${visible.length} cikket megnézted.</small>`;
+    } else {
+      pagination.replaceChildren();
+    }
+  }
+
+  filterButtons.forEach(button=>button.addEventListener('click',()=>{currentFilter=button.dataset.filter||'Összes';updateFilterButtons();renderArticles(true);}));
+  quickFilterLinks.forEach(link=>link.addEventListener('click',()=>{currentFilter=link.dataset.quickFilter||'Összes';updateFilterButtons();renderArticles(true);}));
+  if(searchInput) searchInput.addEventListener('input',()=>renderArticles(true));
+  if(sortSelect) sortSelect.addEventListener('change',()=>renderArticles(true));
+
   async function init(){
-    try{const client=await getPublicClient();if(client){const {data,error}=await client.from('articles').select('*').eq('status','published').order('published_at',{ascending:false}).order('updated_at',{ascending:false});if(error)throw error;if(Array.isArray(data)&&data.length){articles=data.map(mapRow);cloudEnabled=true;}else{console.info('A központi cikkadatbázis még üres; a helyi articles.js cikklista marad aktív.');}}}
-    catch(error){console.warn('A központi cikklista nem érhető el; a helyi articles.js tartalmat használom.',error);}
-    renderHero();renderEditorPicks();updateFilterButtons();renderArticles();
+    try{
+      const client=await getPublicClient();
+      if(client){
+        const {data,error}=await client.from('articles').select('*').eq('status','published').order('published_at',{ascending:false}).order('updated_at',{ascending:false});
+        if(error) throw error;
+        if(Array.isArray(data)&&data.length){articles=data.map(mapRow);cloudEnabled=true;}
+        else console.info('A központi cikkadatbázis még üres; a helyi articles.js cikklista marad aktív.');
+      }
+    } catch(error) {
+      console.warn('A központi cikklista nem érhető el; a helyi articles.js tartalmat használom.',error);
+    }
+    renderHero();renderEditorPicks();updateFilterButtons();renderArticles(true);
   }
   init();
 })();
@@ -206,7 +304,6 @@
 (() => {
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
-
   const menuToggle = document.getElementById('menuToggle');
   const mainNav = document.getElementById('mainNav');
   if (menuToggle && mainNav) {
